@@ -1,0 +1,15 @@
+C:\Users\gabor.fazekas\source\repos\Practice10\Practice10\obj\Debug\net8.0\Practice10.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gabor.fazekas\source\repos\Practice10\Practice10\obj\Debug\net8.0\Practice10.AssemblyInfoInputs.cache
+C:\Users\gabor.fazekas\source\repos\Practice10\Practice10\obj\Debug\net8.0\Practice10.AssemblyInfo.cs
+C:\Users\gabor.fazekas\source\repos\Practice10\Practice10\obj\Debug\net8.0\Practice10.csproj.CoreCompileInputs.cache
+C:\Users\gabor.fazekas\source\repos\Practice10\Practice10\obj\Debug\net8.0\Practice10.sourcelink.json
+C:\Users\gabor.fazekas\source\repos\Practice10\Practice10\bin\Debug\net8.0\Practice10.exe
+C:\Users\gabor.fazekas\source\repos\Practice10\Practice10\bin\Debug\net8.0\Practice10.deps.json
+C:\Users\gabor.fazekas\source\repos\Practice10\Practice10\bin\Debug\net8.0\Practice10.runtimeconfig.json
+C:\Users\gabor.fazekas\source\repos\Practice10\Practice10\bin\Debug\net8.0\Practice10.dll
+C:\Users\gabor.fazekas\source\repos\Practice10\Practice10\bin\Debug\net8.0\Practice10.pdb
+C:\Users\gabor.fazekas\source\repos\Practice10\Practice10\obj\Debug\net8.0\Practice10.dll
+C:\Users\gabor.fazekas\source\repos\Practice10\Practice10\obj\Debug\net8.0\refint\Practice10.dll
+C:\Users\gabor.fazekas\source\repos\Practice10\Practice10\obj\Debug\net8.0\Practice10.pdb
+C:\Users\gabor.fazekas\source\repos\Practice10\Practice10\obj\Debug\net8.0\Practice10.genruntimeconfig.cache
+C:\Users\gabor.fazekas\source\repos\Practice10\Practice10\obj\Debug\net8.0\ref\Practice10.dll
