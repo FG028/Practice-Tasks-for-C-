@@ -1,0 +1,15 @@
+C:\Users\gabor.fazekas\source\repos\Practice03\Practice03\bin\Debug\net8.0\Practice03.exe
+C:\Users\gabor.fazekas\source\repos\Practice03\Practice03\bin\Debug\net8.0\Practice03.deps.json
+C:\Users\gabor.fazekas\source\repos\Practice03\Practice03\bin\Debug\net8.0\Practice03.runtimeconfig.json
+C:\Users\gabor.fazekas\source\repos\Practice03\Practice03\bin\Debug\net8.0\Practice03.dll
+C:\Users\gabor.fazekas\source\repos\Practice03\Practice03\bin\Debug\net8.0\Practice03.pdb
+C:\Users\gabor.fazekas\source\repos\Practice03\Practice03\obj\Debug\net8.0\Practice03.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gabor.fazekas\source\repos\Practice03\Practice03\obj\Debug\net8.0\Practice03.AssemblyInfoInputs.cache
+C:\Users\gabor.fazekas\source\repos\Practice03\Practice03\obj\Debug\net8.0\Practice03.AssemblyInfo.cs
+C:\Users\gabor.fazekas\source\repos\Practice03\Practice03\obj\Debug\net8.0\Practice03.csproj.CoreCompileInputs.cache
+C:\Users\gabor.fazekas\source\repos\Practice03\Practice03\obj\Debug\net8.0\Practice03.sourcelink.json
+C:\Users\gabor.fazekas\source\repos\Practice03\Practice03\obj\Debug\net8.0\Practice03.dll
+C:\Users\gabor.fazekas\source\repos\Practice03\Practice03\obj\Debug\net8.0\refint\Practice03.dll
+C:\Users\gabor.fazekas\source\repos\Practice03\Practice03\obj\Debug\net8.0\Practice03.pdb
+C:\Users\gabor.fazekas\source\repos\Practice03\Practice03\obj\Debug\net8.0\Practice03.genruntimeconfig.cache
+C:\Users\gabor.fazekas\source\repos\Practice03\Practice03\obj\Debug\net8.0\ref\Practice03.dll
