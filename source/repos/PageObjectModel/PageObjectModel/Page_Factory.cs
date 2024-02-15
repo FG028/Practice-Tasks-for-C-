@@ -2,24 +2,25 @@
 using SeleniumExtras.PageObjects;
 
 namespace PageObjectModel;
+
     internal class Page_Factory : LoginPage
     {
-        [FindsBy(Id = "lostPassword")]
+        [FindsBy(How = How.Id, Using = "lostPassword")]
         private IWebElement lostPasswordLink { get; set; }
 
-        [FindsBy(Id = "rememberMe")]
+        [FindsBy(How = How.Id, Using = "rememberme")]
         private IWebElement rememberMeCheckBox { get; set; }
 
-        [FindsBy(XPath = "//button[contains(@text(), 'Register')]")]
+        [FindsBy(How = How.XPath, Using = "//button[contains(@text(), 'Register')]")]
         private IWebElement registerButton { get; set; }
 
-        [FindsBy(Id = "username")]
+        [FindsBy(How = How.Id, Using = "username")]
         private IWebElement usernameField { get; set; }
 
-        [FindsBy(Id = "password")]
+        [FindsBy(How = How.Id, Using = "password")]
         private IWebElement passwordField { get; set; }
 
-        [FindsBy(Id = "login")]
+        [FindsBy(How = How.Id, Using = "login")]
         private IWebElement loginButton { get; set; }
 
         public Page_Factory(IWebDriver driver) : base(driver)

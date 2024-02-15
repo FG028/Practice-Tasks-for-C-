@@ -5,7 +5,7 @@ using OpenQA.Selenium.Chrome;
 namespace PageObjectModel
 {
         [TestFixture]
-        internal class LoginPageTests
+        public class LoginPageTests
         {
             private IWebDriver driver;
 
@@ -20,7 +20,7 @@ namespace PageObjectModel
                 LoginPage page = new LoginPage(driver);
                 string text = page.GetLostPasswordText();
 
-                Assert.That(text, Is.EqualTo("Lost your password"));
+                Assert.That(text, Is.EqualTo("Lost your password ?"));
             }
             [Test]
             public void TestGetRememberMeText()
@@ -28,16 +28,16 @@ namespace PageObjectModel
                 LoginPage page = new LoginPage(driver);
                 string text = page.GetRememberMeText();
 
-                Assert.That(text, Is.Not.Empty);
-            }
+                Assert.That(text, Is.EqualTo("Remember Me"));
+        }
             [Test]
             public void TestGetRegisterButtonText()
             {
                 LoginPage page = new LoginPage(driver);
                 string text = page.GetRegisterButtonText();
 
-                Assert.That(text, Contains.Substring("Register")); // Assert substring
-            }
+                Assert.That(text, Is.EqualTo("Register"));
+        }
             [Test]
             public void TestLogin()
             {
@@ -55,6 +55,12 @@ namespace PageObjectModel
                 Assert.That(successMessage.Text, Contains.Substring("Logged in successfully"));
 
             }
+            [TearDownAttribute]
+            public void TearDownAttribute()
+            {
+                driver.Dispose();
+            }
+
             [TearDown]
             public void TearDown()
             {

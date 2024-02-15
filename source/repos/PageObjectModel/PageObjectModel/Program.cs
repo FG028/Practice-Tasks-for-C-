@@ -9,7 +9,7 @@ public class Program
     {
         IWebDriver driver = new ChromeDriver();
 
-        driver.Navigate().GoToUrl("https://practice.automationtesting.in/my-account/. ");
+        driver.Navigate().GoToUrl("https://practice.automationtesting.in/my-account/.");
 
         LoginPage loginPage = new LoginPage(driver);
 
@@ -19,8 +19,8 @@ public class Program
         string rememberMeText = loginPage.GetRememberMeText();
         Console.WriteLine(rememberMeText);
 
-        string registerButtoníText = loginPage.GetRegisterButtonText();
-        Console.WriteLine(registerButtoníText);
+        string registerButtonText = loginPage.GetRegisterButtonText();
+        Console.WriteLine(registerButtonText);
 
         loginPage.Login("testuser", "password123");
 
