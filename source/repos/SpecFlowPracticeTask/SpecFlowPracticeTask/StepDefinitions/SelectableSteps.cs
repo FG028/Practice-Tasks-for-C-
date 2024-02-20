@@ -2,9 +2,11 @@
 using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using OpenQA.Selenium.Interactions;
+using System;
 
 namespace SpecFlowPracticeTask.StepDefinitions
 {
+    [Binding]
     public class SelectableSteps
     {
         private readonly WebDriver driver;
@@ -14,8 +16,9 @@ namespace SpecFlowPracticeTask.StepDefinitions
             this.driver = driver;
         }
 
+        [Given(@"I am on the DemoQA page ""(.*)""")]
         [Given(@"I navigate to the ""Interactions"" category and ""Selectable"" section")]
-        public void NavigateToSelectableSection()
+        public void NavigateToSelectableSection(string url)
         {
             driver.Navigate().GoToUrl("https://demoqa.com/selectable");
         }
@@ -58,11 +61,15 @@ namespace SpecFlowPracticeTask.StepDefinitions
         {
             var squares = driver.FindElements(By.CssSelector(".ui-selected"));
 
-            Assert.That(squares[0].Text, Is.EqualTo(value1));
-            Assert.That(squares[1].Text, Is.EqualTo(value2));
-            Assert.That(squares[2].Text, Is.EqualTo(value3));
-            Assert.That(squares[3].Text, Is.EqualTo(value4));
-            Assert.That(squares[4].Text, Is.EqualTo(value5));
+            Assert.Multiple(() =>
+            {
+                Assert.That(squares[0].Text, Is.EqualTo(value1));
+                Assert.That(squares[1].Text, Is.EqualTo(value2));
+                Assert.That(squares[2].Text, Is.EqualTo(value3));
+                Assert.That(squares[3].Text, Is.EqualTo(value4));
+                Assert.That(squares[4].Text, Is.EqualTo(value5));
+
+            });
         }
     }
 }

@@ -14,9 +14,9 @@ namespace SpecFlowPracticeTask.StepDefinitions
             this.driver = driver;
         }
 
-        [Given(@"I am on the DemoQA page")]
+        [Given(@"I am on the DemoQA page ""(.*)""")]
         [Given(@"I navigate to the ""Alerts, Frame & Windows"" category and ""Browser Windows"" section")]
-        public void NavigateToBrowserWindowsSection()
+        public void NavigateToBrowserWindowsSection(string url)
         {
             driver.Navigate().GoToUrl("https://demoqa.com/alertsWindows");
             driver.FindElement(By.XPath("//h5[text()='Browser Windows']")).Click();
@@ -34,7 +34,7 @@ namespace SpecFlowPracticeTask.StepDefinitions
             button.Click();
         }
 
-        [Then(@"the new ""(.*)"" should be loaded")]
+        [Then(@"A new ""<window_type>"" should be loaded and ""<expected_content>"" should be displayed")]
         public void VerifyWindowLoaded(string windowsType)
         {
             if (windowsType == "tab")
@@ -43,7 +43,7 @@ namespace SpecFlowPracticeTask.StepDefinitions
             }
             else if (windowsType == "windows")
             {
-                WaitForLoadAndSwitchToTab(driver);
+                WaitForLoadAndSwitchToWindow(driver);
             }
             else
             {

@@ -17,10 +17,12 @@ namespace SpecFlowPracticeTask.StepDefinitions
             this.driver = driver;
         }
 
+        [Given(@"I am on the DemoQA page ""(.*)""")]
         [Given(@"I navigate to the ""Elements"" category and ""Web Tables"" section")]
-        public void NavigateToWebTablesSection()
+        public void NavigateToWebTablesSection(string url)
         {
             driver.Navigate().GoToUrl("https://demoqa.com/webtables");
+            driver.FindElement(By.XPath("//h5[text()='Browser Windows']")).Click();
         }
 
         [Given(@"I click on the ""(.*)"" column header")]
@@ -40,16 +42,16 @@ namespace SpecFlowPracticeTask.StepDefinitions
             if (int.TryParse(values[0].Text, out int _))
             {
                 var orderedNumbers = values.Select(v => int.Parse(v.Text)).OrderBy(n => n).ToList();
-                Assert.IsTrue(orderedNumbers.SequenceEqual(orderedNumbers)); // compare with itself after ordering
+                Assert.That(orderedNumbers.SequenceEqual(orderedNumbers), Is.True); // compare with itself after ordering
             }
             else
             {
                 var orderedText = values.OrderBy(v => v.Text).ToList();
-                Assert.IsTrue(orderedText.SequenceEqual(orderedText)); // compare with itself after ordering
+                Assert.That(orderedText.SequenceEqual(orderedText), Is.True); // compare with itself after ordering
             }
         }
 
-        [When(@"I delete the second row name Alden")]
+        [Then(@"I delete the second row (name Alden)")]
         public void DeleteSecondRow()
         {
             var table = driver.FindElement(By.XPath("//table[@id='webtables']"));
@@ -61,7 +63,7 @@ namespace SpecFlowPracticeTask.StepDefinitions
             deleteButton.Click();
         }
 
-        [Then(@"I should see there are onlxy two rows left in the table")]
+        [Then(@"I should see there are only two rows left in the table")]
         public void VerifyRowCount()
         {
             var table = driver.FindElement(By.XPath("//table[@id='webtables']"));
@@ -70,12 +72,12 @@ namespace SpecFlowPracticeTask.StepDefinitions
             Assert.That(rows.Count, Is.EqualTo(2));
         }
 
-        [Then(@"I should see the values in the ""(.*)"" column are in ascending order")]
+        [Then(@"I should not see the value ""(.*)"" among the values in the ""(.*)"" column")]
         public void VerifyValueAbsence(string unwantedValue, string columnName)
         {
             var values = driver.FindElements(By.XPath($"//td[text()!='{columnName}']//following-sibling::td[text()!=' ']"));
 
-            Assert.IsFalse(values.Any(v => v.Text == unwantedValue));
+            Assert.That(values.Any(v => v.Text == unwantedValue), Is.False);
         }
     }
 }

@@ -15,13 +15,14 @@ namespace SpecFlowPracticeTask.StepDefinitions
             this.driver = driver;
         }
 
-        [Given(@"I navigate to the ""Widgets"" category and ""Progress Bar"" section")]
-        public void NavigateToProgressBarSection()
+        [Given(@"I am on the DemoQA page ""(.*)""")]
+        [Given(@"I navigate to the ""(.*)"" category and ""(.*)"" section")]
+        public void NavigateToWebTablesSection(string url)
         {
             driver.Navigate().GoToUrl("https://demoqa.com/progress-bar");
         }
 
-        [When(@"I click the ""(.*)"" button")]
+        [Then(@"I click the ""(.*)"" button")]
         public void ClickButton(string buttonText)
         {
             var button = driver.FindElement(By.Id("startStopButton"));
@@ -29,7 +30,7 @@ namespace SpecFlowPracticeTask.StepDefinitions
         }
 
 
-        [Then(@"I wait until the progress var reaches (.*)%")]
+        [Then(@"I wait until the progress bar reaches (.*)%")]
         public void WaitUntilProgressBarCompletes(int expectedValue)
         {
             var progressBarText = driver.FindElement(By.Id("progressBarText"));
@@ -45,7 +46,7 @@ namespace SpecFlowPracticeTask.StepDefinitions
             Assert.That(button.Text, Is.EqualTo(expectedText));
         }
 
-        [Then(@"I verify that the progress bar value is ""(.*)""")]
+        [Then(@"I verify that the progress bar value is ""(.*)""%")]
         public void VerifyProgressBarValue(int expectedValue)
         {
             var progressBar = driver.FindElement(By.Id("progressBar"));

@@ -15,9 +15,10 @@ public class TextBoxSteps
     {
         this.driver = driver;
     }
-    
+
+    [Given(@"I am on the DemoQA page ""(.*)""")]
     [Given(@"I navigate to the ""Elements"" category and ""Text Box"" section")]
-    public void NavigateToTextBoxSection()
+    public void NavigateToTextBoxSection(string url)
     {
         driver.Navigate().GoToUrl("https://demoqa.com/text-box");
     }

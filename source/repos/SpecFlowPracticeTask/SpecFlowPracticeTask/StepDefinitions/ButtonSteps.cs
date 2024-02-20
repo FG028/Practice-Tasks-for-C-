@@ -15,10 +15,12 @@ namespace SpecFlowPracticeTask.StepDefinitions
             this.driver = driver;
         }
 
-        [Given(@"I navigate to the ""Elements"" category and ""Buttons")]
-        public void NavigateToButtonsSections()
+        [Given(@"I am on the DemoQA page ""(.*)""")]
+        [Given(@"I navigate to the ""(.*)"" category and ""(.*)"" section")]
+        public void NavigateToWebTablesSection(string url)
         {
-            driver.Navigate().GoToUrl("https://demoqa.com/buttons");
+            driver.Navigate().GoToUrl("https://demoqa.com/elements");
+            driver.FindElement(By.XPath("//*[@id=\"item-4\"]/span")).Click();
         }
 
         [When(@"I interact with the ""(.*)"" button")]

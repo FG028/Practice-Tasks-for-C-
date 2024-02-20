@@ -17,13 +17,14 @@ namespace SpecFlowPracticeTask.StepDefinitions
             this.driver = driver;
         }
 
+        [Given(@"I am on the DemoQA page ""(.*)""")]
         [Given(@"I navigate to the ""Forms"" category and "" Auto Complete"" section")]
-        public void NavigateToAutoCompleteSection()
+        public void NavigateToAutoCompleteSection(string url)
         {
             driver.Navigate().GoToUrl("https://demoqa.com/auto-complete");
         }
 
-        [When(@"I  enter the letter ""(.*)"" in the ""Type multiple color name"" field")]
+        [When(@"I enter the letter ""(.*)"" in the ""Type multiple color names"" field")]
         public void EnterTextInInput(string text)
         {
             var input = driver.FindElement(By.Id("autoCompleteMultipleInput"));
@@ -40,11 +41,11 @@ namespace SpecFlowPracticeTask.StepDefinitions
             Assert.That(suggestions.Count, Is.EqualTo(expectedCount));
             foreach(var color in uniqueColors)
             {
-                Assert.IsTrue(color.Contains(expectedLetter));
+                Assert.That(color.Contains(expectedLetter), Is.True);
             }
         }
 
-        [When(@"I add colors from the autoComplete suggestions:")]
+        [Then(@"I add colors from the autoComplete suggestions:")]
         public void AddColorsFromSuggestions(Table table)
         {
             var input = driver.FindElement(By.Id("autoCompleteMultipleInput"));
@@ -76,7 +77,7 @@ namespace SpecFlowPracticeTask.StepDefinitions
             Assert.That(words.Distinct().Count(), Is.EqualTo(words.Count));
         }
 
-        [When(@"I type ""(.*)"" followed by down arrow and enter")]
+        [Then(@"I type ""(.*)"" followed by down arrow and enter")]
         public void AddColorManually(string text)
         {
             var input = driver.FindElement(By.Id("autoCompleteMultipleInput"));
@@ -98,10 +99,10 @@ namespace SpecFlowPracticeTask.StepDefinitions
         public void VerifyFieldValue(string expectedText)
         {
             var input = driver.FindElement(By.Id("autoCompleteMultipleInput"));
-            Assert.IsTrue(input.Text.Contains(expectedText));
+            Assert.That(input.Text.Contains(expectedText), Is.True);
         }
 
-        [When(@"I delete ""(.*)"" and ""(.*)""")]
+        [Then(@"I delete ""(.*)"" and ""(.*)""")]
         public void DeleteSpecificColors(string color1, string color2)
         {
             var input = driver.FindElement(By.Id("autoCompleteMultipleInput"));
@@ -116,7 +117,7 @@ namespace SpecFlowPracticeTask.StepDefinitions
             }
         }
 
-        [Then(@"I should see only ""(.*)"" ""(.*)"" and ""(.*)"" in the field")]
+        [Then(@"I should see only ""(.*)"", ""(.*)"", and ""(.*)"" in the field")]
         public void VerifySpecificColorsRemaining(string color1, string color2, string color3)
         {
             var input = driver.FindElement(By.Id("autoCompleteMultipleInput"));

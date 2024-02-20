@@ -7,6 +7,7 @@ using SeleniumExtras.WaitHelpers;
 
 namespace SpecFlowPracticeTask.StepDefinitions
 {
+    [Binding]
     public class PracticeFormSteps
     {
         private readonly WebDriver driver;
@@ -21,8 +22,9 @@ namespace SpecFlowPracticeTask.StepDefinitions
             this.driver = driver;
         }
 
+        [Given(@"I am on the DemoQA page ""(.*)""")]
         [Given(@"I navigate to the ""Forms"" category and ""Practice Form"" section")]
-        public void NavigateToPracticeForm()
+        public void NavigateToPracticeForm(string url)
         {
             driver.Navigate().GoToUrl("https://demoqa.com/forms");
             driver.FindElement(By.LinkText("Practice Form")).Click();
@@ -73,35 +75,38 @@ namespace SpecFlowPracticeTask.StepDefinitions
             driver.FindElement(By.XPath("//option[text()='Merrut']")).Click();
         }
 
-        [When(@"I submit the form")]
+        [Then(@"I submit the form")]
         public void SubmitFrom()
         {
             driver.FindElement(By.Id("submit")).Click();
         }
-        [Then(@"I should see the modal with submitted data matching my input")]
+        [Then(@"I should see the model with submitted data matching my input")]
         public void VerifySubmittedData()
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
             wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.Id("example-modal-sizes-title-lg")));
 
-            Assert.That(firstName, Is.EqualTo(driver.FindElement(By.Id("firstName")).Text));
-            Assert.That(lastName, Is.EqualTo(driver.FindElement(By.Id("lastName")).Text));
-            Assert.That(userEmail, Is.EqualTo(driver.FindElement(By.Id("userEmail")).Text));
-            Assert.That(userAddress, Is.EqualTo(driver.FindElement(By.Id("userAddress")).Text));
-            Assert.That(userPhone, Is.EqualTo(driver.FindElement(By.Id("userPhone")).Text));
+            Assert.Multiple(() =>
+            {
+                Assert.That(firstName, Is.EqualTo(driver.FindElement(By.Id("firstName")).Text));
+                Assert.That(lastName, Is.EqualTo(driver.FindElement(By.Id("lastName")).Text));
+                Assert.That(userEmail, Is.EqualTo(driver.FindElement(By.Id("userEmail")).Text));
+                Assert.That(userAddress, Is.EqualTo(driver.FindElement(By.Id("userAddress")).Text));
+                Assert.That(userPhone, Is.EqualTo(driver.FindElement(By.Id("userPhone")).Text));
+            });
 
             bool isFemaleSelected = driver.FindElement(By.CssSelector("[for='gender-female'] input")).Selected;
-            Assert.IsTrue(isFemaleSelected);
+            Assert.That(isFemaleSelected, Is.True);
 
             Assert.That(driver.FindElement(By.CssSelector("dateOfBirthInput")).GetAttribute("value"), Is.EqualTo("200-01-10"));
 
             var selectSubjects = driver.FindElements(By.CssSelector(".mb-3:nth-child(3) label span[class='checkmark checked']"));
             var expectedSubjects = new List<string> { "Physics", "Maths" };
-            Assert.True(selectSubjects.Select(s => s.Text).All(s => expectedSubjects.Contains(s)));
+            Assert.That(selectSubjects.Select(s => s.Text).All(s => expectedSubjects.Contains(s)), Is.True);
 
             var selectedHobbies = driver.FindElements(By.CssSelector(".mb-3:nth-child(4) label span[class='checkmark checked']"));
             var expectedHobbies = new List<string> { "Reading", "Music" };
-            Assert.True(selectedHobbies.Select(s => s.Text).All(s => expectedHobbies.Contains(s)));
+            Assert.That(selectedHobbies.Select(s => s.Text).All(s => expectedHobbies.Contains(s)), Is.True);
 
             Assert.That(driver.FindElement(By.Id("state")).Text, Is.EqualTo("Uttar Pradesh"));
             Assert.That(driver.FindElement(By.Id("city")).Text, Is.EqualTo("Merrut"));

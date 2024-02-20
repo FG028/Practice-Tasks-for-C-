@@ -1,11 +1,11 @@
 ﻿Feature: Interact with form elements on DemoQA
 
-Background:
-  Given I am on the DemoQA page "https://demoqa.com/"
+Background: 
+    Given I am on the DemoQA page "https://demoqa.com/"
 
 Scenario: Fill TextBox form, submit, and verify displayed data
-    Given I am on the DemoQA page "https://demoqa.com/"
-    And I navigate to the "Elements" category and "Text Box" section
+    Given I am on the DemoQA page "https://demoqa.com/text-box/"
+        And I navigate to the "Elements" category and "Text Box" section
     When I enter the following data:
       | Field        | Value                                    |
       |--------------|------------------------------------------|
@@ -13,7 +13,7 @@ Scenario: Fill TextBox form, submit, and verify displayed data
       | Email       | john.doe@example.com                       |
       | Current Address | 123 Main Street, Anytown, USA 12345      |
       | Permanent Address | Same as Current Address                |
-    And I click on the "Submit" button
+        And I click on the "Submit" button
     Then I should see the submitted data displayed in the table
       | Field        | Value                                    |
       |--------------|------------------------------------------|
@@ -22,29 +22,27 @@ Scenario: Fill TextBox form, submit, and verify displayed data
       | Current Address | 123 Main Street, Anytown, USA 12345      |
       | Permanent Address | Same as Current Address                |
 
-Scenario: Select specific Check Boxes and verify output
-    Given I am on the DemoQA page "https://demoqa.com/"
-    And I navigate to the "Elements" category and "Check Box" section
-    When I expand the "Home" folder
-    And I select the "Desktop" folder without expanding it
-    And I select "Angular" and "Veu" from the "WorkSpace" folder
-    And I expand the "Office" folder and click on each item in the folder
-    And I expand the "Downloads" folder and select the whole folder
+Scenario: Expand and Select Folders
+    Given I navigate to the "https://demoqa.com/checkbox" website
+    When I expand the "Home" folder and select the "Desktop" folder
+    Then I select "Angular" and "Veu" from the "WorkSpace" folder
+    Then I expand the "Office" folder and click on each item
+    Then I expand the "Downloads" folder and select the entire folder
     Then I should see the output "You have selected : desktop notes commands angular veu office public private classified general downloads wordFile excelFile"
 
 Scenario: Sort and delete row in Web Tables
-    Given I am on the DemoQA page "https://demoqa.com/"
-    And I navigate to the "Elements" category and "Web Tables" section
+    Given I am on the DemoQA page "https://demoqa.com/webtables"
+        And I navigate to the "Elements" category and "Web Tables" section
     When I click on the "Salary" column header
     Then I should see the values in the "Salary" column are in ascending order
-    When I delete the second row (name Alden)
+    Then I delete the second row (name Alden)
     Then I should see there are only two rows left in the table
-    And I should not see the value "Compliance" among the values in the "Department" column
+        And I should not see the value "Compliance" among the values in the "Department" column
 
 Scenario: Interact with Buttons using Scenario Outline (choose one example)
     Scenario Outline: Perform various clicks on buttons
-        Given I am on the DemoQA page "https://demoqa.com/"
-        And I navigate to the "Elements" category and "Buttons" section
+        Given I am on the DemoQA page "https://demoqa.com/buttons"
+            And I navigate to the "Elements" category and "Buttons" section
         When I interact with the "<button_name>" button
         Then I should see the text "<expected_message>"
 
