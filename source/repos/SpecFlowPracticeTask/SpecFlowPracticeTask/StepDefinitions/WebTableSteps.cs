@@ -18,14 +18,18 @@ namespace SpecFlowPracticeTask.StepDefinitions
         }
 
         [Given(@"I am on the DemoQA page ""(.*)""")]
-        [Given(@"I navigate to the ""Elements"" category and ""Web Tables"" section")]
-        public void NavigateToWebTablesSection(string url)
+        public void NavigateToDemoQA(string url)
         {
-            driver.Navigate().GoToUrl("https://demoqa.com/webtables");
-            driver.FindElement(By.XPath("//h5[text()='Browser Windows']")).Click();
+            url = "https://demoqa.com/auto-complete";
+            driver.Navigate().GoToUrl(url);
         }
 
-        [Given(@"I click on the ""(.*)"" column header")]
+        [Given(@"I navigate to the ""Elements"" category and ""Web Tables"" section")]
+        public void NavigateToAutoCompleteSection()
+        {
+            driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[1]/div/ul/li[4]")).Click();
+        }
+
         [When(@"I click on the ""(.*)"" column header")]
         public void ClickColumnHeader(string columnName)
         {

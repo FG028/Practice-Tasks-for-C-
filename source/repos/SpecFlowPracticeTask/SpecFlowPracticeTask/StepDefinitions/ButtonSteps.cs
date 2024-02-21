@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
+using System.Xml.Linq;
 using TechTalk.SpecFlow;
 
 namespace SpecFlowPracticeTask.StepDefinitions
@@ -16,11 +17,16 @@ namespace SpecFlowPracticeTask.StepDefinitions
         }
 
         [Given(@"I am on the DemoQA page ""(.*)""")]
-        [Given(@"I navigate to the ""(.*)"" category and ""(.*)"" section")]
-        public void NavigateToWebTablesSection(string url)
+        public void NavigateToDemoQA(string url)
         {
-            driver.Navigate().GoToUrl("https://demoqa.com/elements");
-            driver.FindElement(By.XPath("//*[@id=\"item-4\"]/span")).Click();
+            url = "https://demoqa.com/buttons";
+            driver.Navigate().GoToUrl(url);
+        }
+
+        [Given(@"I navigate to the ""Elements"" category and ""Buttons"" section")]
+        public void NavigateToAutoCompleteSection(string url)
+        {
+            driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[1]/div/ul/li[5]")).Click();
         }
 
         [When(@"I interact with the ""(.*)"" button")]

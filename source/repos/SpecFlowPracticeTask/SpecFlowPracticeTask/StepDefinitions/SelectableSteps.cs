@@ -17,10 +17,16 @@ namespace SpecFlowPracticeTask.StepDefinitions
         }
 
         [Given(@"I am on the DemoQA page ""(.*)""")]
-        [Given(@"I navigate to the ""Interactions"" category and ""Selectable"" section")]
-        public void NavigateToSelectableSection(string url)
+        public void NavigateToDemoQA(string url)
         {
-            driver.Navigate().GoToUrl("https://demoqa.com/selectable");
+            url = "https://demoqa.com/selectable";
+            driver.Navigate().GoToUrl(url);
+        }
+
+        [Given(@"I navigate to the ""Interactions"" category and ""Selectable"" section")]
+        public void NavigateToAutoCompleteSection(string url)
+        {
+            driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[5]/div/ul/li[2]")).Click();
         }
 
         [Given(@"I switch to the ""Grid"" tab")]

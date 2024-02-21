@@ -23,7 +23,7 @@ Scenario: 1.1. Fill TextBox form, submit, and verify displayed data
       | Permanent Address | Same as Current Address                |
 
 Scenario: 1.2. Expand and Select Folders
-    Given I navigate to the "https://demoqa.com/checkbox" website
+    Given I am on the DemoQA page "https://demoqa.com/heckbox"
         And I navigate to the "Elements" category and "Check Box" section
     When I expand the "Home" folder and select the "Desktop" folder
     Then I select "Angular" and "Veu" from the "WorkSpace" folder

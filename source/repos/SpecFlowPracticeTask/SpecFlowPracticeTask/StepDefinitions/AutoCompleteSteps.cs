@@ -18,10 +18,16 @@ namespace SpecFlowPracticeTask.StepDefinitions
         }
 
         [Given(@"I am on the DemoQA page ""(.*)""")]
-        [Given(@"I navigate to the ""Forms"" category and "" Auto Complete"" section")]
+        public void NavigateToDemoQA(string url)
+        {
+            url = "https://demoqa.com/auto-complete";
+            driver.Navigate().GoToUrl(url);
+        }
+
+        [Given(@"I navigate to the ""Widgets"" category and ""Auto Complete"" section")]
         public void NavigateToAutoCompleteSection(string url)
         {
-            driver.Navigate().GoToUrl("https://demoqa.com/auto-complete");
+            driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[4]/div/ul/li[2]")).Click();
         }
 
         [When(@"I enter the letter ""(.*)"" in the ""Type multiple color names"" field")]

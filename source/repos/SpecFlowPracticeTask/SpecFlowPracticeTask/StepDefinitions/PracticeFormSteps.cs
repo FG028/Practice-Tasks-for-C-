@@ -4,6 +4,7 @@ using OpenQA.Selenium.Support.UI;
 using TechTalk.SpecFlow;
 using Bogus;
 using SeleniumExtras.WaitHelpers;
+using static System.Net.WebRequestMethods;
 
 namespace SpecFlowPracticeTask.StepDefinitions
 {
@@ -23,11 +24,16 @@ namespace SpecFlowPracticeTask.StepDefinitions
         }
 
         [Given(@"I am on the DemoQA page ""(.*)""")]
-        [Given(@"I navigate to the ""Forms"" category and ""Practice Form"" section")]
-        public void NavigateToPracticeForm(string url)
+        public void NavigateToDemoQA(string url)
         {
-            driver.Navigate().GoToUrl("https://demoqa.com/forms");
-            driver.FindElement(By.LinkText("Practice Form")).Click();
+            url = "https://demoqa.com/automation-practice-form";
+            driver.Navigate().GoToUrl(url);
+        }
+
+        [Given(@"I navigate to the ""Forms"" category and ""Practice Form"" section")]
+        public void NavigateToAutoCompleteSection(string url)
+        {
+            driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[2]/div/ul/li")).Click();
         }
 
         [When(@"I fill the form with random data")]

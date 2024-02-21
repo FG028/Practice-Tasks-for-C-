@@ -17,10 +17,16 @@ public class TextBoxSteps
     }
 
     [Given(@"I am on the DemoQA page ""(.*)""")]
-    [Given(@"I navigate to the ""Elements"" category and ""Text Box"" section")]
-    public void NavigateToTextBoxSection(string url)
+    public void NavigateToDemoQA(string url)
     {
-        driver.Navigate().GoToUrl("https://demoqa.com/text-box");
+        url = "https://demoqa.com/text-box";
+        driver.Navigate().GoToUrl(url);
+    }
+
+    [Given(@"I navigate to the ""Elements"" category and ""Text Box"" section")]
+    public void NavigateToAutoCompleteSection(string url)
+    {
+        driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[1]/div/ul/li[1]")).Click();
     }
 
     [When(@"I enter the following data:")]

@@ -16,10 +16,16 @@ public class CheckBoxSteps
     }
 
     [Given(@"I am on the DemoQA page ""(.*)""")]
-    [Given(@"I navigate to the ""Alerts, Frame & Windows"" category and ""Browser Windows"" section")]
-    public void NavigateToBrowserWindowsSection(string url)
+    public void NavigateToDemoQA(string url)
     {
-        driver.Navigate().GoToUrl("https://demoqa.com/checkbox");
+        url = "https://demoqa.com/checkbox";
+        driver.Navigate().GoToUrl(url);
+    }
+
+    [Given(@"I navigate to the ""Elements"" category and ""Check Box"" section")]
+    public void NavigateToAutoCompleteSection(string url)
+    {
+        driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[1]/div/ul/li[2]")).Click();
     }
 
     [When(@"I expand the ""(.*)"" folder and select the ""(.*)"" folder")]
