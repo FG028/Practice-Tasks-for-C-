@@ -16,50 +16,11 @@ public class CheckBoxSteps
     }
 
     [Given(@"I am on the DemoQA page ""(.*)""")]
-    [Given(@"I navigate to the ""Elements"" category and ""Check Box"" section")]
-    public void NavigateToCheckBoxSection(string url)
+    [Given(@"I navigate to the ""Alerts, Frame & Windows"" category and ""Browser Windows"" section")]
+    public void NavigateToBrowserWindowsSection(string url)
     {
-        driver.Navigate().GoToUrl(url);
+        driver.Navigate().GoToUrl("https://demoqa.com/checkbox");
     }
-
-    /*[When(@"I expand the ""(.*)"" folder")]
-    public void ExpandFolder(string folderName)
-    {
-        driver.FindElement(By.XPath($"//label[text()='{folderName}']//input[@type='checkbox']")).Click();
-    }
-
-    [Then(@"I select the ""(.*)"" folder without expanding it")]
-    public void SelectItemsFromFolder(string folderName)
-    {
-        driver.FindElement(By.XPath($"//label[text()='{folderName}']//input[@type='checkbox']")).Click();
-    }
-
-    [Then(@"I select ""(.*)"" and ""(.*)"" from the ""(.*)"" folder")]
-    public void SelectItemsFromFolder(string item1, string item2, string folderName)
-    {
-        ExpandFolder(folderName);
-        driver.FindElement(By.XPath($"//label[text()='{folderName}']//label[text()='{item1}']//input")).Click();
-        driver.FindElement(By.XPath($"//label[text()='{folderName}']//label[text()='{item2}']//input")).Click();
-    }
-
-    [Then(@"I expand the ""(.*)"" folder and click on each item in the folder")]
-    public void ClickAllItemsInFolder(string folderName)
-    {
-        ExpandFolder(folderName);
-        var options = driver.FindElements(By.XPath($"//label[text()='{folderName}']//input[@type='checkbox']"));
-        foreach (var option in options)
-        {
-            option.Click();
-        }
-    }
-
-    [Then(@"I expand the ""(.*)"" folder and select the whole folder")]
-    public void SelectEntireFolder(string folderName)
-    {
-        ExpandFolder(folderName);
-        driver.FindElement(By.XPath($"//label[text()='{folderName}']//input[@type='checkbox']")).Click();
-    }
-    */
 
     [When(@"I expand the ""(.*)"" folder and select the ""(.*)"" folder")]
     public void WhenIExpandTheFolderAndSelectTheFolder(string parentFolder, string childFolder)
