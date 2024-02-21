@@ -17,15 +17,15 @@ namespace SpecFlowPracticeTask.StepDefinitions
             this.driver = driver;
         }
 
-        [Given(@"I am on the DemoQA page ""(.*)""")]
-        public void NavigateToDemoQA(string url)
+        [Given(@"I am on the DemoQA page ""https://demoqa.com/auto-complete""")]
+        public void NavigateToDemoQA()
         {
-            url = "https://demoqa.com/auto-complete";
+            string url = "https://demoqa.com/auto-complete";
             driver.Navigate().GoToUrl(url);
         }
 
         [Given(@"I navigate to the ""Widgets"" category and ""Auto Complete"" section")]
-        public void NavigateToAutoCompleteSection(string url)
+        public void NavigateToAutoCompleteSection()
         {
             driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[4]/div/ul/li[2]")).Click();
         }

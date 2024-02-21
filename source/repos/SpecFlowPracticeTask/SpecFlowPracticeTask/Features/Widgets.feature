@@ -1,8 +1,5 @@
 ﻿Feature: Interact with interactive widgets on DemoQA
 
-Background: 
-    Given I am on the DemoQA page "https://demoqa.com/"
-
 Scenario: 3.1. Verify Auto Complete suggestions for letter 'g'
     Given I am on the DemoQA page "https://demoqa.com/auto-complete"
         And I navigate to the "Widgets" category and "Auto Complete" section
@@ -20,4 +17,4 @@ Scenario: 3.2. Start, wait, reset, and verify progress bar
         And I verify that the button text becomes "Reset"
     Then I click the "Reset" button
         And I verify that the button text becomes "Start"
-        And I verify that the progress bar value is 0%
+        And I verify that the progress bar value is "0"%

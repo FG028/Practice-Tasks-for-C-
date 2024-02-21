@@ -17,10 +17,10 @@ namespace SpecFlowPracticeTask.StepDefinitions
             this.driver = driver;
         }
 
-        [Given(@"I am on the DemoQA page ""(.*)""")]
-        public void NavigateToDemoQA(string url)
+        [Given(@"I am on the DemoQA page ""https://demoqa.com/webtables""")]
+        public void NavigateToDemoQA()
         {
-            url = "https://demoqa.com/auto-complete";
+            string url = "https://demoqa.com/webtables";
             driver.Navigate().GoToUrl(url);
         }
 
@@ -55,7 +55,7 @@ namespace SpecFlowPracticeTask.StepDefinitions
             }
         }
 
-        [Then(@"I delete the second row (name Alden)")]
+        [Then(@"I delete the second row name Alden")]
         public void DeleteSecondRow()
         {
             var table = driver.FindElement(By.XPath("//table[@id='webtables']"));

@@ -15,15 +15,15 @@ public class CheckBoxSteps
         this.driver = driver;
     }
 
-    [Given(@"I am on the DemoQA page ""(.*)""")]
-    public void NavigateToDemoQA(string url)
+    [Given(@"I am on the DemoQA page ""https://demoqa.com/checkbox""")]
+    public void NavigateToDemoQA()
     {
-        url = "https://demoqa.com/checkbox";
+        string url = "https://demoqa.com/checkbox";
         driver.Navigate().GoToUrl(url);
     }
 
     [Given(@"I navigate to the ""Elements"" category and ""Check Box"" section")]
-    public void NavigateToAutoCompleteSection(string url)
+    public void NavigateToAutoCompleteSection()
     {
         driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[1]/div/ul/li[2]")).Click();
     }

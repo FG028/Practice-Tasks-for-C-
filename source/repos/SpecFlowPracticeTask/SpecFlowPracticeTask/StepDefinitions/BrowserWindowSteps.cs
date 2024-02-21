@@ -18,10 +18,10 @@ namespace SpecFlowPracticeTask.StepDefinitions
             this.driver = driver;
         }
 
-        [Given(@"I am on the DemoQA page ""(.*)""")]
-        public void NavigateToSpecificPage(string url)
+        [Given(@"I am on the DemoQA page ""https://demoqa.com/browser-windows""")]
+        public void NavigateToSpecificPage()
         {
-            url = "https://demoqa.com/browser-windows";
+            string url = "https://demoqa.com/browser-windows";
             driver.Navigate().GoToUrl(url);
         }
 
@@ -43,7 +43,7 @@ namespace SpecFlowPracticeTask.StepDefinitions
             button.Click();
         }
 
-        [Then(@"A new ""<window_type>"" should be loaded and ""<expected_content>"" should be displayed")]
+        [Then(@"A new ""(.*)"" should be loaded")]
         public void VerifyWindowLoaded(string windowsType)
         {
             if (windowsType == "tab")

@@ -1,11 +1,8 @@
 ﻿Feature: Interact with form elements on DemoQA
 
-Background: 
-    Given I am on the DemoQA page "https://demoqa.com/"
-
 Scenario: 1.1. Fill TextBox form, submit, and verify displayed data
-    Given I am on the DemoQA page "https://demoqa.com/text-box/"
-        And I navigate to the "Elements" category and "Text Box" section
+    Given I am on the DemoQA page "https://demoqa.com/text-box"
+        And  I navigate to the "Elements" category and "Text Box" section
     When I enter the following data:
       | Field        | Value                                    |
       |--------------|------------------------------------------|
@@ -23,8 +20,8 @@ Scenario: 1.1. Fill TextBox form, submit, and verify displayed data
       | Permanent Address | Same as Current Address                |
 
 Scenario: 1.2. Expand and Select Folders
-    Given I am on the DemoQA page "https://demoqa.com/heckbox"
-        And I navigate to the "Elements" category and "Check Box" section
+    Given I am on the DemoQA page "https://demoqa.com/checkbox"
+        And  I navigate to the "Elements" category and "Check Box" section
     When I expand the "Home" folder and select the "Desktop" folder
     Then I select "Angular" and "Veu" from the "WorkSpace" folder
     Then I expand the "Office" folder and click on each item
@@ -36,7 +33,7 @@ Scenario: 1.3. Sort and delete row in Web Tables
         And I navigate to the "Elements" category and "Web Tables" section
     When I click on the "Salary" column header
     Then I should see the values in the "Salary" column are in ascending order
-    Then I delete the second row (name Alden)
+    Then I delete the second row name Alden
     Then I should see there are only two rows left in the table
         And I should not see the value "Compliance" among the values in the "Department" column
 

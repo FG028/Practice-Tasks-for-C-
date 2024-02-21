@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
-using System.Xml.Linq;
 using TechTalk.SpecFlow;
 
 namespace SpecFlowPracticeTask.StepDefinitions
@@ -16,15 +15,15 @@ namespace SpecFlowPracticeTask.StepDefinitions
             this.driver = driver;
         }
 
-        [Given(@"I am on the DemoQA page ""(.*)""")]
-        public void NavigateToDemoQA(string url)
+        [Given(@"I am on the DemoQA page ""https://demoqa.com/buttons""")]
+        public void NavigateToDemoQA()
         {
-            url = "https://demoqa.com/buttons";
+            string url = "https://demoqa.com/buttons";
             driver.Navigate().GoToUrl(url);
         }
 
         [Given(@"I navigate to the ""Elements"" category and ""Buttons"" section")]
-        public void NavigateToAutoCompleteSection(string url)
+        public void NavigateToAutoCompleteSection()
         {
             driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[1]/div/ul/li[5]")).Click();
         }
