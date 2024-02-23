@@ -28,17 +28,21 @@ public class CheckBoxSteps
         driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[1]/div/ul/li[2]")).Click();
     }
 
-    [When(@"I expand the ""(.*)"" folder and select the ""(.*)"" folder")]
-    public void WhenIExpandTheFolderAndSelectTheFolder(string parentFolder, string childFolder)
+    [When(@"I expand the Home folder")]
+    public void WhenIExpandTheHomeFolder()
     {
-        var parentElement = driver.FindElement(By.Name(parentFolder));
-        parentElement.Click();
-
-        var childElement = driver.FindElement(By.Name(childFolder));
+        var parentElement = driver.FindElement(By.Name("Home"));
+        parentElement.Click();        
+    }
+    
+    [Then(@"I select the Desktop folder")]
+    public void WhenISelectTheDesktopFolder()
+    {
+        var childElement = driver.FindElement(By.XPath("//*[@id=\"tree-node\"]/ol/li/ol/li[1]/span/label"));
         childElement.Click();
     }
 
-    [Then(@"I select ""(.*)"" and ""(.*)"" from the ""(.*)"" folder")]
+    [Given(@"I select ""(.*)"" and ""(.*)"" from the ""(.*)"" folder")]
     public void WhenISelectAndFromTheFolder(string item1, string item2, string folder)
     {
         var folderElement = driver.FindElement(By.Name(folder));
@@ -49,12 +53,17 @@ public class CheckBoxSteps
         item2Element.Click();
     }
 
-    [Then(@"I expand the ""(.*)"" folder and click on each item")]
-    public void WhenIExpandTheFolderAndClickOnEachItem(string folder)
+    [Then(@"I expand the Office folder")]
+    public void WhenIExpandTheOfficeFolder()
     {
-        var folderElement = driver.FindElement(By.Name(folder));
+        var folderElement = driver.FindElement(By.Name("Office"));
         folderElement.Click();
+    }
 
+    [Then(@"I click on each item")]
+    public void WhenIClickOnEachItem() 
+    {
+        var folderElement = driver.FindElement(By.CssSelector("#tree-node > ol > li > ol > li:nth-child(2) > ol > li.rct-node.rct-node-parent.rct-node-expanded > span > label > span.rct-checkbox > svg"));
         var itemElements = folderElement.FindElements(By.TagName("label"));
         foreach (var item in itemElements)
         {
@@ -62,12 +71,17 @@ public class CheckBoxSteps
         }
     }
 
-    [Then(@"I expand the ""(.*)"" folder and select the entire folder")]
-    public void WhenIExpandTheFolderAndSelectTheEntireFolder(string folder)
+    [Then(@"I expand the Downloads folder")]
+    public void WhenIExpandTheDownloadsFolder()
     {
-        var folderElement = driver.FindElement(By.Name(folder));
+        var folderElement = driver.FindElement(By.Name("Downloads"));
         folderElement.Click();
+    }
 
+    [Then(@"I select the entire folder")]
+    public void WhenISelectTheEntireFolder()
+    {
+        var folderElement = driver.FindElement(By.Name("Downloads"));
         var checkboxElement = folderElement.FindElement(By.XPath("//input[@type='checkbox']"));
         checkboxElement.Click();
     }

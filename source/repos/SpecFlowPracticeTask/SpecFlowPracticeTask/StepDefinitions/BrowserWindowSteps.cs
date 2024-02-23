@@ -1,9 +1,4 @@
-﻿using NUnit.Framework;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.DevTools.V119.Network;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
+﻿using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 
 namespace SpecFlowPracticeTask.StepDefinitions

@@ -1,8 +1,6 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
 using System.Data;
-using OpenQA.Selenium.Support.UI;
-using System.Linq;
 using TechTalk.SpecFlow;
 
 namespace SpecFlowPracticeTask.StepDefinitions

@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <Folder Include="Drivers\" />
-    <Folder Include="Pages\" />
+    <Folder Include="NewFolder\" />
     <Folder Include="Support\" />
   </ItemGroup>
 
