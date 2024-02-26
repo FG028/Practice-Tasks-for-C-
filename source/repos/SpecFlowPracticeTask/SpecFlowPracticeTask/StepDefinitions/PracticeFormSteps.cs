@@ -1,122 +1,105 @@
-﻿using NUnit.Framework;
+﻿using TechTalk.SpecFlow;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using TechTalk.SpecFlow;
-using Bogus;
 using SeleniumExtras.WaitHelpers;
+using SpecFlowPracticeTask.POM;
 
-namespace SpecFlowPracticeTask.StepDefinitions
+[Binding]
+public class PracticeFormSteps
 {
-    [Binding]
-    public class PracticeFormSteps
+    private readonly PracticeFormPage practiceFormPage;
+    private readonly IWebDriver driver;
+    private string firstName;
+    private string lastName;
+    private string userEmail;
+    private string userAddress;
+    private string userPhone;
+
+    public PracticeFormSteps(IWebDriver driver)
     {
-        private readonly WebDriver driver;
-        private string firstName;
-        private string lastName;
-        private string userEmail;
-        private string userAddress;
-        private string userPhone;
+        this.driver = driver;
+        practiceFormPage = new PracticeFormPage(driver);
+    }
 
-        public PracticeFormSteps(WebDriver driver)
+    [Given(@"I am on the DemoQA page ""https://demoqa.com/automation-practice-form""")]
+    public void NavigateToDemoQA()
+    {
+        driver.Navigate();
+    }
+
+    [Given(@"I navigate to the ""Forms"" category and ""Practice Form"" section")]
+    public void NavigateToAutoCompleteSection()
+    {
+        practiceFormPage.NavigateToAutoCompleteSection();
+    }
+
+    [When(@"I fill the form with random data")]
+    public void FillFormWithRandomData()
+    {
+        var faker = new Bogus.Faker();
+
+        firstName = faker.Name.FirstName();
+        lastName = faker.Name.LastName();
+        userEmail = $"{firstName}.{lastName}@example.com";
+        userAddress = faker.Address.StreetAddress();
+        userPhone = faker.Phone.PhoneNumber();
+
+        practiceFormPage.FillForm(firstName, lastName, userEmail, userAddress, userPhone);
+
+        practiceFormPage.SelectGender(faker.Random.Bool());
+        practiceFormPage.SetDateOfBirth("2000-01-10");
+
+        practiceFormPage.SelectSubjects(new[] { "Physics", "Maths" });
+        practiceFormPage.SelectHobbies(new[] { "Reading", "Music" });
+
+        practiceFormPage.SelectState("Uttar Pradesh");
+        practiceFormPage.SelectCity("Merrut");
+    }
+
+    [Then(@"I submit the form")]
+    public void SubmitForm()
+    {
+        practiceFormPage.SubmitButton.Click();
+    }
+
+    [Then(@"I should see the model with submitted data matching my input")]
+    public void VerifySubmittedData()
+    {
+        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+        wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.Id("example-modal-sizes-title-lg")));
+
+        Assert.Multiple(() =>
         {
-            this.driver = driver;
-        }
+            Assert.That(firstName, Is.EqualTo(practiceFormPage.FirstNameInput.Text));
+            Assert.That(lastName, Is.EqualTo(practiceFormPage.LastNameInput.Text));
+            Assert.That(userEmail, Is.EqualTo(practiceFormPage.UserEmailInput.Text));
+            Assert.That(userAddress, Is.EqualTo(practiceFormPage.UserAddressInput.Text));
+            Assert.That(userPhone, Is.EqualTo(practiceFormPage.UserPhoneInput.Text));
 
-        [Given(@"I am on the DemoQA page ""https://demoqa.com/automation-practice-form""")]
-        public void NavigateToDemoQA()
-        {
-            string url = "https://demoqa.com/automation-practice-form";
-            driver.Navigate().GoToUrl(url);
-        }
+            var isFemaleSelected = practiceFormPage.FemaleGenderRadio.Selected;
+            Assert.That(isFemaleSelected || !practiceFormPage.MaleGenderRadio.Selected);
 
-        [Given(@"I navigate to the ""Forms"" category and ""Practice Form"" section")]
-        public void NavigateToAutoCompleteSection()
-        {
-            driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[2]/div/ul/li")).Click();
-        }
+            Assert.That(practiceFormPage.DateOfBirthInput.GetAttribute("value"), Is.EqualTo("2000-01-10"));
 
-        [When(@"I fill the form with random data")]
-        public void FillFormWithRandomData()
-        {
-            var faker = new Bogus.Faker();
+            var selectedSubjects = practiceFormPage.SubjectCheckBoxes
+                .Where(x => x.Selected)
+                .Select(x => x.GetAttribute("value"))
+                .ToList();
+            Assert.That(selectedSubjects, Is.EquivalentTo(new[] { "Physics", "Maths" }));
 
-            string firstName = faker.Name.FirstName();
-            string lastName = faker.Name.LastName();
-            string userEmail = $"{firstName}.{lastName}@example.com";
-            string userAddress = faker.Address.StreetAddress();
-            string userPhone = faker.Phone.PhoneNumber();
+            var selectedHobbies = practiceFormPage.HobbyCheckBoxes
+                .Where(x => x.Selected)
+                .Select(x => x.GetAttribute("values"))
+                .ToList();
+            Assert.That(selectedHobbies, Is.EquivalentTo(new[] { "Reading", "Music" }));
 
-            driver.FindElement(By.Id("firstName")).SendKeys(firstName);
-            driver.FindElement(By.Id("lastName")).SendKeys(lastName);
-            driver.FindElement(By.Id("userEmail")).SendKeys(userEmail);
-            driver.FindElement(By.Id("userAddress")).SendKeys(userAddress);
-            driver.FindElement(By.Id("userNumber")).SendKeys(userPhone);
+            var stateSelectElement = new SelectElement(practiceFormPage.StateDropDown);
+            var citySelectElement = new SelectElement(practiceFormPage.CityDropDown);
+            Assert.That(stateSelectElement.SelectedOption.Text, Is.EqualTo("Uttar Pradesh"));
+            Assert.That(citySelectElement.SelectedOption.Text, Is.EqualTo("Merrut"));
+        });
 
-            var genderField = driver.FindElement(By.CssSelector("[for='gender-female'] input"));
-            genderField.Click();
-
-            driver.FindElement(By.Id("dateOfBirthInput")).SendKeys("2000-01-10");
-
-            var subjectFields = driver.FindElements(By.CssSelector("[name='subjects'] input"));
-            foreach (var field in subjectFields)
-                if (field.GetAttribute("value").Contains("Physics") || field.GetAttribute("value").Contains("Maths"))
-                {
-                    field.Click();
-                }
-
-            var hobbiesFields = driver.FindElements(By.CssSelector("[name='hobbies] input"));
-            foreach (var field in hobbiesFields)
-            {
-                if (field.GetAttribute("values").Contains("Reading") || field.GetAttribute("values").Contains("Music"))
-                {
-                    field.Click();
-                }
-            }
-
-            driver.FindElement(By.Id("state")).Click();
-            driver.FindElement(By.XPath("//option[text()='Uttar Pradesh']")).Click();
-
-            driver.FindElement(By.Id("city")).Click();
-            driver.FindElement(By.XPath("//option[text()='Merrut']")).Click();
-        }
-
-        [Then(@"I submit the form")]
-        public void SubmitFrom()
-        {
-            driver.FindElement(By.Id("submit")).Click();
-        }
-        [Then(@"I should see the model with submitted data matching my input")]
-        public void VerifySubmittedData()
-        {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-            wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.Id("example-modal-sizes-title-lg")));
-
-            Assert.Multiple(() =>
-            {
-                Assert.That(firstName, Is.EqualTo(driver.FindElement(By.Id("firstName")).Text));
-                Assert.That(lastName, Is.EqualTo(driver.FindElement(By.Id("lastName")).Text));
-                Assert.That(userEmail, Is.EqualTo(driver.FindElement(By.Id("userEmail")).Text));
-                Assert.That(userAddress, Is.EqualTo(driver.FindElement(By.Id("userAddress")).Text));
-                Assert.That(userPhone, Is.EqualTo(driver.FindElement(By.Id("userPhone")).Text));
-            });
-
-            bool isFemaleSelected = driver.FindElement(By.CssSelector("[for='gender-female'] input")).Selected;
-            Assert.That(isFemaleSelected, Is.True);
-
-            Assert.That(driver.FindElement(By.CssSelector("dateOfBirthInput")).GetAttribute("value"), Is.EqualTo("200-01-10"));
-
-            var selectSubjects = driver.FindElements(By.CssSelector(".mb-3:nth-child(3) label span[class='checkmark checked']"));
-            var expectedSubjects = new List<string> { "Physics", "Maths" };
-            Assert.That(selectSubjects.Select(s => s.Text).All(s => expectedSubjects.Contains(s)), Is.True);
-
-            var selectedHobbies = driver.FindElements(By.CssSelector(".mb-3:nth-child(4) label span[class='checkmark checked']"));
-            var expectedHobbies = new List<string> { "Reading", "Music" };
-            Assert.That(selectedHobbies.Select(s => s.Text).All(s => expectedHobbies.Contains(s)), Is.True);
-
-            Assert.That(driver.FindElement(By.Id("state")).Text, Is.EqualTo("Uttar Pradesh"));
-            Assert.That(driver.FindElement(By.Id("city")).Text, Is.EqualTo("Merrut"));
-
-            driver.FindElement(By.Id("closeLargeModel")).Click();
-        }
+        practiceFormPage.CloseModalButton.Click();
     }
 }

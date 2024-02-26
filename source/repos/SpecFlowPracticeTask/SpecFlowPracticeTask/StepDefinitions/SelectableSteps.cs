@@ -1,81 +1,60 @@
-﻿using NUnit.Framework;
+﻿using TechTalk.SpecFlow;
+using NUnit.Framework;
 using OpenQA.Selenium;
-using TechTalk.SpecFlow;
-using OpenQA.Selenium.Interactions;
-using System;
+using SpecFlowPracticeTask.POM;
 
-namespace SpecFlowPracticeTask.StepDefinitions
+[Binding]
+public class SelectableSteps
 {
-    [Binding]
-    public class SelectableSteps
+    private readonly SelectablePage selectablePage;
+    private readonly IWebDriver driver;
+
+    public SelectableSteps(IWebDriver driver)
     {
-        private readonly WebDriver driver;
+        this.driver = driver;
+        selectablePage = new SelectablePage(driver);
+    }
 
-        public SelectableSteps(WebDriver driver)
+    [Given(@"I am on the DemoQA Test Automation page ""https://demoqa.com/selectable""")]
+    public void NavigateToDemoQA()
+    {
+        selectablePage.NavigateToPage();
+    }
+
+    [Given(@"I navigate to the ""Interactions"" category and ""Selectable"" section")]
+    public void NavigateToAutoCompleteSection()
+    {
+        selectablePage.NavigateToAutoCompleteSection();
+    }
+
+    [Given(@"I switch to the ""Grid"" tab")]
+    public void SwitchToGridTab()
+    {
+        selectablePage.GridTab.Click();
+    }
+
+    [When(@"I select squares (.*), (.*), (.*), (.*), and (.*)")]
+    public void SelectSquares(int square1, int square2, int square3, int square4, int square5)
+    {
+        selectablePage.SelectSquare(square1);
+        selectablePage.SelectSquare(square2);
+        selectablePage.SelectSquare(square3);
+        selectablePage.SelectSquare(square4);
+        selectablePage.SelectSquare(square5);
+    }
+
+    [Then(@"I should see the selected squares have values ""(.*)"", ""(.*)"", ""(.*)"", ""(.*)"", ""(.*)""")]
+    public void VerifySelectedValues(string value1, string value2, string value3, string value4, string value5)
+    {
+        var selectedSquares = selectablePage.SelectableSquares.Where(x => x.Selected).ToList();
+
+        Assert.Multiple(() =>
         {
-            this.driver = driver;
-        }
-
-        [Given(@"I am on the DemoQA Test Automation page ""https://demoqa.com/selectable""")]
-        public void NavigateToDemoQA()
-        {
-            string url = "https://demoqa.com/selectable";
-            driver.Navigate().GoToUrl(url);
-        }
-
-        [Given(@"I navigate to the ""Interactions"" category and ""Selectable"" section")]
-        public void NavigateToAutoCompleteSection()
-        {
-            driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[5]/div/ul/li[2]")).Click();
-        }
-
-        [Given(@"I switch to the ""Grid"" tab")]
-        public void SwitchToGridTab()
-        {
-            var gridTab = driver.FindElement(By.Id("gridTab"));
-            gridTab.Click();
-        }
-
-        [When(@"I select squares (.*), (.*), (.*), (.*), and (.*)")]
-        public void SelectSquares(int square1, int square2, int square3, int square4, int square5)
-        {
-            var squares = driver.FindElements(By.CssSelector(".ui-selectable-item"));
-
-            SelectSquare(squares[square1 -1]);
-            SelectSquare(squares[square2 - 1]);
-            SelectSquare(squares[square3 - 1]);
-            SelectSquare(squares[square4 - 1]);
-            SelectSquare(squares[square5 - 1]);
-        }
-
-        private void SelectSquare(IWebElement square)
-        {
-            if(!IsSelected(square))
-            {
-                Actions actions = new Actions(driver);
-                actions.ClickAndHold(square).Build().Perform();
-            }
-        }
-
-        private bool IsSelected(IWebElement square)
-        {
-            return square.GetAttribute("class").Contains(".ui-selected");
-        }
-
-        [Then(@"I should see the selected squares have values ""(.*)"", ""(.*)"", ""(.*)"", ""(.*)"", ""(.*)""")]
-        public void VerifySelectedValues(string value1, string value2, string value3, string value4, string value5)
-        {
-            var squares = driver.FindElements(By.CssSelector(".ui-selected"));
-
-            Assert.Multiple(() =>
-            {
-                Assert.That(squares[0].Text, Is.EqualTo(value1));
-                Assert.That(squares[1].Text, Is.EqualTo(value2));
-                Assert.That(squares[2].Text, Is.EqualTo(value3));
-                Assert.That(squares[3].Text, Is.EqualTo(value4));
-                Assert.That(squares[4].Text, Is.EqualTo(value5));
-
-            });
-        }
+            Assert.That(selectedSquares[0].Text, Is.EqualTo(value1));
+            Assert.That(selectedSquares[1].Text, Is.EqualTo(value2));
+            Assert.That(selectedSquares[2].Text, Is.EqualTo(value3));
+            Assert.That(selectedSquares[3].Text, Is.EqualTo(value4));
+            Assert.That(selectedSquares[4].Text, Is.EqualTo(value5));
+        });
     }
 }

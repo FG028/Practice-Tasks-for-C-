@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
 using TechTalk.SpecFlow;
+using SpecFlowPracticeTask.POM;
 
 namespace SpecFlowPracticeTask.StepDefinitions
 {
@@ -9,56 +9,37 @@ namespace SpecFlowPracticeTask.StepDefinitions
     public class ButtonSteps
     {
         private readonly WebDriver driver;
+        private readonly ButtonPage buttonPage;
 
         public ButtonSteps(WebDriver driver)
         {
             this.driver = driver;
+            buttonPage = new ButtonPage(driver);
         }
 
         [Given(@"I am on the DemoQA page ""https://demoqa.com/buttons""")]
         public void NavigateToDemoQA()
         {
-            string url = "https://demoqa.com/buttons";
-            driver.Navigate().GoToUrl(url);
+            buttonPage.NavigateToPage();
         }
 
         [Given(@"I navigate to the ""Elements"" category and ""Buttons"" section")]
         public void NavigateToAutoCompleteSection()
         {
-            driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[1]/div/ul/li[5]")).Click();
+            buttonPage.NavigateToAutoCompleteSection();
         }
 
         [When(@"I interact with the ""(.*)"" button")]
         public void InteractWithButton(string buttonName)
         {
-            var button = driver.FindElement(By.XPath($"//button[text()='{buttonName}']"));
-            button.Click();
-        }
-
-        private void InteractWithButton(WebElement button)
-        {
-            var buttonText = button.Text.ToLower();
-
-            switch (buttonText)
-            {
-                case "double click":
-                    Actions actions = new Actions(driver);
-                    actions.DoubleClick(button).Perform();
-                    break;
-                case "right click ":
-                    new Actions(driver).ContextClick(button).Perform();
-                    break;
-                default:
-                    button.Click();
-                    break;
-            }
+            var button = buttonPage.GetButtonByName(buttonName);
+            buttonPage.PerformAction(button);
         }
 
         [Then(@"I should see the text ""(.*)""")]
         public void VerifyButtonText(string expectedMessage)
         {
-            var resultText = driver.FindElement(By.Id("result")).Text;
-            Assert.That(resultText, Is.EqualTo(expectedMessage));
+            Assert.That(buttonPage.GetResultText(), Is.EqualTo(expectedMessage));
         }
     }
 }

@@ -2,7 +2,6 @@
 
 Scenario: 1.1. Fill TextBox form, submit, and verify displayed data
     Given I am on the DemoQA page "https://demoqa.com/text-box"
-        And  I navigate to the "Elements" category and "Text Box" section
 
     When I enter the following data:
       | Field             | Value                                  |
@@ -36,7 +35,6 @@ Scenario: 1.2. Expand and Select Folders
 
 Scenario: 1.3. Sort and delete row in Web Tables
     Given I am on the DemoQA page "https://demoqa.com/webtables"
-        And I navigate to the "Elements" category and "Web Tables" section
     When I click on the "Salary" column header
     Then I should see the values in the "Salary" column are in ascending order
         And I delete the second row name Alden

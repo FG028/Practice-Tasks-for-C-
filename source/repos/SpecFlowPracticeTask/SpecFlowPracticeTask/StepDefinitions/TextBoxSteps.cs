@@ -2,60 +2,39 @@
 using OpenQA.Selenium;
 using TechTalk.SpecFlow.Assist;
 using NUnit.Framework;
-
+using SpecFlowPracticeTask.POM;
 
 namespace SpecFlowPracticeTask.StepDefinitions;
 
 [Binding]
 public class TextBoxSteps
 {
-    private readonly WebDriver driver;
+    private readonly TextBoxPage textBoxPage;
 
-    public TextBoxSteps(WebDriver driver)
+    public TextBoxSteps(IWebDriver driver)
     {
-        this.driver = driver;
+        textBoxPage = new TextBoxPage(driver);
     }
 
     [Given(@"I am on the DemoQA page ""https://demoqa.com/text-box""")]
     public void NavigateToDemoQA()
     {
-        string url = "https://demoqa.com/text-box";
-        driver.Navigate().GoToUrl(url);
-    }
-
-    [Given(@"I navigate to the ""Elements"" category and ""Text Box"" section")]
-    public void NavigateToAutoCompleteSection()
-    {
-        driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[1]/div/ul/li[1]")).Click();
+        textBoxPage.NavigateToPage();
     }
 
     [When(@"I enter the following data:")]
-    public void EnterFromData(Table table) 
+    public void EnterFromData(Table table)
     {
-        var data = table.CreateSet<Dictionary<string, string>>();
-
-        foreach (var item in data) 
-        {
-            var fieldName = item["Field"];
-            var fieldValue = item["Value"];
-
-            var field = driver.FindElement(By.Id(fieldName.ToLower()));
-            field.SendKeys(fieldValue);
-        }
+        var data = table.CreateSet<Dictionary<string, string>>().ToList();
+        textBoxPage.EnterUserData(data[0]["FullName"], data[0]["Email"], data[0]["Current Address"], data[0]["Permanent Address"]);
+        textBoxPage.SubmitUserData();
     }
 
     [Then(@"I should see the submitted data displayed in the table")]
     public void VerifySubmittedData(Table table)
     {
-        var rows = driver.FindElements(By.TagName("tr"));
-        var data = table.CreateSet<List<string>>().ToList();
-
-        for (int i = 1; i < rows.Count; i++)
-        {
-            var cells = rows[i].FindElements(By.TagName("td"));
-            var actualRow = cells.Select(cell => cell.Text).ToList();
-
-            Assert.That(data[i - 1], Is.EqualTo(actualRow)); 
-        }
+        var expectedData = table.CreateSet<List<string>>().ToList();
+        var actualData = textBoxPage.GetSubmittedData();
+        Assert.AreEqual(expectedData, actualData);
     }
 }
