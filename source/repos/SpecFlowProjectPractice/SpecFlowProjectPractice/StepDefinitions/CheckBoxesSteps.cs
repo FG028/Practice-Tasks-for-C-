@@ -1,0 +1,39 @@
+﻿using NUnit.Framework;
+using OpenQA.Selenium;
+using SpecFlowProjectPractice.Helper;
+using TechTalk.SpecFlow;
+using SpecFlowProjectPractice.PageObjects;
+
+namespace SpecFlowProjectPractice.StepDefinitions
+{
+    [Binding]
+    public class CheckBoxesSteps
+    {
+        private readonly IWebDriver _driver;
+        private readonly ElementsPage _elementsPage;
+
+        public CheckBoxesSteps(IWebDriver driver)
+        {
+            _driver = driver;
+            _elementsPage = new ElementsPage(_driver);
+    }
+
+        [When(@"I select the following checkboxes:")]
+        public void WhenISelectTheFollowingCheckBoxes(Table table)
+        {
+            foreach (var row in table.Rows)
+            {
+                string checkBoxLabel = row["Item"].ToString();
+                _elementsPage.SelectCheckBox(checkBoxLabel);
+            }
+        }
+
+        [Then(@"I verify the output is ""(.*)""")]
+        public void ThenIVerifyTheOutputIs(string expectedOutput)
+        {
+            // Retrieve the actual output text from the page
+            string actualOutput = _elementsPage.OutputText.Text;
+            Assert.AreEqual(expectedOutput, actualOutput, "Output text does not match expected value");
+        }
+    }
+}
