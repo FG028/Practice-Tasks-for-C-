@@ -1,24 +1,25 @@
 ﻿using OpenQA.Selenium;
+using SpecFlowProjectPractice.Drivers;
 
 namespace SpecFlowProjectPractice.PageObjects
 {
     public class WebTablesPage : ElementsPage
     {
-        private readonly IWebDriver _driver;
+        private readonly WebDriverManager _driverManager;
 
-        public WebTablesPage(IWebDriver driver) : base(driver)
+        public WebTablesPage(WebDriverManager driverManager) : base(driverManager)
         {
-            _driver = driver;
+            _driverManager = driverManager;
         }
 
         public IWebElement GetTableBody()
         {
-            return _driver.FindElement(By.CssSelector("table.demo-table tbody"));
+            return _driverManager.Driver().FindElement(By.CssSelector("table.demo-table tbody"));
         }
 
         public int TableRowCount => GetTableBody().FindElements(By.TagName("tr")).Count;
 
-        public IWebElement TableBody => _driver.FindElement(By.TagName("tbody"));
+        public IWebElement TableBody => _driverManager.Driver().FindElement(By.TagName("tbody"));
 
         public string GetCellValue(int rowIndex, int columnIndex)
         {

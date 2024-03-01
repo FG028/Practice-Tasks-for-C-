@@ -1,29 +1,46 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
+using SpecFlowProjectPractice.Drivers;
 
 namespace SpecFlowProjectPractice.PageObjects
 {
     public class ButtonsPage : ElementsPage
     {
-        private readonly IWebDriver _driver;
+        private readonly WebDriverManager driverManager;
 
-        public ButtonsPage(IWebDriver driver) : base(driver)
+        public ButtonsPage(WebDriverManager _driverManager) : base(_driverManager)
         {
-            _driver = driver;
+            driverManager = _driverManager;
         }
 
-        public void ClickButton(string buttonText)
+        public IWebElement GetButtonByName(string buttonName)
         {
-            _driver.FindElement(By.XPath($"//button[text()='{buttonText}']")).Click();
+            // Not able to find the XPath with this
+            return driverManager.Driver().FindElement(By.XPath($"//button[text()='{buttonName}']"));
         }
 
-        public string GetDisplayedText()
+        public void PerformButtonAction(string buttonName, IWebElement button)
         {
-            return _driver.FindElement(By.Id("displayed-text")).Text;
+            switch (buttonName)
+            {
+                case "Click Me":
+                    button.Click();
+                    break;
+                case "Double Click Me":
+                    new Actions(driverManager.Driver()).DoubleClick(button).Perform();
+                    break;
+                case "Right Click Me":
+                    new Actions(driverManager.Driver()).ContextClick(button).Perform();
+                    break;
+                default:
+                    throw new ArgumentException($"Unsupported button name: {buttonName}");
+            }
         }
 
-        public string FeedbackText()
+        public string GetResultText()
         {
-            return _driver.FindElement(By.Id("feedbackMessage")).Text;
+            // need to find a way to get the text after the click action
+            return driverManager.Driver().FindElement(By.CssSelector(".result-text")).Text;
         }
     }
 }

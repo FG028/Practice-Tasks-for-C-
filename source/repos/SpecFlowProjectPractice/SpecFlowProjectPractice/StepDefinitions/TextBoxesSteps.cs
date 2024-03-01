@@ -1,53 +1,57 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
-using SpecFlowProjectPractice.Helper;
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
+using SpecFlowProjectPractice.Drivers;
+using TechTalk.SpecFlow.Assist;
 
 namespace SpecFlowProjectPractice.StepDefinitions
 {
     [Binding]
     public class TextBoxesSteps
     {
-        private readonly IWebDriver _driver;
-        private readonly ElementsPage _elementsPage;
-        private readonly WaitHelper _waitHelper;
+        private WebDriverManager driverManager;
+        private TextBoxPage _textBoxPage;
 
-        public TextBoxesSteps(IWebDriver driver)
+        public TextBoxesSteps(WebDriverManager _driverManager)
         {
-            _driver = driver;
-            _elementsPage = new ElementsPage(_driver);
-            _waitHelper = new WaitHelper();
+            driverManager = _driverManager;
+            _textBoxPage = new TextBoxPage(driverManager);
         }
 
-        [Then(@"I enter ""(.*)"" in the ""(.*)"" field")]
-        public void GivenIEnterInTheField(string value, string fieldName)
+        [When(@"I enter the following data:")]
+        public void GivenIEnterInTheField(Table table)
         {
-            var fieldElement = _elementsPage.FindElement(By.Name("fieldName"));
+            // The key is not present "FullName"
+            var data = table.CreateSet<Dictionary<string, string>>().ToList();
+            _textBoxPage.FullNameField.SendKeys(data[0]["Full Name"]);
+            _textBoxPage.EmailField.SendKeys(data[0]["Email"]);
+            _textBoxPage.CurrentAddressField.SendKeys(data[0]["Current Address"]);
+            _textBoxPage.PermanentAddressField.SendKeys(data[0]["Permanent Address"]);
 
-            fieldElement.SendKeys(value);
         }
 
-        [When(@"I click the Submit button")]
+        [Then(@"I click on the Submit button")]
         public void WhenIClickTheSubmitButton()
         {
-            _elementsPage.ClickSubmitButton();
+            _textBoxPage.ClickSubmitButton();
         }
 
-        [Then(@"I verify the displayed table contains the entered data")]
-        public void ThenIVerifyTheDisplayedTableContainsTheEnteredData()
+        [Then(@"I verify the displayed table contains the entered ""(.*)""")]
+        public void ThenIVerifyTheDisplayedTableContainsTheEnteredData(Table table)
         {
-            // Assuming entered values are stored in variables or properties
-            string enteredName = "John Doe"; // Replace with actual entered name
-            string enteredEmail = "johndoe@example.com"; // Replace with actual entered email
-            
-            // Retrieve table row elements with entered data
-            var nameCell = _driver.FindElement(By.XPath($"//table//td[text()='{enteredName}']"));
-            var emailCell = _driver.FindElement(By.XPath($"//table//td[text()='{enteredEmail}']"));
-
-            // Assert that the table cells contain the expected values
-            Assert.IsTrue(nameCell.Displayed, "Name not found in the table");
-            Assert.IsTrue(emailCell.Displayed, "Email not found in the table");
+            var expectedData = table.CreateSet<List<string>>().ToList();
+            List<List<string>> GetSubmittedData()
+            {
+                List<List<string>> data = new List<List<string>>();
+                foreach (var row in _textBoxPage.SubmittedDataRows)
+                {
+                    List<string> rowData = row.FindElements(By.TagName("td")).Select(cell => cell.Text).ToList();
+                    data.Add(rowData);
+                }
+                return data;
+            }
+            Assert.That(GetSubmittedData(), Is.EqualTo(expectedData));
         }
     }
 }

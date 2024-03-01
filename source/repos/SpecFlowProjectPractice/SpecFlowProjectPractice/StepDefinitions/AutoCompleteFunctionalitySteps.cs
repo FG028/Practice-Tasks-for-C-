@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
+using SpecFlowProjectPractice.Drivers;
 
 
 namespace SpecFlowProjectPractice.StepDefinitions
@@ -9,13 +10,13 @@ namespace SpecFlowProjectPractice.StepDefinitions
     [Binding]
     public class AutoCompleteFunctionalitySteps
     {
-        private readonly IWebDriver _driver;
+        private WebDriverManager _driverManager;
         private readonly AutoCompletePage _autoCompletePage;
 
-        public AutoCompleteFunctionalitySteps(IWebDriver driver)
+        public AutoCompleteFunctionalitySteps(WebDriverManager driverManager)
         {
-            _driver = driver;
-            _autoCompletePage = new AutoCompletePage(_driver);
+            _driverManager = driverManager;
+            _autoCompletePage = new AutoCompletePage(_driverManager);
         }
 
         [When(@"I enter the letter ""(.*)"" in the ""(.*)"" field")]
@@ -24,19 +25,19 @@ namespace SpecFlowProjectPractice.StepDefinitions
             _autoCompletePage.EnterText(fieldName, text);
         }
 
-        [Then(@"I verify the autocomplete offers three variants, all containing ""(.*)""")]
+        [Then(@"I verify the AutoComplete offers three variants, all containing ""(.*)""")]
         public void ThenIVerifyTheFollowingSuggestionsAreDisplayed(Table table)
         {
             List<string> expectedSuggestions = table.Rows.Select(row => row["Item"].ToString()).ToList();
             List<string> actualSuggestions = _autoCompletePage.GetSuggestions();
-            // Assert that actual suggestions match expected suggestions
+
             CollectionAssert.AreEquivalent(expectedSuggestions, actualSuggestions);
         }
 
-        [When(@"I enter ""(.*)"" in the ""(.*)"" field")]
+        [Then(@"I enter ""(.*)"" in the ""(.*)"" field")]
         public void WhenIEnterInTheField(string text, string fieldName)
         {
-            _autoCompletePage.EnterText(fieldName, text);
+            _autoCompletePage.EnterText(text, fieldName);
         }
 
         [Then(@"I delete ""(.*)"" and ""(.*)""")]
@@ -46,11 +47,11 @@ namespace SpecFlowProjectPractice.StepDefinitions
             _autoCompletePage.DeleteColor(color2);
         }
 
-        [Then(@"I verify the selected value in the field is ""(.*)""")]
-        public void ThenIVerifyTheSelectedValueInTheFieldIs(string expectedValue)
+        [Then(@"I should see only ""(.*)"", ""(.*)"", and ""(.*)"" in the field")]
+        public void ThenIVerifyTheSelectedValueInTheFieldIs(string color1, string color2, string color3)
         {
             string actualValue = _autoCompletePage.GetSelectedFieldValue();
-            Assert.AreEqual(expectedValue, actualValue, "Selected value in the field does not match expected value");
+            Assert.That(actualValue, Is.EquivalentTo(new List<string> { color1, color2, color3 }));
         }
     }
 }

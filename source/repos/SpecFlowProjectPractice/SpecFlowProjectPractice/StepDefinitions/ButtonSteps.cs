@@ -1,35 +1,34 @@
 ﻿using NUnit.Framework;
-using OpenQA.Selenium;
-using SpecFlowProjectPractice.Helper;
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
+using SpecFlowProjectPractice.Drivers;
 
 namespace SpecFlowProjectPractice.StepDefinitions
 {
     [Binding]
     public class ButtonsSteps
     {
-        private readonly IWebDriver _driver;
-        private readonly ButtonsPage _buttonsPage;
+        private WebDriverManager _driverManager;
+        private ButtonsPage _buttonsPage;
 
-        public ButtonsSteps(IWebDriver driver)
+        public ButtonsSteps(WebDriverManager driverManager)
         {
-            _driver = driver;
-            _buttonsPage = new ButtonsPage(_driver);
+            _driverManager = driverManager;
+            _buttonsPage = new ButtonsPage(_driverManager);
         }
         
         [When(@"I click the ""(.*)"" button")]
         public void WhenIClickTheButton(string buttonLabel)
         {
-            _buttonsPage.ClickButton(buttonLabel);
+
+            var button = _buttonsPage.GetButtonByName(buttonLabel);
+            _buttonsPage.PerformButtonAction(buttonLabel, button);
         }
 
         [Then(@"I verify the text is ""(.*)""")]
-        public void ThenIVerifyTheFollowingTextIsDisplayed(string expectedText)
-        {
-            var actualText = _driver.FindElement(By.XPath("//h1")).Text;
-
-            Assert.AreEqual(expectedText, actualText, $"Displayed text does not match expected text: '{expectedText}'");
+        public void ThenIVerifyTheFollowingTextIsDisplayed(string expectedMessage)
+        { 
+            Assert.That(_buttonsPage.GetResultText(), Is.EqualTo(expectedMessage));
         }
        
     }

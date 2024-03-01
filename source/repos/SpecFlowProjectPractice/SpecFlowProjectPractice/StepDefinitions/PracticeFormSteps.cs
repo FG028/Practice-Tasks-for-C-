@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
-using SpecFlowProjectPractice.Helper;
+using SpecFlowProjectPractice.Drivers;
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
 using OpenQA.Selenium.Support.UI;
@@ -11,7 +11,7 @@ namespace SpecFlowProjectPractice.StepDefinitions
     [Binding]
     public class PracticeFormSteps
     {
-        private readonly IWebDriver _driver;
+        private WebDriverManager _driverManager;
         private readonly PracticeFormPage _practiceFormPage;
         private string firstName;
         private string lastName;
@@ -19,9 +19,10 @@ namespace SpecFlowProjectPractice.StepDefinitions
         private string userAddress;
         private string userPhone;
 
-        public PracticeFormSteps(IWebDriver driver)
+        public PracticeFormSteps(WebDriverManager driverManager)
         {
-            _driver = driver;
+            _driverManager = driverManager;
+            _practiceFormPage = new PracticeFormPage(_driverManager);
         }
 
         [When(@"I fill the form with random data")]
@@ -56,7 +57,7 @@ namespace SpecFlowProjectPractice.StepDefinitions
         [Then(@"I should see the model with submitted data matching my input")]
         public void VerifySubmittedData()
         {
-            WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+            WebDriverWait wait = new WebDriverWait(_driverManager.Driver(), TimeSpan.FromSeconds(5));
             wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(By.Id("example-modal-sizes-title-lg")));
 
             Assert.Multiple(() =>

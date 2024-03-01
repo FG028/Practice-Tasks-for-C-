@@ -1,24 +1,25 @@
 ﻿using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
+using SpecFlowProjectPractice.Drivers;
 
 namespace SpecFlowProjectPractice.PageObjects
 {
-    public class AutoCompletePage : ElementsPage
+    public class AutoCompletePage
     {
-        private readonly IWebDriver _driver;
+        private readonly WebDriverManager _driverManager;
 
-        public AutoCompletePage(IWebDriver driver) : base(driver)
+        public AutoCompletePage(WebDriverManager driverManager)
         {
-            _driver = driver;
+            _driverManager = driverManager;
         }
 
-        public void EnterText(string text, string fieldname)
+        public void EnterText(string text, string fieldName)
         {
-            // Replace with actual selector for the input field
-            var inputField = _driver.FindElement(By.Id("autoCompleteInput"));
+            // 'no such element: Unable to locate element
+            var inputField = _driverManager.Driver().FindElement(By.Id("autoCompleteInput"));
             inputField.Clear();
             inputField.SendKeys(text);
-            inputField.SendKeys(fieldname);
+            inputField.SendKeys(fieldName);
         }
 
         public void SelectSuggestion(string suggestionText)
@@ -29,7 +30,7 @@ namespace SpecFlowProjectPractice.PageObjects
             }
 
             // Replace with actual selector for the autocomplete dropdown container and its options
-            var dropdown = _driver.FindElement(By.Id("autoCompleteDropdown"));
+            var dropdown = _driverManager.Driver().FindElement(By.Id("autoCompleteDropdown"));
             dropdown.FindElements(By.TagName("li"))
                 .First(option => option.Text.Equals(suggestionText, StringComparison.InvariantCultureIgnoreCase))
                 .Click();
@@ -37,7 +38,7 @@ namespace SpecFlowProjectPractice.PageObjects
         public List<string> GetSuggestions()
         {
             // Replace with actual selector to target the autocomplete dropdown container
-            var dropdown = _driver.FindElement(By.Id("autoCompleteDropdown"));
+            var dropdown = _driverManager.Driver().FindElement(By.Id("autoCompleteDropdown"));
 
             // Handle if the dropdown is not currently visible
             if (!dropdown.Displayed)
@@ -52,14 +53,14 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public string GetSelectedFieldValue()
         {
-            var selectedField = _driver.FindElement(By.Id("selectedField"));
+            var selectedField = _driverManager.Driver().FindElement(By.Id("selectedField"));
             return selectedField.GetAttribute("value");
         }
 
         public bool IsOptionVisible(string optionText)
         {
             // Replace with actual selector for the autocomplete dropdown container
-            var dropdown = _driver.FindElement(By.Id("autoCompleteDropdown"));
+            var dropdown = _driverManager.Driver().FindElement(By.Id("autoCompleteDropdown"));
             return dropdown.Displayed &&
                    dropdown.FindElements(By.TagName("li"))
                     .Any(option => option.Text.Equals(optionText, StringComparison.InvariantCultureIgnoreCase));
@@ -73,7 +74,7 @@ namespace SpecFlowProjectPractice.PageObjects
             }
 
             // Replace with actual selector for the autocomplete dropdown container and its options
-            var dropdown = _driver.FindElement(By.Id("autoCompleteDropdown"));
+            var dropdown = _driverManager.Driver().FindElement(By.Id("autoCompleteDropdown"));
             dropdown.FindElements(By.TagName("li"))
                 .First(option => option.Text.Equals(optionText, StringComparison.InvariantCultureIgnoreCase))
                 .Click();

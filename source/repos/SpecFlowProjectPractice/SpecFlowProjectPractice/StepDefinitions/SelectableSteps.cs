@@ -2,19 +2,20 @@
 using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
+using SpecFlowProjectPractice.Drivers;
 
 namespace SpecFlowProjectPractice.StepDefinitions
 {
     [Binding]
     public class SelectableSteps
     {
-        private readonly IWebDriver _driver;
+        private WebDriverManager _driverManager;
         private readonly SelectablePage _selectablePage;
 
-        public SelectableSteps(IWebDriver driver)
+        public SelectableSteps(WebDriverManager driverManager)
         {
-            _driver = driver;
-            _selectablePage = new SelectablePage(_driver);
+            _driverManager = driverManager;
+            _selectablePage = new SelectablePage(_driverManager);
         }
 
         [When(@"I select squares ""(.*)""")]
@@ -26,6 +27,7 @@ namespace SpecFlowProjectPractice.StepDefinitions
                 _selectablePage.SelectOption(optionLabel);
             }
         }
+        // : 'Invalid cast from 'System.String' to 'TechTalk.SpecFlow.Table'.
         [Then(@"I verify the selected squares' values are ""(.*)""")]
         public void ThenIVerifyTheFollowingOptionsAreSelected(Table table)
         {

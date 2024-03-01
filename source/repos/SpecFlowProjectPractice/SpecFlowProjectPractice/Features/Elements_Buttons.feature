@@ -8,5 +8,6 @@
 	Examples:
 	| ButtonName		| ExpectedText					|
 	| ----------------- | ----------------------------- |
-	| Click Me			| You have clicked me			|
-	| Double Click Me	| You have done a right click	|
+	| Click Me			| You have a dynamic click      |
+	| Double Click Me	| You have done a double click	|
+	| Right Click Me    | You have done a right click   | 

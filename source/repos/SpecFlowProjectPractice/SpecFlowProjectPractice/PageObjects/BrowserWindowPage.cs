@@ -1,24 +1,24 @@
-﻿using OpenQA.Selenium;
+﻿using SpecFlowProjectPractice.Drivers;
 
 
 namespace SpecFlowProjectPractice.PageObjects
 {
     public class BrowserWindowPage
     {
-        private readonly IWebDriver _driver;
+        private readonly WebDriverManager _driverManager;
 
-        public BrowserWindowPage(IWebDriver driver)
+        public BrowserWindowPage(WebDriverManager driverManager)
         {
-            _driver = driver;
+            _driverManager = driverManager;
         }
 
         public void SwitchToNewWindow()
         {
-            var originalWindow = _driver.CurrentWindowHandle;
+            var originalWindow = _driverManager.Driver().CurrentWindowHandle;
 
-            foreach (var handle in _driver.WindowHandles.Except(new[] { originalWindow }))
+            foreach (var handle in _driverManager.Driver().WindowHandles.Except(new[] { originalWindow }))
             {
-                _driver.SwitchTo().Window(handle);
+                _driverManager.Driver().SwitchTo().Window(handle);
                 break;
             }
         }

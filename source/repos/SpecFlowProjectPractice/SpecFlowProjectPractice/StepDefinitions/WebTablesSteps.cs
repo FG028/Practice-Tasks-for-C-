@@ -1,23 +1,21 @@
 ﻿using NUnit.Framework;
-using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
+using SpecFlowProjectPractice.Drivers;
 
 namespace SpecFlowProjectPractice.StepDefinitions
 {
     [Binding]
     public class WebTablesSteps
     {
-        private readonly IWebDriver _driver;
+        private readonly WebDriverManager _driverManager;
         private readonly WebTablesPage _webTablesPage;
 
-        public WebTablesSteps(IWebDriver driver)
+        public WebTablesSteps(WebDriverManager driverManager)
         {
-            _driver = driver;
-            _webTablesPage = new WebTablesPage(_driver);
+            _driverManager = driverManager;
+            _webTablesPage = new WebTablesPage(_driverManager);
         }
-
-        
 
         [When(@"I click the ""(.*)"" column")]
         public void WhenIClickTheColumn(string columnName)

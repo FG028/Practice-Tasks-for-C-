@@ -1,15 +1,16 @@
 ﻿using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
+using SpecFlowProjectPractice.Drivers;
 
 namespace SpecFlowProjectPractice.PageObjects
 {
     public class PracticeFormPage
     {
-        private readonly IWebDriver _driver;
+        private readonly WebDriverManager _driverManager;
 
-        public PracticeFormPage(IWebDriver driver)
+        public PracticeFormPage(WebDriverManager driverManager)
         {
-            _driver = driver;
+            _driverManager = driverManager;
         }
 
         [FindsBy(How = How.Id, Using = "firstName")]
@@ -57,6 +58,7 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public void FillForm(string firstName, string lastName, string email, string address, string phone)
         {
+            // 'Object reference not set to an instance of an object.'
             FirstNameInput.SendKeys(firstName);
             LastNameInput.SendKeys(lastName);
             UserEmailInput.SendKeys(email);
@@ -108,14 +110,14 @@ namespace SpecFlowProjectPractice.PageObjects
         public void SelectState(string state)
         {
             StateDropDown.Click();
-            var stateOption = _driver.FindElement(By.XPath($"//option[text()='{state}']"));
+            var stateOption = _driverManager.Driver().FindElement(By.XPath($"//option[text()='{state}']"));
             stateOption.Click();
         }
 
         public void SelectCity(string city)
         {
             CityDropDown.Click();
-            var cityOption = _driver.FindElement(By.XPath($"//option[text()='{city}']"));
+            var cityOption = _driverManager.Driver().FindElement(By.XPath($"//option[text()='{city}']"));
             cityOption.Click();
         }
     }

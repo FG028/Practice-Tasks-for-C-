@@ -1,22 +1,23 @@
 ﻿using OpenQA.Selenium;
+using SpecFlowProjectPractice.Drivers;
 
 namespace SpecFlowProjectPractice.PageObjects
 {
     public class ElementsPage : Page
     {
-        private readonly IWebDriver _driver;
+        private readonly WebDriverManager _driverManager;
 
-        public ElementsPage(IWebDriver driver) : base (driver)
+        public ElementsPage(WebDriverManager driverManager) : base (driverManager)
         {
-            _driver = driver;
+            _driverManager = driverManager;
         }
 
-        public IWebElement OutputText => _driver.FindElement(By.Id("output"));
+        public IWebElement OutputText => _driverManager.Driver().FindElement(By.Id("output"));
 
         public List<string> GetColumnValues(string columnName)
         {
-            var table = _driver.FindElement(By.Id("your-table-id"));
-            var headerRow = _driver.FindElement(By.TagName("thead")).FindElement(By.TagName("tr"));
+            var table = _driverManager.Driver().FindElement(By.XPath($"//td[text()='{columnName}']/following-sibling::td[text()!=' ']"));
+            var headerRow = _driverManager.Driver().FindElement(By.TagName("thead")).FindElement(By.TagName("tr"));
             var columnElements = headerRow.FindElements(By.TagName("th"));
             int columnIndex = -1; // Initialize to -1 in case the column isn't found
 
@@ -38,33 +39,28 @@ namespace SpecFlowProjectPractice.PageObjects
             return values;
         }
 
-        public void ClickSubmitButton()
-        {
-            var submitButton = _driver.FindElement(By.Id("submitButton"));
-            submitButton.Click();
-        }
-
         public void SelectCheckBox(string checkBoxName)
         {
-            // Replace with the appropriate logic to find the checkbox based on checkBoxName
-            var checkBox = _driver.FindElement(By.Name(checkBoxName));
+            // 'no such element: Unable to locate element:
+            var checkBox = _driverManager.Driver().FindElement(By.Name(checkBoxName));
 
             if (!checkBox.Selected)
             {
                 checkBox.Click();
             }
         }
+
         public int GetRowCount()
         {
-            // Replace with actual selector based on your table structure
-            var table = _driver.FindElement(By.Id("your-table-id"));
+            // 'no such element: Unable to locate element:
+            var table = _driverManager.Driver().FindElement(By.Id("your-table-id"));
             return table.FindElements(By.TagName("tr")).Count;
         }
 
         public void ClickColumnHeader(string columnName)
         {
-            // Replace with actual selector based on your table structure
-            var table = _driver.FindElement(By.Id("your-table-id"));
+            // 'no such element: Unable to locate element:
+            var table = _driverManager.Driver().FindElement(By.XPath($"//th[text()='{columnName}']"));
             var headerRow = table.FindElement(By.TagName("tr"));
             headerRow.FindElements(By.TagName("th"))
                 .First(x => x.Text == columnName)
@@ -73,8 +69,8 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public void DeleteRowByName(string name)
         {
-            // Replace with actual selector based on your table structure
-            var table = _driver.FindElement(By.Id("your-table-id"));
+            // 'no such element: Unable to locate element:
+            var table = _driverManager.Driver().FindElement(By.Id("your-table-id"));
             foreach (var row in table.FindElements(By.TagName("tr")).Skip(1))
             {
                 if (row.FindElement(By.TagName("td")).Text.Contains(name))
