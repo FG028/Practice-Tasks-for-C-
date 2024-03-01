@@ -1,21 +1,23 @@
 ﻿using OpenQA.Selenium;
 using SpecFlowProjectPractice.Helper;
 using TechTalk.SpecFlow;
+using SpecFlowProjectPractice.Drivers;
 
 [Binding]
 public class CommonStepDefinitionPageCaller
 {
-    // private readonly IWebDriver _driver;
-    protected IWebDriver _driver { get; }
 
-    public CommonStepDefinitionPageCaller(IWebDriver driver)
+    private WebDriverManager _webDriverManager;
+
+    public CommonStepDefinitionPageCaller(WebDriverManager webDriverManager)
     {
-        _driver = driver;
+        _webDriverManager = webDriverManager;
     }
 
     [Given(@"I am on the ""(.*)"" page")]
     public void GivenIAmOnThePage(string pageName)
     {
-        NavigationHelper.NavigateToPage(_driver, pageName);
+        var navigateHelper = new NavigationHelper(_webDriverManager);
+        navigateHelper.NavigateToPage(pageName);
     }
 }

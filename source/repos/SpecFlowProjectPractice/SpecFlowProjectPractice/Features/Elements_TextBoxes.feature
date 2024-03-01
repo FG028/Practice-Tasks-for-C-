@@ -1,6 +1,7 @@
 ﻿Feature: Text Box Functionality
 	Background:
 		Given I am on the "Text Box" page
+	@CHROME
 	Scenario: Fill out and verify text box data
 	Then I enter "John Doe" in the "Full Name" field
 		And I enter "john.doe@example.com" in the "Email" field

@@ -1,4 +1,5 @@
 ﻿Feature: Auto Complete Functionality
+	@CHROME
 	Scenario: Filter and select colors in Auto Complete
 		Given I am on the "Auto Complete" page
 

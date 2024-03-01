@@ -1,6 +1,4 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using SpecFlowProjectPractice.Drivers;
+﻿using SpecFlowProjectPractice.Drivers;
 using TechTalk.SpecFlow;
 
 namespace SpecFlowProjectPractice.Hooks
@@ -8,17 +6,23 @@ namespace SpecFlowProjectPractice.Hooks
     [Binding]
     public class Hooks
     {
+        private WebDriverManager _driverManager;
+
+        public Hooks(WebDriverManager driverManager) 
+        {
+            _driverManager = driverManager;
+        }
 
         [BeforeScenario]
         public void BeforeScenario()
         {
-            WebDriverManager.GetWebDriver();
+            _driverManager.GetDriver();
         }
 
         [AfterScenario]
         public void AfterScenario()
         {
-            WebDriverManager.CloseDriver();
+            _driverManager.CloseBrowser();
         }
     }
 }

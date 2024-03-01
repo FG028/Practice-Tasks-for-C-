@@ -1,8 +1,7 @@
 ﻿Feature: Practice Form Functionality
-
 	Background:
 		Given I am on the "Practice Form" page
-
+	@CHROME
 	Scenario: Fill out and verify practice form data
 		When I fill the form with random data
 		Then I click the Submit button

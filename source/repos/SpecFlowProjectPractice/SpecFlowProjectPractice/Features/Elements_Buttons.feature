@@ -1,4 +1,5 @@
 ﻿Feature: Buttons Functionality
+	@CHROME
 	Scenario Outline: Click button and verify text
 	Given I am on the "Buttons" page
 	When I click the "<ButtonName>" button

@@ -1,11 +1,12 @@
 ﻿Feature: Browser Windows Functionality
 
+	@CHROME
 	Scenario Outline: Open new window and verify content (if applicable)
 	Given I am on the "Browser Windows" page
 	When I click the "<ButtonName>" button
 	Then I switch to the new window
 		And I verify the page contains the text "<ExpectedText>"
-	
+
 	Examples:
 	| ButtonName		| ExpectedText			|
 	| ----------------- | --------------------- |

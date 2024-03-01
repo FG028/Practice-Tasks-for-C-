@@ -2,7 +2,7 @@
 	
 	Background: 
 	Given I am on the "Check Box" page
-	
+	@CHROME
 	Scenario: Select and verify checkboxes
 	When I select the following checkboxes:
 	

@@ -1,26 +1,62 @@
-﻿using OpenQA.Selenium;
+﻿using BoDi;
+using NUnit.Framework;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.DevTools.V120.Browser;
-using TechTalk.SpecFlow;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.IE;
 
 
 namespace SpecFlowProjectPractice.Drivers
 {
-    public static class WebDriverManager
+    public class WebDriverManager
     {
-        private static IWebDriver driver;
-        public static IWebDriver GetWebDriver()
-        {
-            var driver = new ChromeDriver();
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            driver.Manage().Window.Maximize();
+        private IWebDriver webDriver;
 
-            return driver;
+        public IWebDriver Driver()
+        {
+            return webDriver;
         }
 
-        public static void CloseDriver() 
+        public IWebDriver GetDriver()
         {
-            driver.Quit();
+            var browserType = TestContext.Parameters["BROWSER"];
+            switch (browserType)
+            {
+                case "CHROME":
+                    webDriver = new ChromeDriver();
+                    break;
+
+                case "CHROMEHEADLESS":
+                    ChromeOptions chromeOptions = new ChromeOptions();
+                    chromeOptions.AddArguments("headless");
+                    webDriver = new ChromeDriver(chromeOptions);
+                    break;
+
+                case "INTERNETEXPLORER":
+                    webDriver = new InternetExplorerDriver();
+                    break;
+
+                case "FIREFOX":
+                    webDriver = new FirefoxDriver();
+                    break;
+
+                case "FFHEADLESS":
+                    FirefoxOptions firefoxOptions = new FirefoxOptions();
+                    firefoxOptions.AddArguments("--headless");
+                    webDriver = new FirefoxDriver(firefoxOptions);
+                    break;
+
+                default:
+                    webDriver = new ChromeDriver();
+                    break;
+            }
+            return webDriver;
+        }
+
+        public void CloseBrowser() 
+        {
+            webDriver.Quit();
+            webDriver.Dispose();
         }
     }
 }
