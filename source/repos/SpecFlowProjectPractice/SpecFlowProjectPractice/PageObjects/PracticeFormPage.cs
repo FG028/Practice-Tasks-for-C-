@@ -13,29 +13,21 @@ namespace SpecFlowProjectPractice.PageObjects
             _driverManager = driverManager;
         }
 
-        [FindsBy(How = How.Id, Using = "firstName")]
-        public IWebElement FirstNameInput { get; set; }
+        public IWebElement FirstNameInput => _driverManager.Driver().FindElement(By.Id("firstName"));
 
-        [FindsBy(How = How.Id, Using = "lastName")]
-        public IWebElement LastNameInput { get; set; }
+        public IWebElement LastNameInput=> _driverManager.Driver().FindElement(By.Id("lastName"));
 
-        [FindsBy(How = How.Id, Using = "userEmail")]
-        public IWebElement UserEmailInput { get; set; }
+        public IWebElement UserEmailInput => _driverManager.Driver().FindElement(By.Id("userEmail"));
 
-        [FindsBy(How = How.Id, Using = "userAddress")]
-        public IWebElement UserAddressInput { get; set; }
+        public IWebElement UserAddressInput => _driverManager.Driver().FindElement(By.Id("userAddress"));
 
-        [FindsBy(How = How.Id, Using = "userNumber")]
-        public IWebElement UserPhoneInput { get; set; }
+        public IWebElement UserPhoneInput => _driverManager.Driver().FindElement(By.Id("userNumber"));
 
-        [FindsBy(How = How.CssSelector, Using = "[for='gender-female'] input")]
-        public IWebElement FemaleGenderRadio { get; set; }
+        public IWebElement FemaleGenderRadio => _driverManager.Driver().FindElement(By.CssSelector("[for='gender-female'] input"));
 
-        [FindsBy(How = How.CssSelector, Using = "[for='gender-male'] input")]
-        public IWebElement MaleGenderRadio { get; set; }
+        public IWebElement MaleGenderRadio => _driverManager.Driver().FindElement(By.CssSelector("[for='gender-male'] input"));
 
-        [FindsBy(How = How.Id, Using = "dateOfBirthInput")]
-        public IWebElement DateOfBirthInput { get; set; }
+        public IWebElement DateOfBirthInput => _driverManager.Driver().FindElement(By.Id("dateOfBirthInput"));
 
         [FindsBy(How = How.CssSelector, Using = "[name='subjects'] input")]
         public IReadOnlyCollection<IWebElement> SubjectCheckBoxes { get; set; }
@@ -43,17 +35,13 @@ namespace SpecFlowProjectPractice.PageObjects
         [FindsBy(How = How.CssSelector, Using = "[name='hobbies'] input")]
         public IReadOnlyCollection<IWebElement> HobbyCheckBoxes { get; set; }
 
-        [FindsBy(How = How.Id, Using = "state")]
-        public IWebElement StateDropDown { get; set; }
+        public IWebElement StateDropDown => _driverManager.Driver().FindElement(By.Id("state"));
 
-        [FindsBy(How = How.Id, Using = "city")]
-        public IWebElement CityDropDown { get; set; }
+        public IWebElement CityDropDown => _driverManager.Driver().FindElement(By.Id("state"));
 
-        [FindsBy(How = How.Id, Using = "submit")]
-        public IWebElement SubmitButton { get; set; }
+        public IWebElement SubmitButton => _driverManager.Driver().FindElement(By.Id("state"));
 
-        [FindsBy(How = How.Id, Using = "closeLargeModel")]
-        public IWebElement CloseModalButton { get; set; }
+        public IWebElement CloseModalButton => _driverManager.Driver().FindElement(By.Id("closeLargeModel"));
 
 
         public void FillForm(string firstName, string lastName, string email, string address, string phone)

@@ -9,29 +9,57 @@ namespace SpecFlowProjectPractice.StepDefinitions
     public class CheckBoxesSteps
     {
         private WebDriverManager _driverManager;
-        private readonly ElementsPage _elementsPage;
+        private readonly CheckBoxPage checkBoxPage;
 
         public CheckBoxesSteps(WebDriverManager driverManager)
         {
             _driverManager = driverManager;
-            _elementsPage = new ElementsPage(_driverManager);
-    }
+            checkBoxPage = new CheckBoxPage(_driverManager);
+        }
 
-        [When(@"I select the following checkboxes:")]
-        public void WhenISelectTheFollowingCheckBoxes(Table table)
+        [When(@"I expand the ""(.*)"" folder")]
+        public void WhenIExtendTheHomeFolder(string folderName)
         {
-            foreach (var row in table.Rows)
+            checkBoxPage.PopUpButtonConfirmation();
+            checkBoxPage.ExpandFolder(folderName);
+        }
+
+        [Then(@"I select the ""(.*)"" folder without expanding")]
+        public void WhenISelectTheDesktopFolderWithoutExpanding(string folderName)
+        {
+            checkBoxPage.SelectFolder(folderName);
+        }
+
+        [Then(@"I select ""(.*)"" and ""(.*)"" from the ""(.*)"" folder")]
+        public void WhenISelectAngularAndVeuFromTheWorkspaceFolder(string itemName1, string itemName2, string folderName)
+        {
+            checkBoxPage.ExpandFolder(folderName);
+            checkBoxPage.SelectItem(itemName1);
+            checkBoxPage.SelectItem(itemName2);
+        }
+
+        [Then(@"I expand and click each item in the ""(.*)"" folder")]
+        public void WhenIExtendAndClickEachItemInTheOfficeFolder(string folderName)
+        {
+            checkBoxPage.ExpandFolder(folderName);
+            var officeItems = checkBoxPage.GetOfficeItems();
+            foreach (var item in officeItems)
             {
-                string checkBoxLabel = row["Item"].ToString();
-                _elementsPage.SelectCheckBox(checkBoxLabel);
+                checkBoxPage.SelectItem(item);
             }
         }
 
-        [Then(@"I verify the output is ""(.*)""")]
-        public void ThenIVerifyTheOutputIs(string expectedOutput)
+        [Then(@"I select the ""(.*)"" folder")]
+        public void WhenIExtendAndSelectTheDownloadsFolder(string folderName)
         {
-            string actualOutput = _elementsPage.OutputText.Text;
-            Assert.AreEqual(expectedOutput, actualOutput, "Output text does not match expected value");
+            checkBoxPage.SelectFolder(folderName);
+        }
+
+        [Then(@"I verify the selected items are ""(.*?)""")]
+        public void ThenIVerifyTheSelectedItemsAre(string expectedSelection)
+        {
+            var actualSelection = checkBoxPage.GetSelectedItemsText();
+            Assert.AreEqual(expectedSelection, actualSelection);
         }
     }
 }

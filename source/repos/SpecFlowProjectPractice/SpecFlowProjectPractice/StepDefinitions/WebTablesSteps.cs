@@ -20,6 +20,7 @@ namespace SpecFlowProjectPractice.StepDefinitions
         [When(@"I click the ""(.*)"" column")]
         public void WhenIClickTheColumn(string columnName)
         {
+            _webTablesPage.PopUpButtonConfirmation();
             _webTablesPage.ClickColumnHeader(columnName);
         }
 

@@ -24,28 +24,28 @@ namespace SpecFlowProjectPractice.Helper
             switch (pageName.ToLower())
             {
                 case "text box":
-                    NavigateToUrl(BaseUrl + "elements-forms/text-box");
+                    NavigateToUrl(BaseUrl + "text-box");
                     break;
                 case "check box":
-                    NavigateToUrl(BaseUrl + "elements-forms/check-box");
+                    NavigateToUrl(BaseUrl + "check-box");
                     break;
                 case "web tables":
-                    NavigateToUrl(BaseUrl + "elements-web-tables");
+                    NavigateToUrl(BaseUrl + "web-tables");
                     break;
                 case "buttons":
-                    NavigateToUrl(BaseUrl + "elements-forms/buttons");
+                    NavigateToUrl(BaseUrl + "buttons");
                     break;
                 case "browser windows":
-                    NavigateToUrl(BaseUrl + "alerts-frame-and-windows/browser-windows");
+                    NavigateToUrl(BaseUrl + "browser-windows");
                     break;
                 case "auto complete":
-                    NavigateToUrl(BaseUrl + "widgets/auto-complete");
+                    NavigateToUrl(BaseUrl + "auto-complete");
                     break;
                 case "selectable":
-                    NavigateToUrl(BaseUrl + "interactions/selectable");
+                    NavigateToUrl(BaseUrl + "selectable");
                     break;
                 case "practice form":
-                    NavigateToUrl(BaseUrl + "forms/practice-form");
+                    NavigateToUrl(BaseUrl + "practice-form");
                     break;
                 default:
                     throw new ArgumentException($"Unsupported page name: {pageName}");

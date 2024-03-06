@@ -15,10 +15,12 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public void EnterText(string text, string fieldName)
         {
+            var popup = _driverManager.Driver().FindElement(By.CssSelector("body > div.fc-consent-root > div.fc-dialog-container > div.fc-dialog.fc-choice-dialog > div.fc-dialog-content"));
+            popup.FindElement(By.XPath("/html/body/div[3]/div[2]/div[1]/div[2]/div[2]/button[1]/p")).Click();
             // 'no such element: Unable to locate element
-            var inputField = _driverManager.Driver().FindElement(By.Id("autoCompleteInput"));
-            inputField.Clear();
-            inputField.SendKeys(text);
+            var inputField = _driverManager.Driver().FindElement(By.CssSelector("#autoCompleteMultipleContainer > div > div.auto-complete__value-container.auto-complete__value-container--is-multi.css-1hwfws3"));
+            inputField.Click();
+            inputField.SendKeys("g");
             inputField.SendKeys(fieldName);
         }
 
@@ -79,9 +81,7 @@ namespace SpecFlowProjectPractice.PageObjects
                 .First(option => option.Text.Equals(optionText, StringComparison.InvariantCultureIgnoreCase))
                 .Click();
         }
-
-        [FindsBy(How = How.Id, Using = "autoCompleteMultipleInput")]
-        public IWebElement ColorInput { get; set; }
+        public IWebElement ColorInput => _driverManager.Driver().FindElement(By.Id("autoCompleteMultipleInput"));
 
         public void DeleteColor(string color)
         {

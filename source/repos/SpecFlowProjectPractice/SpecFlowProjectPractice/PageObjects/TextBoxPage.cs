@@ -1,5 +1,4 @@
 ﻿using OpenQA.Selenium;
-using SeleniumExtras.PageObjects;
 using SpecFlowProjectPractice.Drivers;
 
 namespace SpecFlowProjectPractice.PageObjects
@@ -13,28 +12,43 @@ namespace SpecFlowProjectPractice.PageObjects
             _driverManager = driverManager;
         }
 
-        [FindsBy(How = How.CssSelector, Using = "[id*='fullName']")]
-        public IWebElement FullNameField { get; set; }
+        public IWebElement FullNameField => _driverManager.Driver().FindElement(By.Id("userName"));
 
-        [FindsBy(How = How.CssSelector, Using = "[id*='userEmail']")]
-        public IWebElement EmailField { get; set; }
+        public IWebElement EmailField => _driverManager.Driver().FindElement(By.Id("userEmail"));
 
-        [FindsBy(How = How.CssSelector, Using = "[id*='currentAddress']")]
-        public IWebElement CurrentAddressField { get; set; }
+        public IWebElement CurrentAddressField => _driverManager.Driver().FindElement(By.Id("currentAddress"));
 
-        [FindsBy(How = How.CssSelector, Using = "[id*='permanentAddress']")]
-        public IWebElement PermanentAddressField { get; set; }
+        public IWebElement PermanentAddressField => _driverManager.Driver().FindElement(By.Id("permanentAddress"));
 
-        [FindsBy(How = How.CssSelector, Using = "[type='submit']")]
-        public IWebElement SubmitButton { get; set; }
+        public IWebElement Submit => _driverManager.Driver().FindElement(By.CssSelector("#submit"));
 
-        [FindsBy(How = How.CssSelector, Using = ".rt-tr-group")]
-        public IReadOnlyCollection<IWebElement> SubmittedDataRows { get; set; }
+        public IWebElement FullNameLabel => _driverManager.Driver().FindElement(By.Id("name"));
+        public IWebElement EmailLabel => _driverManager.Driver().FindElement(By.Id("email"));
+        public IWebElement CurrentAddressLabel => _driverManager.Driver().FindElement(By.CssSelector("p#currentAddress"));
+        public IWebElement PermanentAddressLabel => _driverManager.Driver().FindElement(By.CssSelector("p#permanentAddress"));
+
+
+        public void PopUpButtonConfirmation()
+        {
+            var popup = _driverManager.Driver().FindElement(By.CssSelector("body > div.fc-consent-root > div.fc-dialog-container > div.fc-dialog.fc-choice-dialog > div.fc-dialog-content"));
+            popup.FindElement(By.XPath("/html/body/div[3]/div[2]/div[1]/div[2]/div[2]/button[1]/p")).Click();
+        }
 
         public void ClickSubmitButton()
         {
-            var submitButton = _driverManager.Driver().FindElement(By.CssSelector("[type='submit']"));
-            submitButton.Click();
+            var submitButton = Submit;
+            if (submitButton != null)
+            {
+                var elementYOffset = submitButton.Location.Y; // Get the Y-coordinate of the button
+
+                ((IJavaScriptExecutor)_driverManager.Driver()).ExecuteScript(
+                    "arguments[0].scrollIntoView(true);", submitButton);
+                submitButton.Click();
+            }
+            else
+            {
+                submitButton.Click();
+            }
         }
     }
 }

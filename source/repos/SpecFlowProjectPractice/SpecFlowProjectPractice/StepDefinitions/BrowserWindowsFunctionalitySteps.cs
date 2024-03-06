@@ -2,7 +2,6 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using SpecFlowProjectPractice.Helper;
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
 using SpecFlowProjectPractice.Drivers;
@@ -22,10 +21,30 @@ namespace SpecFlowProjectPractice.StepDefinitions
         }
 
         [When(@"I click the link ""(.*)"" button")]
-        public void WhenIClickTheLink(string linkText)
+        public void WhenIClickTheLink(string linkAction)
         {
+            browserWindowPage.PopUpButtonConfirmation();
             //  'no such element: Unable to locate element
-            _driverManager.Driver().FindElement(By.LinkText(linkText)).Click();
+            // _driverManager.Driver().FindElement(By.LinkText(linkText)).Click();
+
+            /* var selector = linkAction switch
+            {
+                "New Tab" => "[tabButton]",
+                "New Window" => "[windowButton]",
+                _ => throw new ArgumentException("Invalid link action: " + linkAction)
+            };
+
+            _driverManager.Driver().FindElement(By.CssSelector(selector)).Click();*/
+
+            switch (linkAction) 
+            {
+                case "New Tab":
+                    browserWindowPage.ClickNewTabLink();
+                    break;
+                case "New Window":
+                    browserWindowPage.ClickNewWindowLink();
+                    break;
+            }
         }
 
         [Then(@"I switch to the new window")]

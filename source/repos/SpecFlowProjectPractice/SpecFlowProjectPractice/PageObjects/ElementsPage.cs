@@ -16,8 +16,8 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public List<string> GetColumnValues(string columnName)
         {
-            var table = _driverManager.Driver().FindElement(By.XPath($"//td[text()='{columnName}']/following-sibling::td[text()!=' ']"));
-            var headerRow = _driverManager.Driver().FindElement(By.TagName("thead")).FindElement(By.TagName("tr"));
+            var table = _driverManager.Driver().FindElement(By.XPath("#app > div > div > div > div.col-12.mt-4.col-md-6 > div.web-tables-wrapper > div.ReactTable.-striped.-highlight > div.rt-table > div.rt-tbody"));
+            var headerRow = _driverManager.Driver().FindElement(By.CssSelector("#app > div > div > div > div.col-12.mt-4.col-md-6 > div.web-tables-wrapper > div.ReactTable.-striped.-highlight > div.rt-table > div.rt-thead.-header > div"));
             var columnElements = headerRow.FindElements(By.TagName("th"));
             int columnIndex = -1; // Initialize to -1 in case the column isn't found
 
@@ -53,15 +53,15 @@ namespace SpecFlowProjectPractice.PageObjects
         public int GetRowCount()
         {
             // 'no such element: Unable to locate element:
-            var table = _driverManager.Driver().FindElement(By.Id("your-table-id"));
+            var table = _driverManager.Driver().FindElement(By.XPath("#app > div > div > div > div.col-12.mt-4.col-md-6 > div.web-tables-wrapper > div.ReactTable.-striped.-highlight > div.rt-table > div.rt-tbody"));
             return table.FindElements(By.TagName("tr")).Count;
         }
 
         public void ClickColumnHeader(string columnName)
         {
             // 'no such element: Unable to locate element:
-            var table = _driverManager.Driver().FindElement(By.XPath($"//th[text()='{columnName}']"));
-            var headerRow = table.FindElement(By.TagName("tr"));
+            var table = _driverManager.Driver().FindElement(By.XPath("#app > div > div > div > div.col-12.mt-4.col-md-6 > div.web-tables-wrapper > div.ReactTable.-striped.-highlight > div.rt-table > div.rt-tbody"));
+            var headerRow = _driverManager.Driver().FindElement(By.CssSelector("#app > div > div > div > div.col-12.mt-4.col-md-6 > div.web-tables-wrapper > div.ReactTable.-striped.-highlight > div.rt-table > div.rt-thead.-header > div"));
             headerRow.FindElements(By.TagName("th"))
                 .First(x => x.Text == columnName)
                 .Click();
@@ -70,7 +70,7 @@ namespace SpecFlowProjectPractice.PageObjects
         public void DeleteRowByName(string name)
         {
             // 'no such element: Unable to locate element:
-            var table = _driverManager.Driver().FindElement(By.Id("your-table-id"));
+            var table = _driverManager.Driver().FindElement(By.XPath("#app > div > div > div > div.col-12.mt-4.col-md-6 > div.web-tables-wrapper > div.ReactTable.-striped.-highlight > div.rt-table > div.rt-tbody"));
             foreach (var row in table.FindElements(By.TagName("tr")).Skip(1))
             {
                 if (row.FindElement(By.TagName("td")).Text.Contains(name))

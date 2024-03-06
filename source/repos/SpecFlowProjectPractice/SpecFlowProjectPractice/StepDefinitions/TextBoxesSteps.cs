@@ -1,9 +1,9 @@
 ﻿using NUnit.Framework;
-using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
 using SpecFlowProjectPractice.Drivers;
 using TechTalk.SpecFlow.Assist;
+using SpecFlowProjectPractice.Models;
 
 namespace SpecFlowProjectPractice.StepDefinitions
 {
@@ -22,13 +22,21 @@ namespace SpecFlowProjectPractice.StepDefinitions
         [When(@"I enter the following data:")]
         public void GivenIEnterInTheField(Table table)
         {
-            // The key is not present "FullName"
-            var data = table.CreateSet<Dictionary<string, string>>().ToList();
-            _textBoxPage.FullNameField.SendKeys(data[0]["Full Name"]);
-            _textBoxPage.EmailField.SendKeys(data[0]["Email"]);
-            _textBoxPage.CurrentAddressField.SendKeys(data[0]["Current Address"]);
-            _textBoxPage.PermanentAddressField.SendKeys(data[0]["Permanent Address"]);
+            _textBoxPage.PopUpButtonConfirmation();
+            if (_textBoxPage.FullNameField == null || _textBoxPage.EmailField == null || _textBoxPage.CurrentAddressField == null || _textBoxPage.PermanentAddressField == null)
+            {
+                throw new ArgumentNullException(
+                    "One or more web element parameters are null. Please ensure all elements are properly initialized.");
+            }
+            else
+            {
+                var data = table.CreateInstance<FormPayload>();
 
+                _textBoxPage?.FullNameField.SendKeys(data.FullName);
+                _textBoxPage?.EmailField.SendKeys(data.Email);
+                _textBoxPage?.CurrentAddressField.SendKeys(data.CurrentAddress);
+                _textBoxPage?.PermanentAddressField.SendKeys(data.PermanentAddress);
+            }
         }
 
         [Then(@"I click on the Submit button")]
@@ -37,21 +45,15 @@ namespace SpecFlowProjectPractice.StepDefinitions
             _textBoxPage.ClickSubmitButton();
         }
 
-        [Then(@"I verify the displayed table contains the entered ""(.*)""")]
+        [Then(@"I verify the displayed table contains the entered data")]
         public void ThenIVerifyTheDisplayedTableContainsTheEnteredData(Table table)
         {
-            var expectedData = table.CreateSet<List<string>>().ToList();
-            List<List<string>> GetSubmittedData()
-            {
-                List<List<string>> data = new List<List<string>>();
-                foreach (var row in _textBoxPage.SubmittedDataRows)
-                {
-                    List<string> rowData = row.FindElements(By.TagName("td")).Select(cell => cell.Text).ToList();
-                    data.Add(rowData);
-                }
-                return data;
-            }
-            Assert.That(GetSubmittedData(), Is.EqualTo(expectedData));
+            var expectedData = table.CreateInstance<FormPayload>();
+
+            Assert.AreEqual($"Name:{expectedData.FullName}", _textBoxPage?.FullNameLabel.Text);
+            Assert.AreEqual($"Email:{expectedData.Email}", _textBoxPage?.EmailLabel.Text);
+            Assert.AreEqual($"Current Address :{expectedData.CurrentAddress}", _textBoxPage?.CurrentAddressLabel.Text);
+            Assert.AreEqual($"Permananet Address :{expectedData.PermanentAddress}", _textBoxPage?.PermanentAddressLabel.Text);
         }
     }
 }

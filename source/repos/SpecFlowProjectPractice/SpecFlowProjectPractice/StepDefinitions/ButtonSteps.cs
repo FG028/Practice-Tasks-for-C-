@@ -20,7 +20,7 @@ namespace SpecFlowProjectPractice.StepDefinitions
         [When(@"I click the ""(.*)"" button")]
         public void WhenIClickTheButton(string buttonLabel)
         {
-
+            _buttonsPage.PopUpButtonConfirmation();
             var button = _buttonsPage.GetButtonByName(buttonLabel);
             _buttonsPage.PerformButtonAction(buttonLabel, button);
         }
