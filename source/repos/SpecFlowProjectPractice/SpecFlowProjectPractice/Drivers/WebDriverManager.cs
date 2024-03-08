@@ -14,9 +14,10 @@ namespace SpecFlowProjectPractice.Drivers
 
         public IWebDriver Driver()
         {
+            webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
             return webDriver;
         }
-
+        
         public IWebDriver GetDriver()
         {
             var browserType = TestContext.Parameters["BROWSER"];

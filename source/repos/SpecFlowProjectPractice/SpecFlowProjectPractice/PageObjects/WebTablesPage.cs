@@ -3,11 +3,11 @@ using SpecFlowProjectPractice.Drivers;
 
 namespace SpecFlowProjectPractice.PageObjects
 {
-    public class WebTablesPage : ElementsPage
+    public class WebTablesPage
     {
         private readonly WebDriverManager _driverManager;
 
-        public WebTablesPage(WebDriverManager driverManager) : base(driverManager)
+        public WebTablesPage(WebDriverManager driverManager)
         {
             _driverManager = driverManager;
         }
@@ -18,56 +18,53 @@ namespace SpecFlowProjectPractice.PageObjects
             popup.FindElement(By.XPath("/html/body/div[3]/div[2]/div[1]/div[2]/div[2]/button[1]/p")).Click();
         }
 
-        public IWebElement GetTableBody()
+        public IWebElement SalaryColumn => _driverManager.Driver().FindElement(By.XPath("/html/body/div[2]/div/div/div/div[2]/div[2]/div[3]/div[1]/div[1]/div/div[5]"));
+
+        private IReadOnlyCollection<IWebElement> FindTableRowElements(int rowNumber)
         {
-            return _driverManager.Driver().FindElement(By.CssSelector("table.demo-table tbody"));
+            // Use a generic selector for flexibility
+            return _driverManager.Driver().FindElements(By.CssSelector($"#app > div > div > div > div.col-12.mt-4.col-md-6 > div.web-tables-wrapper > div.ReactTable.-striped.-highlight > div.rt-table > div.rt-tbody > div:nth-child({rowNumber}) > div"));
         }
 
-        public int TableRowCount => GetTableBody().FindElements(By.TagName("tr")).Count;
-
-        public IWebElement TableBody => _driverManager.Driver().FindElement(By.TagName("tbody"));
-
-        public string GetCellValue(int rowIndex, int columnIndex)
+        public bool AreSalaryValuesAscending()
         {
-            var tableRows = TableBody.FindElements(By.TagName("tr"));
-            ValidateIndex(rowIndex, "row", tableRows.Count);
-
-            var tableCells = tableRows[rowIndex - 1].FindElements(By.TagName("td"));
-            ValidateIndex(columnIndex, "column", tableCells.Count);
-
-            return tableCells[columnIndex - 1].Text;
-        }
-
-        public List<string> GetRowValues(int rowIndex)
-        {
-            var tableRows = TableBody.FindElements(By.TagName("tr"));
-            ValidateIndex(rowIndex, "row", tableRows.Count);
-
-            var rowValues = tableRows[rowIndex - 1].FindElements(By.TagName("td")).Select(cell => cell.Text).ToList();
-            return rowValues;
-        }
-
-        public List<string> GetColumnValues(int columnIndex)
-        {
-            var tableRows = TableBody.FindElements(By.TagName("tr"));
-            ValidateIndex(columnIndex, "column", tableRows.Count); // Assuming consistent column count throughout
-
-            var columnValues = new List<string>();
-            foreach (var row in tableRows)
+            try
             {
-                var cell = row.FindElements(By.TagName("td"))[columnIndex - 1];
-                columnValues.Add(cell.Text);
+                if (!FindTableRowElements(1).Any(element => element.Text == "Salary") ||
+                    !FindTableRowElements(2).Any(element => element.Text == "Salary") ||
+                    !FindTableRowElements(3).Any(element => element.Text == "Salary"))
+                {
+                    return false;
+                }
+
+                int salary1 = int.Parse(FindTableRowElements(1).FirstOrDefault(element => element.Text == "Salary").Text.Trim());
+                int salary2 = int.Parse(FindTableRowElements(2).FirstOrDefault(element => element.Text == "Salary").Text.Trim());
+                int salary3 = int.Parse(FindTableRowElements(3).FirstOrDefault(element => element.Text == "Salary").Text.Trim());
+
+                return salary1 <= salary2 && salary2 <= salary3;
             }
-
-            return columnValues;
-        }
-
-        private void ValidateIndex(int index, string indexType, int maxCount)
-        {
-            if (index < 1 || index > maxCount)
+            catch (NoSuchElementException)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), $"{indexType} index must be between 1 and {maxCount}");
+                throw new Exception("Failed to find elements while checking salary values.");
+            }
+            catch (FormatException)
+            {
+                throw new Exception("Failed to parse salary values to integers.");
             }
         }
+
+        public void ClickSalaryColumn() => SalaryColumn.Click();
+
+        public void DeleteSecondRow() => DeleteButton.Click();
+
+        public int GetRowCount() => FindTableRowElements(1).Count; // Use the same selector as in AreSalaryValuesAscending
+
+        public bool IsComplianceDepartmentValuePresent() => DepartmentValues.Any(element => element.Text == "Compliance");
+
+        // Update the DeleteButton selector if the original is incorrect
+        public IWebElement DeleteButton => _driverManager.Driver().FindElement(By.Id("delete-record-2")); // Example selector, adjust if needed
+
+        // Update the DepartmentValues selector if the original is incorrect
+        public IReadOnlyCollection<IWebElement> DepartmentValues => _driverManager.Driver().FindElements(By.XPath("//table[@id='table1']//tbody//tr//td[text()='Department']")); // Example selector, adjust if needed
     }
 }

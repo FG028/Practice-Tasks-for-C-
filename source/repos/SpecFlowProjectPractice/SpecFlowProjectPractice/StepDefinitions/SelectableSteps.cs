@@ -3,6 +3,8 @@ using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
 using SpecFlowProjectPractice.Drivers;
+using System.Text.RegularExpressions;
+using OpenQA.Selenium.Interactions;
 
 namespace SpecFlowProjectPractice.StepDefinitions
 {
@@ -19,23 +21,17 @@ namespace SpecFlowProjectPractice.StepDefinitions
         }
 
         [When(@"I select squares ""(.*)""")]
-        public void WhenISelectTheFollowingOptions(Table table)
+        public void WhenISelectTheFollowingOptions()
         {
-            foreach (var row in table.Rows)
-            {
-                string optionLabel = row["Item"].ToString();
-                _selectablePage.SelectOption(optionLabel);
-            }
+            _selectablePage.SelectGrid();
+            _selectablePage.SelectOption();
         }
-        // : 'Invalid cast from 'System.String' to 'TechTalk.SpecFlow.Table'.
-        [Then(@"I verify the selected squares' values are ""(.*)""")]
-        public void ThenIVerifyTheFollowingOptionsAreSelected(Table table)
-        {
-            List<string> expectedSelectedOptions = table.Rows.Select(row => row["Item"].ToString()).ToList();
-            List<string> actualSelectedOptions = _selectablePage.GetSelectedOptions();
 
-            // Assert that actual and expected selected options are the same
-            CollectionAssert.AreEquivalent(expectedSelectedOptions, actualSelectedOptions);
+        [Then(@"I verify the selected squares' values are ""(.*)""")]
+        public void ThenIVerifyTheFollowingOptionsAreSelected(string expectedValues)
+        {
+            var actualValues = _selectablePage.GetSelectedValuesFromSquares();
+            Assert.AreEqual(expectedValues.Split(','), actualValues.ToArray());
         }
     }
 }

@@ -18,23 +18,19 @@ namespace SpecFlowProjectPractice.PageObjects
             popup.FindElement(By.XPath("/html/body/div[3]/div[2]/div[1]/div[2]/div[2]/button[1]/p")).Click();
         }
 
+        public string GetPageText()
+        {
+            return _driverManager.Driver().FindElement(By.TagName("body")).Text;
+        }
+
         public void SwitchToNewWindow()
         {
-            var originalWindow = _driverManager.Driver().CurrentWindowHandle;
-
-            foreach (var handle in _driverManager.Driver().WindowHandles.Except(new[] { originalWindow }))
+            string currentWindow = _driverManager.Driver().CurrentWindowHandle;
+            foreach (string windowHandle in _driverManager.Driver().WindowHandles.Where(w => w != currentWindow))
             {
-                _driverManager.Driver().SwitchTo().Window(handle);
+                _driverManager.Driver().SwitchTo().Window(windowHandle);
                 break;
             }
-        }
-        public void ClickNewTabLink()
-        {
-            _driverManager.Driver().FindElement(By.Id("tabButton")).Click();
-        }
-        public void ClickNewWindowLink()
-        {
-            _driverManager.Driver().FindElement(By.CssSelector("windowButton")).Click();
         }
     }
 }

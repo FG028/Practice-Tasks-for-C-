@@ -1,14 +1,12 @@
-﻿Feature: Browser Windows Functionality
+﻿Feature: Browser Windows Management
 
 	@CHROME
-	Scenario Outline: Open new window and verify content (if applicable)
+	Scenario Outline: Open new window or tab and verify its content
 	Given I am on the "Browser Windows" page
-	When I click the link "<ButtonName>" button
-	Then I switch to the new window
-		And I verify the page contains the text "<ExpectedText>"
+	When I click the link "<buttonText>" button
+	Then The new window contains the text "<expectedText>"
 
 	Examples:
-	| ButtonName		| ExpectedText			|
-	| ----------------- | --------------------- |
-	| New Tab			| This is a sample page |
-	| New Window		| This is a sample page |
+	| buttonText  | expectedText		  |
+	| New Tab     | This is a sample page |
+	| New Window  | This is a sample page |

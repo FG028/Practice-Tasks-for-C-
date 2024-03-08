@@ -17,47 +17,35 @@ namespace SpecFlowProjectPractice.StepDefinitions
             _webTablesPage = new WebTablesPage(_driverManager);
         }
 
-        [When(@"I click the ""(.*)"" column")]
-        public void WhenIClickTheColumn(string columnName)
+        [When(@"I click on the Salary column")]
+        public void WhenIClickOnTheSalaryColumn()
         {
             _webTablesPage.PopUpButtonConfirmation();
-            _webTablesPage.ClickColumnHeader(columnName);
+            _webTablesPage.ClickSalaryColumn();
         }
 
-        [Then(@"I verify the values in the ""(.*)"" column are in ascending order")]
-        public void ThenIVerifyTheValuesInTheColumnAreInAscendingOrder(string columnName)
+        [Then(@"the values in the Salary column should be in ascending order")]
+        public void ThenTheValuesInTheSalaryColumnShouldBeInAscendingOrder()
         {
-            // Get all cells in the specified column
-            List<string> cellValues = _webTablesPage.GetColumnValues(columnName);
-
-            // Verify values are in ascending order using LINQ
-            bool isAscending = cellValues.OrderBy(x => x).SequenceEqual(cellValues);
-            Assert.IsTrue(isAscending, $"Values in '{columnName}' column are not in ascending order");
+            Assert.IsTrue(_webTablesPage.AreSalaryValuesAscending());
         }
 
-        [Then(@"I delete the second row name Alden")]
-        public void DeleteSecondRow()
+        [Then(@"I delete the second row")]
+        public void WhenIDeleteTheSecondRow()
         {
-            _webTablesPage.DeleteRowByName("Alden");
+            _webTablesPage.DeleteSecondRow();
         }
 
-        [Then(@"I verify there are only two rows left in the table")]
-        public void ThenIVerifyThereAreOnlyTwoRowsLeftInTheTable()
+        [Then(@"there should be only two rows left in the table")]
+        public void ThenThereShouldBeOnlyTwoRowsLeftInTheTable()
         {
-            // Get the number of rows in the table
-            int rowCount = _webTablesPage.GetRowCount();
-            Assert.AreEqual(2, rowCount, "Row count is not equal to 2");
+            Assert.AreEqual(2, _webTablesPage.GetRowCount());
         }
-        
-        [Then(@"I verify that there is no ""(.*)"" value among the values in the ""(.*)"" column")]
-        public void ThenIVerifyThatThereIsNoValueAmongTheValuesInTheColumn(string value, string columnName)
-        {
-            // Get all values in the specified column
-            List<string> cellValues = _webTablesPage.GetColumnValues(columnName);
-            // Verify that no cell value matches the expected value
 
-            bool isValuePresent = cellValues.Any(x => x.Equals(value, StringComparison.OrdinalIgnoreCase));
-            Assert.IsFalse(isValuePresent, $"Value '{value}' is present in the '{columnName}' column");
+        [Then(@"there should be no ""Compliance"" value among the values in the Department column")]
+        public void ThenThereShouldBeNoComplianceValueAmongTheValuesInTheDepartmentColumn()
+        {
+            Assert.IsFalse(_webTablesPage.IsComplianceDepartmentValuePresent());
         }
     }
 }

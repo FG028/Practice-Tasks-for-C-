@@ -21,45 +21,19 @@ namespace SpecFlowProjectPractice.StepDefinitions
         }
 
         [When(@"I click the link ""(.*)"" button")]
-        public void WhenIClickTheLink(string linkAction)
+        public void ClickButton(string buttonText)
         {
             browserWindowPage.PopUpButtonConfirmation();
-            //  'no such element: Unable to locate element
-            // _driverManager.Driver().FindElement(By.LinkText(linkText)).Click();
-
-            /* var selector = linkAction switch
-            {
-                "New Tab" => "[tabButton]",
-                "New Window" => "[windowButton]",
-                _ => throw new ArgumentException("Invalid link action: " + linkAction)
-            };
-
-            _driverManager.Driver().FindElement(By.CssSelector(selector)).Click();*/
-
-            switch (linkAction) 
-            {
-                case "New Tab":
-                    browserWindowPage.ClickNewTabLink();
-                    break;
-                case "New Window":
-                    browserWindowPage.ClickNewWindowLink();
-                    break;
-            }
+            var button = _driverManager.Driver().FindElement(By.XPath($"//button[text()='{buttonText}']"));
+            button.Click();
         }
 
-        [Then(@"I switch to the new window")]
-        public void WhenISwitchToTheNewWindow()
+        [Then(@"The new window contains the text ""(.*)""")]
+        public void VerifyNewWindowText(string expectedText)
         {
             browserWindowPage.SwitchToNewWindow();
-        }
-
-        [Then(@"I verify the page contains the text ""(.*)""")]
-        public void ThenIVerifyTheFollowingTextIsDisplayed(string expectedText)
-        {
-            var wait = new WebDriverWait(_driverManager.Driver(), TimeSpan.FromSeconds(10));
-            var element = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath($"//*[text()='{expectedText}']")));
-
-            Assert.AreEqual(expectedText, element.Text, $"Expected text '{expectedText}' not found on the page.");
+            string actualText = browserWindowPage.GetPageText();
+            Assert.That(actualText.Contains(expectedText));
         }
     }
 }

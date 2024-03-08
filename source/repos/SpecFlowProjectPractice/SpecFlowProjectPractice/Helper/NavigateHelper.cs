@@ -27,10 +27,10 @@ namespace SpecFlowProjectPractice.Helper
                     NavigateToUrl(BaseUrl + "text-box");
                     break;
                 case "check box":
-                    NavigateToUrl(BaseUrl + "check-box");
+                    NavigateToUrl(BaseUrl + "checkbox");
                     break;
                 case "web tables":
-                    NavigateToUrl(BaseUrl + "web-tables");
+                    NavigateToUrl(BaseUrl + "webtables");
                     break;
                 case "buttons":
                     NavigateToUrl(BaseUrl + "buttons");
@@ -44,8 +44,11 @@ namespace SpecFlowProjectPractice.Helper
                 case "selectable":
                     NavigateToUrl(BaseUrl + "selectable");
                     break;
+                case "progress bar":
+                    NavigateToUrl(BaseUrl + "progress-bar");
+                    break;
                 case "practice form":
-                    NavigateToUrl(BaseUrl + "practice-form");
+                    NavigateToUrl(BaseUrl + "automation-practice-form");
                     break;
                 default:
                     throw new ArgumentException($"Unsupported page name: {pageName}");
