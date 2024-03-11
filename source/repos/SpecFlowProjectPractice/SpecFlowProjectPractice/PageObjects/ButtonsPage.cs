@@ -36,25 +36,28 @@ namespace SpecFlowProjectPractice.PageObjects
         }
 
         public void PerformButtonAction(string buttonName, IWebElement button)
-        {  
-                _clickedButtonName = buttonName;
-                switch (buttonName)
-                {
-                    case "Click Me":
-                        button.Click();
-                        break;
-                    case "Double Click Me":
-                        new Actions(driverManager.Driver()).DoubleClick(button).Perform();
-                        break;
-                    case "Right Click Me":
-                        new Actions(driverManager.Driver()).ContextClick(button).Perform();
-                        break;
-                    default:
-                        throw new ArgumentException($"Unsupported button name: {buttonName}");
-                }
-            
+        {
+            _clickedButtonName = buttonName;
+            ((IJavaScriptExecutor)driverManager.Driver()).ExecuteScript(
+            "arguments[0].scrollIntoView(true);", button);
+
+            switch (buttonName)
+            {
+                case "Click Me":
+                    button.Click();
+                    break;
+                case "Right Click Me":
+                    new Actions(driverManager.Driver()).ContextClick(button).Perform();
+                    break;
+                case "Double Click Me":
+                    new Actions(driverManager.Driver()).DoubleClick(button).Perform();
+                    break;
+                default:
+                    throw new ArgumentException($"Unsupported button name: {buttonName}");
+            }
         }
-        
+
+
         public string GetResultText()
         {
             switch (_clickedButtonName)

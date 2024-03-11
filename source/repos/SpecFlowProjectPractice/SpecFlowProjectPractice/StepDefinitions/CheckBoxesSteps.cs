@@ -2,6 +2,7 @@
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
 using SpecFlowProjectPractice.Drivers;
+using SpecFlowProjectPractice.Helper;
 
 namespace SpecFlowProjectPractice.StepDefinitions
 {
@@ -10,17 +11,18 @@ namespace SpecFlowProjectPractice.StepDefinitions
     {
         private WebDriverManager _driverManager;
         private readonly CheckBoxPage checkBoxPage;
+        private PopUpHandler popUpHandler;
 
         public CheckBoxesSteps(WebDriverManager driverManager)
         {
             _driverManager = driverManager;
+            popUpHandler = new PopUpHandler(driverManager);
             checkBoxPage = new CheckBoxPage(_driverManager);
         }
 
         [When(@"I expand the ""(.*)"" folder")]
         public void WhenIExtendTheHomeFolder(string folderName)
         {
-            checkBoxPage.PopUpButtonConfirmation();
             checkBoxPage.ExpandHomeFolder();
         }
 

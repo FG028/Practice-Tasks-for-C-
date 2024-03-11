@@ -4,6 +4,7 @@ using SpecFlowProjectPractice.PageObjects;
 using SpecFlowProjectPractice.Drivers;
 using TechTalk.SpecFlow.Assist;
 using SpecFlowProjectPractice.Models;
+using SpecFlowProjectPractice.Helper;
 
 namespace SpecFlowProjectPractice.StepDefinitions
 {
@@ -12,17 +13,17 @@ namespace SpecFlowProjectPractice.StepDefinitions
     {
         private WebDriverManager driverManager;
         private TextBoxPage _textBoxPage;
-
+        private PopUpHandler popUpHandler;
         public TextBoxesSteps(WebDriverManager _driverManager)
         {
             driverManager = _driverManager;
+            popUpHandler = new PopUpHandler(driverManager);
             _textBoxPage = new TextBoxPage(driverManager);
         }
 
         [When(@"I enter the following data:")]
         public void GivenIEnterInTheField(Table table)
         {
-            _textBoxPage.PopUpButtonConfirmation();
             if (_textBoxPage.FullNameField == null || _textBoxPage.EmailField == null || _textBoxPage.CurrentAddressField == null || _textBoxPage.PermanentAddressField == null)
             {
                 throw new ArgumentNullException(

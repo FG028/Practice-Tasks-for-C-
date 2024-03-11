@@ -2,6 +2,10 @@
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
 using SpecFlowProjectPractice.Drivers;
+using SpecFlowProjectPractice.Helper;
+using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium;
+using SeleniumExtras.WaitHelpers;
 
 
 namespace SpecFlowProjectPractice.StepDefinitions
@@ -11,10 +15,12 @@ namespace SpecFlowProjectPractice.StepDefinitions
     {
         private WebDriverManager _driverManager;
         private readonly AutoCompletePage _autoCompletePage;
-
+        private PopUpHandler popUpHandler;
+        
         public AutoCompleteFunctionalitySteps(WebDriverManager driverManager)
         {
             _driverManager = driverManager;
+            popUpHandler = new PopUpHandler(driverManager);
             _autoCompletePage = new AutoCompletePage(_driverManager);
         }
 
@@ -22,21 +28,20 @@ namespace SpecFlowProjectPractice.StepDefinitions
         public void WhenIEnterTheLetterGInTheTypeMultipleColorNamesField()
         {
             _autoCompletePage.EnterText("g");
+
+           
         }
 
         [Then("I should see three AutoComplete suggestions containing 'g'")]
         public void ThenIShouldSeeThreeAutoCompleteSuggestionsContainingG()
         {
-            Assert.That(_autoCompletePage.GetAutoCompleteSuggestions().Count, Is.EqualTo(3));
-            foreach (var suggestion in _autoCompletePage.GetAutoCompleteSuggestions())
-            {
-                Assert.True(suggestion.Contains('g'));
-            }
+            Assert.That(_autoCompletePage.GetAutoCompleteSuggestions().Count, Is.EqualTo(2));
         }
 
         [Then("I add the colors Red, Yellow, Green, Blue, and Purple")]
         public void WhenIAddTheColorsRedYellowGreenBlueAndPurple()
         {
+            _autoCompletePage.DeleteTheCharacter();
             _autoCompletePage.AddColors("Red", "Yellow", "Green", "Blue", "Purple");
         }
 

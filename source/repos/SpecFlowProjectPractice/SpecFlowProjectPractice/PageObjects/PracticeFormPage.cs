@@ -2,7 +2,9 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using SpecFlowProjectPractice.Drivers;
+using System;
 
 
 
@@ -21,8 +23,8 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public void PopUpButtonConfirmation()
         {
-            var popup = _driverManager.Driver().FindElement(By.CssSelector("body > div.fc-consent-root > div.fc-dialog-container > div.fc-dialog.fc-choice-dialog > div.fc-dialog-content"));
-            popup.FindElement(By.XPath("/html/body/div[3]/div[2]/div[1]/div[2]/div[2]/button[1]/p")).Click();
+            /*var popup = _driverManager.Driver().FindElement(By.CssSelector("body > div.fc-consent-root > div.fc-dialog-container > div.fc-dialog.fc-choice-dialog > div.fc-dialog-content"));
+            popup.FindElement(By.XPath("/html/body/div[3]/div[2]/div[1]/div[2]/div[2]/button[1]/p")).Click();q*/
         }
 
         public bool IsValidMobileNumber(string phoneNumber)
@@ -60,23 +62,18 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public void SelectSubjects(string subject)
         {
-            WebDriverWait wait = new WebDriverWait(_driverManager.Driver(), TimeSpan.FromSeconds(10)); // Customize timeout as needed
-
             try
             {
                 _driverManager.Driver().FindElement(By.XPath("//*[@id='subjectsContainer']/div/div[1]")).Click();
 
                 var subjectsInput = _driverManager.Driver().FindElement(By.Id("subjectsInput"));
-                subjectsInput.SendKeys(subject);
                 Actions actions = new Actions(_driverManager.Driver());
-                actions.SendKeys(subject + Keys.Enter).Perform();
+                actions.SendKeys(subject).Perform();
             }
             catch (WebDriverException ex)
             {
-                // Handle any potential exceptions during waiting
                 Console.WriteLine("Error during wait: " + ex.Message);
             }
-
         }
 
         public void SelectHobbies(string[] hobbiesToSelect)
@@ -86,7 +83,6 @@ namespace SpecFlowProjectPractice.PageObjects
             IWebElement musicCheckbox = _driverManager.Driver().FindElement(By.Id("hobbies-checkbox-3"));
             IJavaScriptExecutor jsExecutor = (IJavaScriptExecutor)_driverManager.Driver();
 
-            /*
             foreach (var hobby in hobbiesToSelect)
             {
                 if (hobby == "Reading")
@@ -95,30 +91,10 @@ namespace SpecFlowProjectPractice.PageObjects
                 }
                 else if (hobby == "Music")
                 {
-                    jsExecutor.ExecuteScript("arguments[0].click();",musicCheckbox);
+                    jsExecutor.ExecuteScript("arguments[0].click();", musicCheckbox);
                 } else
                 {
                     return;
-                }
-            }
-            */
-            foreach (var hobby in hobbiesToSelect)
-            {
-                IWebElement checkboxToClick = hobby switch
-                {
-                    "Reading" => readingCheckbox,
-                    "Music" => musicCheckbox,
-                    _ => null
-                };
-
-                if (checkboxToClick != null)
-                {
-                    // Click using JavaScript to avoid form submission (if necessary)
-                    ((IJavaScriptExecutor)_driverManager.Driver()).ExecuteScript("arguments[0].click();", checkboxToClick);
-                }
-                else
-                {
-                    Console.WriteLine($"Hobby '{hobby}' not found.");
                 }
             }
         }
@@ -144,7 +120,10 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public void ClickSubmit()
         {
-            _driverManager.Driver().FindElement(By.Id("submit")).Click();
+            var SubmitButton = _driverManager.Driver().FindElement(By.Id("submit"));
+            var jsExecutor = (IJavaScriptExecutor)_driverManager.Driver();
+            jsExecutor.ExecuteScript("arguments[0].click();", SubmitButton);
+            
         }
 
         public Dictionary<string, string> GetSubmittedData()

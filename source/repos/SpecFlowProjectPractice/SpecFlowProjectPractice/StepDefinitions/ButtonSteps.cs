@@ -2,6 +2,7 @@
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
 using SpecFlowProjectPractice.Drivers;
+using SpecFlowProjectPractice.Helper;
 
 namespace SpecFlowProjectPractice.StepDefinitions
 {
@@ -10,17 +11,18 @@ namespace SpecFlowProjectPractice.StepDefinitions
     {
         private WebDriverManager _driverManager;
         private ButtonsPage _buttonsPage;
+        private PopUpHandler popUpHandler;
 
         public ButtonsSteps(WebDriverManager driverManager)
         {
             _driverManager = driverManager;
+            popUpHandler = new PopUpHandler(driverManager);
             _buttonsPage = new ButtonsPage(_driverManager);
         }
         
         [When(@"I click the ""(.*)"" button")]
         public void WhenIClickTheButton(string buttonLabel)
         {
-            _buttonsPage.PopUpButtonConfirmation();
             var button = _buttonsPage.GetButtonByName(buttonLabel);
             _buttonsPage.PerformButtonAction(buttonLabel, button);
         }

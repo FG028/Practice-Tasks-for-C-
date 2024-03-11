@@ -1,10 +1,9 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using SeleniumExtras.WaitHelpers;
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
 using SpecFlowProjectPractice.Drivers;
+using SpecFlowProjectPractice.Helper;
 
 namespace SpecFlowProjectPractice.StepDefinitions
 {
@@ -13,17 +12,17 @@ namespace SpecFlowProjectPractice.StepDefinitions
     {
         private WebDriverManager _driverManager;
         private readonly BrowserWindowPage browserWindowPage;
-
+        private PopUpHandler popUpHandler;
         public BrowserWindowsFunctionalitySteps(WebDriverManager driverManager)
         {
             _driverManager = driverManager;
+            popUpHandler = new PopUpHandler(driverManager);
             browserWindowPage = new BrowserWindowPage(_driverManager);
         }
 
         [When(@"I click the link ""(.*)"" button")]
         public void ClickButton(string buttonText)
         {
-            browserWindowPage.PopUpButtonConfirmation();
             var button = _driverManager.Driver().FindElement(By.XPath($"//button[text()='{buttonText}']"));
             button.Click();
         }

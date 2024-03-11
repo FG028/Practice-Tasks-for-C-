@@ -1,4 +1,7 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.Extensions;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using SpecFlowProjectPractice.Drivers;
 
 namespace SpecFlowProjectPractice.PageObjects
@@ -14,14 +17,22 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public void EnterText(string text)
         {
-            /* var popup = _driverManager.Driver().FindElement(By.CssSelector("body > div.fc-consent-root > div.fc-dialog-container > div.fc-dialog.fc-choice-dialog > div.fc-dialog-content"));
-            popup.FindElement(By.XPath("/html/body/div[3]/div[2]/div[1]/div[2]/div[2]/button[1]/p")).Click(); */
-            
-            var inputField = _driverManager.Driver().FindElement(By.CssSelector("#autoCompleteMultipleContainer > div > div.auto-complete__value-container.auto-complete__value-container--is-multi.css-1hwfws3"));
+            var inputField = _driverManager.Driver().FindElement(By.CssSelector("#autoCompleteMultipleInput"));
             inputField.Click();
             inputField.SendKeys(text);
+            if (text.Length > 2)
+            {
+                inputField.SendKeys(Keys.Enter);
+            }
         }
 
+        public void DeleteTheCharacter()
+        {
+            var inputField = _driverManager.Driver().FindElement(By.CssSelector("#autoCompleteMultipleInput"));
+            inputField.Click();
+            inputField.Clear();
+
+        }
         public List<string> GetAutoCompleteSuggestions()
         {
             var suggestions = _driverManager.Driver().FindElements(By.CssSelector("#autoCompleteMultipleContainer > div"));
@@ -30,8 +41,20 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public List<string> GetSelectedColors()
         {
-            var selectedColors = _driverManager.Driver().FindElements(By.CssSelector("#autoCompleteMultipleContainer > div > div.auto-complete__value-container.auto-complete__value-container--is-multi.css-1hwfws3 > div.css-1g6gooi > div"));
-            return selectedColors.Select(s => s.Text).ToList();
+            List<string> colors = new List<string>();
+
+            for (int i = 1; i <= 5; i++)
+            {
+                string xpath = "//*[@id=\"autoCompleteMultipleContainer\"]/div/div[1]/div[1] |\r\n//*[@id=\"autoCompleteMultipleContainer\"]/div/div[1]/div[2]/div[1] |\r\n//*[@id=\"autoCompleteMultipleContainer\"]/div/div[1]/div[3]/div[1] |\r\n//*[@id=\"autoCompleteMultipleContainer\"]/div/div[1]/div[4]/div[1] |\r\n//*[@id=\"autoCompleteMultipleContainer\"]/div/div[1]/div[5]/div[1]";
+                var elements = _driverManager.Driver().FindElements(By.XPath(xpath));
+
+                foreach (var element in elements)
+                {
+                    colors.Add(element.Text);
+                }
+            }
+
+            return colors;
         }
 
         public void AddColors(params string[] colors)
@@ -39,7 +62,6 @@ namespace SpecFlowProjectPractice.PageObjects
             foreach (var color in colors)
             {
                 EnterText(color);
-                _driverManager.Driver().FindElement(By.CssSelector("#autoCompleteSingleInput")).SendKeys(Keys.Enter);
             }
         }
 
@@ -47,8 +69,22 @@ namespace SpecFlowProjectPractice.PageObjects
         {
             foreach (var color in colors)
             {
-                var colorTag = _driverManager.Driver().FindElement(By.XPath($"//span[@class='tag ui-tag' and text()='{color}']"));
-                colorTag.FindElement(By.CssSelector(".ui-tag-icon-close")).Click();
+                if (color == "Yellow")
+                {
+                    _driverManager.Driver().FindElement(By
+                        .CssSelector("#autoCompleteMultipleContainer > div > div.auto-complete__value-container.auto-complete__value-container--is-multi.auto-complete__value-container--has-value.css-1hwfws3 > div:nth-child(2) > div.css-xb97g8.auto-complete__multi-value__remove > svg > path"))
+                        .Click();
+                }
+                else if (color == "Purple")
+                {
+                    _driverManager.Driver().FindElement(By
+                        .CssSelector("#autoCompleteMultipleContainer > div > div.auto-complete__value-container.auto-complete__value-container--is-multi.auto-complete__value-container--has-value.css-1hwfws3 > div:nth-child(4) > div.css-xb97g8.auto-complete__multi-value__remove > svg > path"))
+                        .Click();
+                } 
+                else 
+                { 
+                    return;
+                }
             }
         }
     }

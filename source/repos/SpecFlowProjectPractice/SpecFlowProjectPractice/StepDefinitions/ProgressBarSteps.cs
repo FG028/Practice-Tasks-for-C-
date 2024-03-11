@@ -3,23 +3,25 @@ using OpenQA.Selenium;
 using NUnit.Framework;
 using SpecFlowProjectPractice.PageObjects;
 using SpecFlowProjectPractice.Drivers;
+using SpecFlowProjectPractice.Helper;
 
 [Binding]
 public class ProgressBarSteps : Steps
 {
     private readonly WebDriverManager _driverManager;
     private readonly ProgressBarPage _progressBarPage;
+    private PopUpHandler popUpHandler;
 
     public ProgressBarSteps(WebDriverManager driverManager)
     {
         _driverManager = driverManager;
+        popUpHandler = new PopUpHandler(driverManager);
         _progressBarPage = new ProgressBarPage(_driverManager);
     }
 
     [When(@"I click on Start")]
     public void WhenIClickOnStart()
     {
-        _progressBarPage.PopUpButtonConfirmation();
         _progressBarPage.ClickStartButton();
     }
 

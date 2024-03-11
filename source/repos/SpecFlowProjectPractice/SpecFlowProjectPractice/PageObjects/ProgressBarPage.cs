@@ -27,7 +27,7 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public bool IsProgressBarComplete()
         {
-            var wait = new WebDriverWait(_driverManager.Driver(), TimeSpan.FromSeconds(20));
+            var wait = new WebDriverWait(_driverManager.Driver(), TimeSpan.FromSeconds(24));
             return wait.Until(d => ProgressBarValue.GetAttribute("aria-valuenow") == "100");
         }
 

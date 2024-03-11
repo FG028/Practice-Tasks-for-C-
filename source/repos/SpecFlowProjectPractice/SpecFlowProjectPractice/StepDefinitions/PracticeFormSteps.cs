@@ -1,6 +1,7 @@
 ﻿using SpecFlowProjectPractice.Drivers;
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
+using SpecFlowProjectPractice.Helper;
 using Bogus;
 using System.Text;
 
@@ -12,10 +13,12 @@ namespace SpecFlowProjectPractice.StepDefinitions
         private WebDriverManager _driverManager;
         private readonly PracticeFormPage _practiceFormPage;
         private Faker _faker;
+        private PopUpHandler popUpHandler;
 
         public PracticeFormSteps(WebDriverManager driverManager)
         {
             _driverManager = driverManager;
+            popUpHandler = new PopUpHandler(driverManager);
             _faker = new Faker();
             _practiceFormPage = new PracticeFormPage(_driverManager);
         }
@@ -23,7 +26,6 @@ namespace SpecFlowProjectPractice.StepDefinitions
         [When(@"I fill the form with random data")]
         public void FillFormWithRandomData()
         {
-            _practiceFormPage.PopUpButtonConfirmation();
 
             var faker = new Bogus.Faker();
 
@@ -44,14 +46,10 @@ namespace SpecFlowProjectPractice.StepDefinitions
             _practiceFormPage.SetDateOfBirth("2000-01-10");
             _practiceFormPage.SelectState("Uttar Pradesh");
             _practiceFormPage.SelectCity("Merrut");
-
-            _practiceFormPage.SelectSubjects("Maths");
+            
+            _practiceFormPage.SelectSubjects("Maths");  
             _practiceFormPage.SelectSubjects("Physics");
             _practiceFormPage.SelectHobbies(new[] { "Reading", "Music" });
-
-
-            _practiceFormPage.SelectState("Uttar Pradesh");
-            _practiceFormPage.SelectCity("Merrut");
 
         }
 

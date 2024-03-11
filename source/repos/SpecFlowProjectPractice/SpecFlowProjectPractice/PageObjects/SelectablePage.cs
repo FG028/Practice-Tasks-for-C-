@@ -21,7 +21,7 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public void SwitchToGridTab()
         {
-            PoPUpWindowConsent();
+            // PoPUpWindowConsent();
             var selectGrid = _driverManager.Driver().FindElement(By.CssSelector("#demo-tab-grid"));
             if (selectGrid == null)
             {
@@ -37,7 +37,7 @@ namespace SpecFlowProjectPractice.PageObjects
             }
         }
 
-        /* public void SelectOptions()
+         public void SelectOptions()
         {
             List<string> optionSelectors = new List<string>
             {
@@ -49,11 +49,14 @@ namespace SpecFlowProjectPractice.PageObjects
             };
             foreach (string selector in optionSelectors)
             {
+                
                 IWebElement option = _driverManager.Driver().FindElement(By.CssSelector(selector));
+                ((IJavaScriptExecutor)_driverManager.Driver()).ExecuteScript(
+                "arguments[0].scrollIntoView(true);", option);
                 option.Click();
             }
         }
-
+        /*
         public List<string> GetSelectedValuesFromSquares()
         {
             List<string> selectedValues = new List<string>();
@@ -68,11 +71,20 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public List<string> GetSelectedSquareValues()
         {
-            var selectedSquares = _driverManager.Driver().FindElements(By.Id("#gridContainer"));
+            var selectedSelectors = new List<string>()
+            {
+                "#row1 > li:nth-child(1)",
+                "#row1 > li:nth-child(3)",
+                "#row2 > li:nth-child(2)",
+                "#row3 > li:nth-child(1)",
+                "#row3 > li:nth-child(3)"
+            };
 
             List<string> selectedValues = new List<string>();
-            foreach (var square in selectedSquares)
+
+            foreach (var selector in selectedSelectors)
             {
+                var square = _driverManager.Driver().FindElement(By.CssSelector(selector));
                 string value = square.Text.Trim();
                 selectedValues.Add(value);
             }
@@ -80,24 +92,16 @@ namespace SpecFlowProjectPractice.PageObjects
             return selectedValues;
         }
 
-        public bool VerifySelectedValues(List<string> expectedValues)
+        public void VerifySelectedValues(List<string> expectedValues)
         {
-            List<string> actualValues = GetSelectedSquareValues();
+        var actualValues = GetSelectedSquareValues();
 
-            if (actualValues.Count != expectedValues.Count)
-            {
-                return false;
-            }
+        if (!actualValues.OrderBy(x => x).SequenceEqual(expectedValues.OrderBy(x => x)))
+        {
+            throw new AssertionException("Selected values do not match expected values!");
+        }
 
-            for (int i = 0; i < expectedValues.Count; i++)
-            {
-                if (actualValues[i] != expectedValues[i])
-                {
-                    return false;
-                }
-            }
-
-            return true;
+        Console.WriteLine("Selected values match the expected values!");
         }
     }
 }

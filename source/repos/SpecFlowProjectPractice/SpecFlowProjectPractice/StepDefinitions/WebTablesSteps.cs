@@ -2,6 +2,7 @@
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
 using SpecFlowProjectPractice.Drivers;
+using SpecFlowProjectPractice.Helper;
 
 namespace SpecFlowProjectPractice.StepDefinitions
 {
@@ -10,17 +11,18 @@ namespace SpecFlowProjectPractice.StepDefinitions
     {
         private readonly WebDriverManager _driverManager;
         private readonly WebTablesPage _webTablesPage;
+        private PopUpHandler popUpHandler;
 
         public WebTablesSteps(WebDriverManager driverManager)
         {
             _driverManager = driverManager;
+            popUpHandler = new PopUpHandler(driverManager);
             _webTablesPage = new WebTablesPage(_driverManager);
         }
 
         [When(@"I click on the Salary column")]
         public void WhenIClickOnTheSalaryColumn()
         {
-            _webTablesPage.PopUpButtonConfirmation();
             _webTablesPage.ClickSalaryColumn();
         }
 
