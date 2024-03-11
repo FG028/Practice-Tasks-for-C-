@@ -1,5 +1,4 @@
 ﻿using OpenQA.Selenium;
-using SeleniumExtras.PageObjects;
 using SpecFlowProjectPractice.Drivers;
 
 namespace SpecFlowProjectPractice.PageObjects
@@ -13,80 +12,44 @@ namespace SpecFlowProjectPractice.PageObjects
             _driverManager = driverManager;
         }
 
-        public void EnterText(string text, string fieldName)
+        public void EnterText(string text)
         {
-            var popup = _driverManager.Driver().FindElement(By.CssSelector("body > div.fc-consent-root > div.fc-dialog-container > div.fc-dialog.fc-choice-dialog > div.fc-dialog-content"));
-            popup.FindElement(By.XPath("/html/body/div[3]/div[2]/div[1]/div[2]/div[2]/button[1]/p")).Click();
-            // 'no such element: Unable to locate element
+            /* var popup = _driverManager.Driver().FindElement(By.CssSelector("body > div.fc-consent-root > div.fc-dialog-container > div.fc-dialog.fc-choice-dialog > div.fc-dialog-content"));
+            popup.FindElement(By.XPath("/html/body/div[3]/div[2]/div[1]/div[2]/div[2]/button[1]/p")).Click(); */
+            
             var inputField = _driverManager.Driver().FindElement(By.CssSelector("#autoCompleteMultipleContainer > div > div.auto-complete__value-container.auto-complete__value-container--is-multi.css-1hwfws3"));
             inputField.Click();
-            inputField.SendKeys("g");
-            inputField.SendKeys(fieldName);
+            inputField.SendKeys(text);
         }
 
-        public void SelectSuggestion(string suggestionText)
+        public List<string> GetAutoCompleteSuggestions()
         {
-            if (!IsOptionVisible(suggestionText))
+            var suggestions = _driverManager.Driver().FindElements(By.CssSelector("#autoCompleteMultipleContainer > div"));
+            return suggestions.Select(s => s.Text).ToList();
+        }
+
+        public List<string> GetSelectedColors()
+        {
+            var selectedColors = _driverManager.Driver().FindElements(By.CssSelector("#autoCompleteMultipleContainer > div > div.auto-complete__value-container.auto-complete__value-container--is-multi.css-1hwfws3 > div.css-1g6gooi > div"));
+            return selectedColors.Select(s => s.Text).ToList();
+        }
+
+        public void AddColors(params string[] colors)
+        {
+            foreach (var color in colors)
             {
-                throw new ArgumentException($"Suggestion '{suggestionText}' is not visible in the autocomplete list.");
+                EnterText(color);
+                _driverManager.Driver().FindElement(By.CssSelector("#autoCompleteSingleInput")).SendKeys(Keys.Enter);
             }
-
-            // Replace with actual selector for the autocomplete dropdown container and its options
-            var dropdown = _driverManager.Driver().FindElement(By.Id("autoCompleteDropdown"));
-            dropdown.FindElements(By.TagName("li"))
-                .First(option => option.Text.Equals(suggestionText, StringComparison.InvariantCultureIgnoreCase))
-                .Click();
         }
-        public List<string> GetSuggestions()
-        {
-            // Replace with actual selector to target the autocomplete dropdown container
-            var dropdown = _driverManager.Driver().FindElement(By.Id("autoCompleteDropdown"));
 
-            // Handle if the dropdown is not currently visible
-            if (!dropdown.Displayed)
+        public void DeleteColors(params string[] colors)
+        {
+            foreach (var color in colors)
             {
-                return new List<string>(); // Or return an exception if preferred
+                var colorTag = _driverManager.Driver().FindElement(By.XPath($"//span[@class='tag ui-tag' and text()='{color}']"));
+                colorTag.FindElement(By.CssSelector(".ui-tag-icon-close")).Click();
             }
-
-            return dropdown.FindElements(By.TagName("li"))
-                           .Select(option => option.Text)
-                           .ToList();
-        }
-
-        public string GetSelectedFieldValue()
-        {
-            var selectedField = _driverManager.Driver().FindElement(By.Id("selectedField"));
-            return selectedField.GetAttribute("value");
-        }
-
-        public bool IsOptionVisible(string optionText)
-        {
-            // Replace with actual selector for the autocomplete dropdown container
-            var dropdown = _driverManager.Driver().FindElement(By.Id("autoCompleteDropdown"));
-            return dropdown.Displayed &&
-                   dropdown.FindElements(By.TagName("li"))
-                    .Any(option => option.Text.Equals(optionText, StringComparison.InvariantCultureIgnoreCase));
-        }
-
-        public void SelectOption(string optionText)
-        {
-            if (!IsOptionVisible(optionText))
-            {
-                throw new ArgumentException($"Option '{optionText}' is not visible in the autocomplete list.");
-            }
-
-            // Replace with actual selector for the autocomplete dropdown container and its options
-            var dropdown = _driverManager.Driver().FindElement(By.Id("autoCompleteDropdown"));
-            dropdown.FindElements(By.TagName("li"))
-                .First(option => option.Text.Equals(optionText, StringComparison.InvariantCultureIgnoreCase))
-                .Click();
-        }
-        public IWebElement ColorInput => _driverManager.Driver().FindElement(By.Id("autoCompleteMultipleInput"));
-
-        public void DeleteColor(string color)
-        {
-            var deleteButton = ColorInput.FindElement(By.XPath($".//following-sibling::span[text()='{color}']/preceding-sibling::span[@class='ms-2 ui-close-icon']"));
-            deleteButton.Click();
         }
     }
 }

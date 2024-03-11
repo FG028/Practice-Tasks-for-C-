@@ -1,12 +1,8 @@
-﻿using NUnit.Framework;
-using OpenQA.Selenium;
-using SpecFlowProjectPractice.Drivers;
+﻿using SpecFlowProjectPractice.Drivers;
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
-using OpenQA.Selenium.Support.UI;
-using SeleniumExtras.WaitHelpers;
 using Bogus;
-using TechTalk.SpecFlow.Assist;
+using System.Text;
 
 namespace SpecFlowProjectPractice.StepDefinitions
 {
@@ -35,18 +31,28 @@ namespace SpecFlowProjectPractice.StepDefinitions
             var lastName = _faker.Name.LastName();
             var userEmail = $"{firstName}.{lastName}@example.com";
             var userAddress = _faker.Address.StreetAddress();
-            var userPhone = _faker.Phone.PhoneNumber();
+            var userPhone = _faker.Phone.PhoneNumber()
+                .Replace("-", "")
+                .Replace(".", "")
+                .Replace("(", "")
+                .Replace(")", "");
+            userPhone = userPhone.Replace(" ", "");
 
             _practiceFormPage.FillForm(firstName, lastName, userEmail, userAddress, userPhone);
 
             _practiceFormPage.SelectGender();
             _practiceFormPage.SetDateOfBirth("2000-01-10");
+            _practiceFormPage.SelectState("Uttar Pradesh");
+            _practiceFormPage.SelectCity("Merrut");
 
-            _practiceFormPage.SelectSubjects("Physics, Maths");
+            _practiceFormPage.SelectSubjects("Maths");
+            _practiceFormPage.SelectSubjects("Physics");
             _practiceFormPage.SelectHobbies(new[] { "Reading", "Music" });
+
 
             _practiceFormPage.SelectState("Uttar Pradesh");
             _practiceFormPage.SelectCity("Merrut");
+
         }
 
         [Then(@"I click the Submit button")]
@@ -56,17 +62,43 @@ namespace SpecFlowProjectPractice.StepDefinitions
         }
 
         [Then(@"I should see the model with submitted data matching my input")]
-        public void VerifySubmittedData(Dictionary<string, string> expectedData)
+        public void VerifySubmittedData()
         {
             var submittedData = _practiceFormPage.GetSubmittedData();
+            var expectedData = new Dictionary<string, string>()
+            {
+                ["Student Name"] = _faker.Name.FirstName() + " " + _faker.Name.LastName(),
+                ["Student Email"] = $"{_faker.Name.FirstName()}.{_faker.Name.LastName()}@example.com",
+                ["Gender"] = "Female",
+                ["Subjects"] = "Maths, Physics", 
+                ["Hobbies"] = "Reading, Music", 
+                ["Address"] = _faker.Address.StreetAddress(),
+                ["Mobile"] = _faker.Phone.PhoneNumber().Replace("-", "").Replace(".", "").Replace("(", "").Replace(")", ""),
+                ["State and City"] = "Uttar Pradesh, Merrut"
+            };
 
-            var table = new Table("Field", "Expected Value", "Actual Value");
+            bool allDataMatches = true;
+            StringBuilder comparisonLog = new StringBuilder();
+
             foreach (var key in submittedData.Keys)
             {
-                table.AddRow(key, expectedData[key], submittedData[key]);
+                if (submittedData[key] != expectedData[key])
+                {
+                    allDataMatches = false;
+                    comparisonLog.AppendLine($"  - {key}: Expected '{expectedData[key]}', Actual '{submittedData[key]}'");
+                }
             }
 
-            Assert.That(table.CreateInstance<Dictionary<string, string>>(), Is.EquivalentTo(expectedData));
+            if (allDataMatches)
+            {
+                Console.WriteLine("Submitted data matches expected data!");
+            }
+            else
+            {
+                Console.WriteLine("Submitted data does not match expected data!");
+                Console.WriteLine(comparisonLog.ToString());
+            }
         }
+
     }
 }

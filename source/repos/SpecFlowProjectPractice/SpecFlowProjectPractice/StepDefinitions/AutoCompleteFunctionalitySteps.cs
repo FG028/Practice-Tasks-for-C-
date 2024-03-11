@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
 using SpecFlowProjectPractice.Drivers;
@@ -19,39 +18,52 @@ namespace SpecFlowProjectPractice.StepDefinitions
             _autoCompletePage = new AutoCompletePage(_driverManager);
         }
 
-        [When(@"I enter the letter ""(.*)"" in the ""(.*)"" field")]
-        public void WhenIEnterTheLetterInTheField(string text, string fieldName)
+        [When("I enter the letter 'g' in the Type multiple color names field")]
+        public void WhenIEnterTheLetterGInTheTypeMultipleColorNamesField()
         {
-            _autoCompletePage.EnterText(fieldName, text);
+            _autoCompletePage.EnterText("g");
         }
 
-        [Then(@"I verify the AutoComplete offers three variants, all containing ""(.*)""")]
-        public void ThenIVerifyTheFollowingSuggestionsAreDisplayed(Table table)
+        [Then("I should see three AutoComplete suggestions containing 'g'")]
+        public void ThenIShouldSeeThreeAutoCompleteSuggestionsContainingG()
         {
-            List<string> expectedSuggestions = table.Rows.Select(row => row["Item"].ToString()).ToList();
-            List<string> actualSuggestions = _autoCompletePage.GetSuggestions();
-
-            CollectionAssert.AreEquivalent(expectedSuggestions, actualSuggestions);
+            Assert.That(_autoCompletePage.GetAutoCompleteSuggestions().Count, Is.EqualTo(3));
+            foreach (var suggestion in _autoCompletePage.GetAutoCompleteSuggestions())
+            {
+                Assert.True(suggestion.Contains('g'));
+            }
         }
 
-        [Then(@"I enter ""(.*)"" in the ""(.*)"" field")]
-        public void WhenIEnterInTheField(string text, string fieldName)
+        [Then("I add the colors Red, Yellow, Green, Blue, and Purple")]
+        public void WhenIAddTheColorsRedYellowGreenBlueAndPurple()
         {
-            _autoCompletePage.EnterText(text, fieldName);
+            _autoCompletePage.AddColors("Red", "Yellow", "Green", "Blue", "Purple");
         }
 
-        [Then(@"I delete ""(.*)"" and ""(.*)""")]
-        public void DeleteSpecificColors(string color1, string color2)
+        [Then("I should see the following colors in the field: Red, Yellow, Green, Blue, Purple")]
+        public void ThenIShouldSeeTheFollowingColorsInTheFieldRedYellowGreenBlueAndPurple()
         {
-            _autoCompletePage.DeleteColor(color1);
-            _autoCompletePage.DeleteColor(color2);
+            Assert.That(_autoCompletePage.GetSelectedColors().Contains("Red"));
+            Assert.That(_autoCompletePage.GetSelectedColors().Contains("Yellow"));
+            Assert.That(_autoCompletePage.GetSelectedColors().Contains("Green"));
+            Assert.That(_autoCompletePage.GetSelectedColors().Contains("Blue"));
+            Assert.That(_autoCompletePage.GetSelectedColors().Contains("Purple"));
         }
 
-        [Then(@"I should see only ""(.*)"", ""(.*)"", and ""(.*)"" in the field")]
-        public void ThenIVerifyTheSelectedValueInTheFieldIs(string color1, string color2, string color3)
+        [Then("I delete the colors Yellow and Purple")]
+        public void WhenIDeleteTheColorsYellowAndPurple()
         {
-            string actualValue = _autoCompletePage.GetSelectedFieldValue();
-            Assert.That(actualValue, Is.EquivalentTo(new List<string> { color1, color2, color3 }));
+            _autoCompletePage.DeleteColors("Yellow", "Purple");
+        }
+
+        [Then("I should see the following colors remaining in the field: Red, Green, Blue")]
+        public void ThenIShouldSeeTheFollowingColorsRemainingInTheFieldRedGreenBlue()
+        {
+            Assert.That(_autoCompletePage.GetSelectedColors().Contains("Red"));
+            Assert.That(_autoCompletePage.GetSelectedColors().Contains("Green"));
+            Assert.That(_autoCompletePage.GetSelectedColors().Contains("Blue"));
+            Assert.False(_autoCompletePage.GetSelectedColors().Contains("Yellow"));
+            Assert.False(_autoCompletePage.GetSelectedColors().Contains("Purple"));
         }
     }
 }

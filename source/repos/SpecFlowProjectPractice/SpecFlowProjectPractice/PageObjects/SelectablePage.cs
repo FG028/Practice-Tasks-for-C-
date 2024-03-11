@@ -19,7 +19,7 @@ namespace SpecFlowProjectPractice.PageObjects
             popup.FindElement(By.XPath("/html/body/div[3]/div[2]/div[1]/div[2]/div[2]/button[1]/p")).Click();
         }
 
-        public void SelectGrid()
+        public void SwitchToGridTab()
         {
             PoPUpWindowConsent();
             var selectGrid = _driverManager.Driver().FindElement(By.CssSelector("#demo-tab-grid"));
@@ -37,7 +37,7 @@ namespace SpecFlowProjectPractice.PageObjects
             }
         }
 
-        public void SelectOption()
+        /* public void SelectOptions()
         {
             List<string> optionSelectors = new List<string>
             {
@@ -56,17 +56,48 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public List<string> GetSelectedValuesFromSquares()
         {
-            /* List<string> actualValues = new List<string>();
+            List<string> selectedValues = new List<string>();
+            IList<IWebElement> selectedOptions = _driverManager.Driver().FindElements(By.CssSelector(".selected")); // Target elements with "selected" class
 
-            var selectedSquares = _driverManager.Driver().FindElements(By.CssSelector(".selected-square"));
+            foreach (IWebElement option in selectedOptions)
+            {
+                selectedValues.Add(option.Text);
+            }
+            return selectedValues;
+        }*/
+
+        public List<string> GetSelectedSquareValues()
+        {
+            var selectedSquares = _driverManager.Driver().FindElements(By.Id("#gridContainer"));
+
+            List<string> selectedValues = new List<string>();
             foreach (var square in selectedSquares)
             {
-                actualValues.Add(square.Text);
+                string value = square.Text.Trim();
+                selectedValues.Add(value);
             }
-            return actualValues; */
 
-            var selectedOptions = _driverManager.Driver().FindElements(By.CssSelector("#selectable li.selected"));
-            return selectedOptions.Select(option => option.Text).ToList();
+            return selectedValues;
+        }
+
+        public bool VerifySelectedValues(List<string> expectedValues)
+        {
+            List<string> actualValues = GetSelectedSquareValues();
+
+            if (actualValues.Count != expectedValues.Count)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < expectedValues.Count; i++)
+            {
+                if (actualValues[i] != expectedValues[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

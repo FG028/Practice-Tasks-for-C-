@@ -12,48 +12,62 @@ namespace SpecFlowProjectPractice.PageObjects
             driverManager = _driverManager;
         }
 
-        private const string ExpandFolderXPath = "//*/span[@class = 'rct-title' and text()='{0}']";
-        private const string SelectFolderXPath = "//*/span[@class = 'rct-title' and text()='{0}']";
-        private const string SelectItemXPath = "//span[text()='{0}']/preceding-sibling::input";
-        private const string SelectedItemsXPath = "//span[contains(@class, 'text-success')]";
-        private const string OfficeItemsXPath = "//span[text()='{0}']/following-sibling::ul//span[@class='ng-star-inserted']";
-
         public void PopUpButtonConfirmation()
         {
             var popup = driverManager.Driver().FindElement(By.CssSelector("body > div.fc-consent-root > div.fc-dialog-container > div.fc-dialog.fc-choice-dialog > div.fc-footer-buttons-container > div.fc-footer-buttons > button.fc-button.fc-cta-consent.fc-primary-button > p"));
             popup.FindElement(By.XPath("/html/body/div[3]/div[2]/div[1]/div[2]/div[2]/button[1]/p")).Click();
         }
 
-        public void ExpandFolder(string folderName)
+        public void ExpandHomeFolder()
         {
-            var formattedXPath = string.Format(ExpandFolderXPath, folderName);
-            var expandButton = driverManager.Driver().FindElement(By.XPath(formattedXPath));
-            expandButton.Click();
-
+            var expandHomeButton = driverManager.Driver().FindElement(By.CssSelector("#tree-node > div > button.rct-option.rct-option-expand-all"));
+            expandHomeButton.Click();
         }
 
-        public void SelectItem(string itemName)
+        public void ExpandFolder() { }
+
+
+        public void DesktopSelector()
         {
-            var checkBox = driverManager.Driver().FindElement(By.XPath(string.Format(SelectItemXPath, itemName)));
+            var desktopSelector = driverManager.Driver().FindElement(By.XPath("/html/body/div[2]/div/div/div/div[2]/div[2]/div/ol/li/ol/li[1]/span/button"));
+            desktopSelector.Click();
+        }
+        public void SelectDesktopCheckBox()
+        {
+            var desktopCheckBox = driverManager.Driver().FindElement(By.XPath("/html/body/div[2]/div/div/div/div[2]/div[2]/div/ol/li/ol/li[1]/span/label/span[1]"));
+            desktopCheckBox.Click();
+        }
+        public void SelectItem1()
+        {
+            var checkBox = driverManager.Driver().FindElement(By.XPath("/html/body/div[2]/div/div/div/div[2]/div[2]/div[1]/ol/li/ol/li[2]/ol/li[1]/ol/li[2]/span/label/span[1]"));
+            checkBox.Click();
+        }
+        public void SelectItem2()
+        {
+            var checkBox = driverManager.Driver().FindElement(By.XPath("/html/body/div[2]/div/div/div/div[2]/div[2]/div/ol/li/ol/li[2]/ol/li[1]/ol/li[3]/span/label/span[1]"));
             checkBox.Click();
         }
 
-        public List<string> GetOfficeItems()
+        public void GetOfficeItems()
         {
-            var officeItems = driverManager.Driver().FindElements(By.XPath(string.Format(OfficeItemsXPath, "Office")));
-            return officeItems.Select(item => item.Text).ToList();
+            var getAllTheOfficeItem = driverManager.Driver().FindElement(By.XPath("/html/body/div[2]/div/div/div/div[2]/div[2]/div/ol/li/ol/li[2]/ol/li[2]/span/label/span[3]"));
+            getAllTheOfficeItem.Click();
         }
         
-        public void SelectFolder(string folderName)
+        public void SelectDownloadsFolder()
         {
-            var checkBox = driverManager.Driver().FindElement(By.XPath(string.Format(SelectFolderXPath, folderName)));
-            checkBox.Click();
+            var desktopCheckbox = driverManager.Driver().FindElement(By.XPath("/html/body/div[2]/div/div/div/div[2]/div[2]/div[1]/ol/li/ol/li[3]/span/label/span[1]"));
+            ((IJavaScriptExecutor)driverManager.Driver()).ExecuteScript("arguments[0].scrollIntoView(true);", desktopCheckbox);
+            desktopCheckbox.Click();
         }
 
         public string GetSelectedItemsText()
         {
-            var selectedItems = driverManager.Driver().FindElements(By.XPath(SelectedItemsXPath));
-            return string.Join(" ", selectedItems.Select(item => item.Text));
+            var selectedItems = driverManager.Driver().FindElements(By.Id("result"));
+            var selectedItemsText = selectedItems.Select(
+            item => string.Join(" ", item.Text.Trim().Split("\r\n", StringSplitOptions.RemoveEmptyEntries)));
+
+            return string.Join(" ", selectedItemsText);
         }
     }
 }

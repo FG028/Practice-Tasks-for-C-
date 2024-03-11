@@ -39,7 +39,7 @@ namespace SpecFlowProjectPractice.StepDefinitions
         [Then(@"there should be only two rows left in the table")]
         public void ThenThereShouldBeOnlyTwoRowsLeftInTheTable()
         {
-            Assert.AreEqual(2, _webTablesPage.GetRowCount());
+             Assert.AreEqual(2, _webTablesPage.GetRowCount());
         }
 
         [Then(@"there should be no ""Compliance"" value among the values in the Department column")]

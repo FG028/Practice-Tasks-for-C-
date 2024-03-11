@@ -21,38 +21,33 @@ namespace SpecFlowProjectPractice.StepDefinitions
         public void WhenIExtendTheHomeFolder(string folderName)
         {
             checkBoxPage.PopUpButtonConfirmation();
-            checkBoxPage.ExpandFolder(folderName);
+            checkBoxPage.ExpandHomeFolder();
         }
 
-        [Then(@"I select the ""(.*)"" folder without expanding")]
-        public void WhenISelectTheDesktopFolderWithoutExpanding(string folderName)
+        [Then(@"I select the Desktop folder without expanding")]
+        public void WhenISelectTheDesktopFolderWithoutExpanding()
         {
-            checkBoxPage.SelectFolder(folderName);
+            checkBoxPage.DesktopSelector();
+            checkBoxPage.SelectDesktopCheckBox();
         }
 
-        [Then(@"I select ""(.*)"" and ""(.*)"" from the ""(.*)"" folder")]
-        public void WhenISelectAngularAndVeuFromTheWorkspaceFolder(string itemName1, string itemName2, string folderName)
+        [Then(@"I select Angular and Veu from the Workspace folder")]
+        public void WhenISelectAngularAndVeuFromTheWorkspaceFolder()
         {
-            checkBoxPage.ExpandFolder(folderName);
-            checkBoxPage.SelectItem(itemName1);
-            checkBoxPage.SelectItem(itemName2);
+            checkBoxPage.SelectItem1();
+            checkBoxPage.SelectItem2();
         }
 
-        [Then(@"I expand and click each item in the ""(.*)"" folder")]
-        public void WhenIExtendAndClickEachItemInTheOfficeFolder(string folderName)
+        [Then(@"I expand and click each item in the Office folder")]
+        public void WhenIExtendAndClickEachItemInTheOfficeFolder()
         {
-            checkBoxPage.ExpandFolder(folderName);
-            var officeItems = checkBoxPage.GetOfficeItems();
-            foreach (var item in officeItems)
-            {
-                checkBoxPage.SelectItem(item);
-            }
+            checkBoxPage.GetOfficeItems();
         }
 
-        [Then(@"I select the ""(.*)"" folder")]
-        public void WhenIExtendAndSelectTheDownloadsFolder(string folderName)
+        [Then(@"I select the Downloads folder")]
+        public void WhenIExtendAndSelectTheDownloadsFolder()
         {
-            checkBoxPage.SelectFolder(folderName);
+            checkBoxPage.SelectDownloadsFolder();
         }
 
         [Then(@"I verify the selected items are ""(.*?)""")]

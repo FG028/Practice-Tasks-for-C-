@@ -20,51 +20,37 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public IWebElement SalaryColumn => _driverManager.Driver().FindElement(By.XPath("/html/body/div[2]/div/div/div/div[2]/div[2]/div[3]/div[1]/div[1]/div/div[5]"));
 
-        private IReadOnlyCollection<IWebElement> FindTableRowElements(int rowNumber)
-        {
-            // Use a generic selector for flexibility
-            return _driverManager.Driver().FindElements(By.CssSelector($"#app > div > div > div > div.col-12.mt-4.col-md-6 > div.web-tables-wrapper > div.ReactTable.-striped.-highlight > div.rt-table > div.rt-tbody > div:nth-child({rowNumber}) > div"));
-        }
-
         public bool AreSalaryValuesAscending()
         {
-            try
-            {
-                if (!FindTableRowElements(1).Any(element => element.Text == "Salary") ||
-                    !FindTableRowElements(2).Any(element => element.Text == "Salary") ||
-                    !FindTableRowElements(3).Any(element => element.Text == "Salary"))
-                {
-                    return false;
-                }
+            var salaryValues = _driverManager.Driver().FindElements(By.XPath("//*/div[@class='rt-tr-group']/div/div[5][text()!='']"))
+                    .Select(element => int.Parse(element.Text));
+            return salaryValues.SequenceEqual(salaryValues.OrderBy(value => value));
+        }
 
-                int salary1 = int.Parse(FindTableRowElements(1).FirstOrDefault(element => element.Text == "Salary").Text.Trim());
-                int salary2 = int.Parse(FindTableRowElements(2).FirstOrDefault(element => element.Text == "Salary").Text.Trim());
-                int salary3 = int.Parse(FindTableRowElements(3).FirstOrDefault(element => element.Text == "Salary").Text.Trim());
+        public int GetRowCount()
+        {
+            // Find the table element (assuming you have a method to get it)
+            var tableElement = _driverManager.Driver().FindElement(By.XPath("//*[@id='app']/div/div/div/div[2]/div[2]/div[3]/div[1]/div[2]")); // Replace with your actual table XPath
 
-                return salary1 <= salary2 && salary2 <= salary3;
-            }
-            catch (NoSuchElementException)
-            {
-                throw new Exception("Failed to find elements while checking salary values.");
-            }
-            catch (FormatException)
-            {
-                throw new Exception("Failed to parse salary values to integers.");
-            }
+            // Find all rows within the table
+            var rows = tableElement.FindElements(By.XPath(".//div[@class='rt-tr-group']")); // Adjust the XPath for rows if needed
+
+            // Count the elements at the salary column index (assuming it's the 5th position)
+            int count = rows.Select(row => row.FindElements(By.TagName("div"))[4])
+                 .Where(element => !string.IsNullOrEmpty(element.Text.Trim()))
+                 .Count();
+
+            return count;
         }
 
         public void ClickSalaryColumn() => SalaryColumn.Click();
 
         public void DeleteSecondRow() => DeleteButton.Click();
 
-        public int GetRowCount() => FindTableRowElements(1).Count; // Use the same selector as in AreSalaryValuesAscending
-
         public bool IsComplianceDepartmentValuePresent() => DepartmentValues.Any(element => element.Text == "Compliance");
 
-        // Update the DeleteButton selector if the original is incorrect
         public IWebElement DeleteButton => _driverManager.Driver().FindElement(By.Id("delete-record-2")); // Example selector, adjust if needed
 
-        // Update the DepartmentValues selector if the original is incorrect
         public IReadOnlyCollection<IWebElement> DepartmentValues => _driverManager.Driver().FindElements(By.XPath("//table[@id='table1']//tbody//tr//td[text()='Department']")); // Example selector, adjust if needed
     }
 }
