@@ -3,10 +3,6 @@ using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
 using SpecFlowProjectPractice.Drivers;
 using SpecFlowProjectPractice.Helper;
-using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium;
-using SeleniumExtras.WaitHelpers;
-
 
 namespace SpecFlowProjectPractice.StepDefinitions
 {
@@ -16,7 +12,7 @@ namespace SpecFlowProjectPractice.StepDefinitions
         private WebDriverManager _driverManager;
         private readonly AutoCompletePage _autoCompletePage;
         private PopUpHandler popUpHandler;
-        
+
         public AutoCompleteFunctionalitySteps(WebDriverManager driverManager)
         {
             _driverManager = driverManager;
@@ -28,8 +24,6 @@ namespace SpecFlowProjectPractice.StepDefinitions
         public void WhenIEnterTheLetterGInTheTypeMultipleColorNamesField()
         {
             _autoCompletePage.EnterText("g");
-
-           
         }
 
         [Then("I should see three AutoComplete suggestions containing 'g'")]
@@ -41,18 +35,19 @@ namespace SpecFlowProjectPractice.StepDefinitions
         [Then("I add the colors Red, Yellow, Green, Blue, and Purple")]
         public void WhenIAddTheColorsRedYellowGreenBlueAndPurple()
         {
-            _autoCompletePage.DeleteTheCharacter();
-            _autoCompletePage.AddColors("Red", "Yellow", "Green", "Blue", "Purple");
+            _autoCompletePage.ClearInputField();
+            _autoCompletePage.AddMultipleColors("Red", "Yellow", "Green", "Blue", "Purple");
         }
 
         [Then("I should see the following colors in the field: Red, Yellow, Green, Blue, Purple")]
         public void ThenIShouldSeeTheFollowingColorsInTheFieldRedYellowGreenBlueAndPurple()
         {
-            Assert.That(_autoCompletePage.GetSelectedColors().Contains("Red"));
-            Assert.That(_autoCompletePage.GetSelectedColors().Contains("Yellow"));
-            Assert.That(_autoCompletePage.GetSelectedColors().Contains("Green"));
-            Assert.That(_autoCompletePage.GetSelectedColors().Contains("Blue"));
-            Assert.That(_autoCompletePage.GetSelectedColors().Contains("Purple"));
+            var expectedColors = new string[] { "Red", "Yellow", "Green", "Blue", "Purple" };
+
+            foreach (var color in expectedColors)
+            {
+                Assert.That(_autoCompletePage.GetSelectedColors().Contains(color), $"Color '{color}' not found in selected options");
+            }
         }
 
         [Then("I delete the colors Yellow and Purple")]
@@ -64,11 +59,17 @@ namespace SpecFlowProjectPractice.StepDefinitions
         [Then("I should see the following colors remaining in the field: Red, Green, Blue")]
         public void ThenIShouldSeeTheFollowingColorsRemainingInTheFieldRedGreenBlue()
         {
-            Assert.That(_autoCompletePage.GetSelectedColors().Contains("Red"));
-            Assert.That(_autoCompletePage.GetSelectedColors().Contains("Green"));
-            Assert.That(_autoCompletePage.GetSelectedColors().Contains("Blue"));
-            Assert.False(_autoCompletePage.GetSelectedColors().Contains("Yellow"));
-            Assert.False(_autoCompletePage.GetSelectedColors().Contains("Purple"));
+            var expectedColors = new List<string>() { "Red", "Green", "Blue" };
+            foreach (var color in expectedColors)
+            {
+                Assert.That(_autoCompletePage.GetSelectedColors().Contains(color), $"Selected colors should contain {color}");
+            }
+
+            var unexpectedColors = new List<string>() { "Yellow", "Purple" };
+            foreach (var color in unexpectedColors)
+            {
+                Assert.False(_autoCompletePage.GetSelectedColors().Contains(color), $"Selected colors should not contain {color}");
+            }
         }
     }
 }

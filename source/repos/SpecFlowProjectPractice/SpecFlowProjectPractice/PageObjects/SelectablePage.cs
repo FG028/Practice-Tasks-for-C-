@@ -13,19 +13,12 @@ namespace SpecFlowProjectPractice.PageObjects
             _driverManager = driverManager;
         }
 
-        public void PoPUpWindowConsent()
-        {
-            var popup = _driverManager.Driver().FindElement(By.CssSelector("body > div.fc-consent-root > div.fc-dialog-container > div.fc-dialog.fc-choice-dialog > div.fc-dialog-content"));
-            popup.FindElement(By.XPath("/html/body/div[3]/div[2]/div[1]/div[2]/div[2]/button[1]/p")).Click();
-        }
-
         public void SwitchToGridTab()
         {
-            // PoPUpWindowConsent();
             var selectGrid = _driverManager.Driver().FindElement(By.CssSelector("#demo-tab-grid"));
             if (selectGrid == null)
             {
-                var elementYOffset = selectGrid.Location.Y; // Get the Y-coordinate of the button
+                var elementYOffset = selectGrid.Location.Y;
 
                 ((IJavaScriptExecutor)_driverManager.Driver()).ExecuteScript(
                     "arguments[0].scrollIntoView(true);", selectGrid);
@@ -56,18 +49,6 @@ namespace SpecFlowProjectPractice.PageObjects
                 option.Click();
             }
         }
-        /*
-        public List<string> GetSelectedValuesFromSquares()
-        {
-            List<string> selectedValues = new List<string>();
-            IList<IWebElement> selectedOptions = _driverManager.Driver().FindElements(By.CssSelector(".selected")); // Target elements with "selected" class
-
-            foreach (IWebElement option in selectedOptions)
-            {
-                selectedValues.Add(option.Text);
-            }
-            return selectedValues;
-        }*/
 
         public List<string> GetSelectedSquareValues()
         {

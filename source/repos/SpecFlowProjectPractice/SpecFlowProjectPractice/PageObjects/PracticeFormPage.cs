@@ -32,7 +32,6 @@ namespace SpecFlowProjectPractice.PageObjects
             return phoneNumber;
         }
 
-
         public void FillForm(string firstName, string lastName, string email, string address, string phone)
         {
             _driverManager.Driver().FindElement(By.Id("firstName")).SendKeys(firstName);
@@ -44,11 +43,10 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public void SetDateOfBirth(string date)
         {
-
             _driverManager.Driver().FindElement(By.Id("dateOfBirthInput")).Click();
-            _driverManager.Driver().FindElement(By.CssSelector(".react-datepicker__month-select")).SendKeys(date.Split('-')[1]); // Select Month
-            _driverManager.Driver().FindElement(By.CssSelector(".react-datepicker__year-select")).SendKeys(date.Split('-')[0]); // Select Year
-            _driverManager.Driver().FindElement(By.XPath("//div[contains(@class, 'react-datepicker__day') and text()='" + date.Split('-')[2] + "']")).Click(); // Select Day
+            _driverManager.Driver().FindElement(By.CssSelector(".react-datepicker__month-select")).SendKeys(date.Split('-')[1]);
+            _driverManager.Driver().FindElement(By.CssSelector(".react-datepicker__year-select")).SendKeys(date.Split('-')[0]);
+            _driverManager.Driver().FindElement(By.XPath("//div[contains(@class, 'react-datepicker__day') and text()='" + date.Split('-')[2] + "']")).Click();
         }
 
         public void SelectGender()
@@ -77,7 +75,6 @@ namespace SpecFlowProjectPractice.PageObjects
                 {
                     element.Click();
                 }
-
             }
             catch (WebDriverException ex)
             {
@@ -110,7 +107,6 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public void SelectState(string stateName)
         {
-            
             IWebElement stateDropdown = _driverManager.Driver().FindElement(By.Id("state"));
             ((IJavaScriptExecutor)_driverManager.Driver()).ExecuteScript(
             "arguments[0].scrollIntoView(true);", stateDropdown);
@@ -122,7 +118,6 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public void SelectCity(string cityName)
         {
-
             IWebElement cityDropdown = _driverManager.Driver().FindElement(By.Id("city"));
             cityDropdown.Click();
 
@@ -140,6 +135,7 @@ namespace SpecFlowProjectPractice.PageObjects
         public Dictionary<string, string> GetSubmittedData()
         {
             var data = new Dictionary<string, string>();
+
             data["Student Name"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(1) > td:nth-child(2)")).Text;
             data["Student Email"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(2) > td:nth-child(2)")).Text;
             data["Gender"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(3) > td:nth-child(2)")).Text;
@@ -148,7 +144,6 @@ namespace SpecFlowProjectPractice.PageObjects
             data["Hobbies"] = _driverManager.Driver().FindElements((By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(7) > td:nth-child(2)"))).Select(x => x.Text).Aggregate((a, b) => $"{a}, {b}"); // Get and combine hobby texts
             data["Address"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(9) > td:nth-child(2)")).Text;
             data["Mobile"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(4) > td:nth-child(2)")).Text;
-
             data["State and City"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(10) > td:nth-child(2)")).Text;
 
             return data;

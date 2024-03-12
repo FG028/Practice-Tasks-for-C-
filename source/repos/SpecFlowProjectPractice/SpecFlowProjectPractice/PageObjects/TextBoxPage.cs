@@ -27,19 +27,12 @@ namespace SpecFlowProjectPractice.PageObjects
         public IWebElement CurrentAddressLabel => _driverManager.Driver().FindElement(By.CssSelector("p#currentAddress"));
         public IWebElement PermanentAddressLabel => _driverManager.Driver().FindElement(By.CssSelector("p#permanentAddress"));
 
-
-        public void PopUpButtonConfirmation()
-        {
-            var popup = _driverManager.Driver().FindElement(By.CssSelector("body > div.fc-consent-root > div.fc-dialog-container > div.fc-dialog.fc-choice-dialog > div.fc-dialog-content"));
-            popup.FindElement(By.XPath("/html/body/div[3]/div[2]/div[1]/div[2]/div[2]/button[1]/p")).Click();
-        }
-
         public void ClickSubmitButton()
         {
             var submitButton = Submit;
             if (submitButton != null)
             {
-                var elementYOffset = submitButton.Location.Y; // Get the Y-coordinate of the button
+                var elementYOffset = submitButton.Location.Y;
 
                 ((IJavaScriptExecutor)_driverManager.Driver()).ExecuteScript(
                     "arguments[0].scrollIntoView(true);", submitButton);

@@ -14,6 +14,7 @@ namespace SpecFlowProjectPractice.StepDefinitions
         private WebDriverManager driverManager;
         private TextBoxPage _textBoxPage;
         private PopUpHandler popUpHandler;
+        
         public TextBoxesSteps(WebDriverManager _driverManager)
         {
             driverManager = _driverManager;

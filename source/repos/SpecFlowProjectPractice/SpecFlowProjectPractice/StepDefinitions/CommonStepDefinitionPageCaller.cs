@@ -5,8 +5,7 @@ using SpecFlowProjectPractice.Drivers;
 
 [Binding]
 public class CommonStepDefinitionPageCaller
-{
-
+{ 
     private WebDriverManager _webDriverManager;
 
     public CommonStepDefinitionPageCaller(WebDriverManager webDriverManager)

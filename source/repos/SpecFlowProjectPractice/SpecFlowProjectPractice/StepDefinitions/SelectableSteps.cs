@@ -12,7 +12,6 @@ namespace SpecFlowProjectPractice.StepDefinitions
         private readonly SelectablePage _selectablePage;
         private PopUpHandler popUpHandler;
 
-
         public SelectableSteps(WebDriverManager driverManager)
         {
             _driverManager = driverManager;

@@ -31,7 +31,6 @@ namespace SpecFlowProjectPractice.StepDefinitions
         public void ThenIVerifyTheFollowingTextIsDisplayed(string expectedMessage)
         { 
             Assert.That(_buttonsPage.GetResultText(), Is.EqualTo(expectedMessage));
-        }
-       
+        }      
     }
 }

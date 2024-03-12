@@ -31,7 +31,6 @@ namespace SpecFlowProjectPractice.StepDefinitions
         [When(@"I fill the form with random data")]
         public void FillFormWithRandomData()
         {
-
             var faker = new Bogus.Faker();
 
             firstName = _faker.Name.FirstName();
@@ -45,10 +44,10 @@ namespace SpecFlowProjectPractice.StepDefinitions
               .Replace("(", "")
               .Replace(")", "")
               .Replace("x", "")
-              .Replace(" ", "");
+              .Replace(" ", "")
+              .Substring(0, 10);
 
             _practiceFormPage.FillForm(firstName, lastName, userEmail, userAddress, userPhone);
-
             _practiceFormPage.SelectGender();
             _practiceFormPage.SetDateOfBirth("2000-01-10");
             _practiceFormPage.SelectState("Uttar Pradesh");
@@ -56,7 +55,6 @@ namespace SpecFlowProjectPractice.StepDefinitions
             _practiceFormPage.SelectSubjects("Maths");
             _practiceFormPage.SelectSubjects("Physics");
             _practiceFormPage.SelectHobbies(new[] { "Reading", "Music" });
-
         }
 
         [Then(@"I click the Submit button")]

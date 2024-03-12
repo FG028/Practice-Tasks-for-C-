@@ -1,6 +1,6 @@
 ﻿Feature: Auto Complete Functionality
 	@CHROME
-	Scenario: Filter and select colors in Auto Complete
+	Scenario: User filters and selects colors in AutoComplete
 		Given I am on the "Auto Complete" page
 
 	When I enter the letter 'g' in the Type multiple color names field

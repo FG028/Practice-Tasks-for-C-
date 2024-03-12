@@ -13,6 +13,7 @@ namespace SpecFlowProjectPractice.StepDefinitions
         private WebDriverManager _driverManager;
         private readonly BrowserWindowPage browserWindowPage;
         private PopUpHandler popUpHandler;
+
         public BrowserWindowsFunctionalitySteps(WebDriverManager driverManager)
         {
             _driverManager = driverManager;
