@@ -1,5 +1,4 @@
 ﻿using TechTalk.SpecFlow;
-using OpenQA.Selenium;
 using NUnit.Framework;
 using SpecFlowProjectPractice.PageObjects;
 using SpecFlowProjectPractice.Drivers;

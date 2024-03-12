@@ -7,7 +7,7 @@ namespace SpecFlowProjectPractice.PageObjects
     public class ButtonsPage
     {
         private WebDriverManager driverManager;
-        private string _clickedButtonName; // to store the button name
+        private string _clickedButtonName;
 
         public ButtonsPage(WebDriverManager _driverManager)
         {
@@ -60,6 +60,7 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public string GetResultText()
         {
+
             switch (_clickedButtonName)
             {
                 case "Click Me":

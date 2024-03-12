@@ -3,7 +3,7 @@ using TechTalk.SpecFlow;
 using SpecFlowProjectPractice.PageObjects;
 using SpecFlowProjectPractice.Helper;
 using Bogus;
-using System.Text;
+using NUnit.Framework;
 
 namespace SpecFlowProjectPractice.StepDefinitions
 {
@@ -14,6 +14,11 @@ namespace SpecFlowProjectPractice.StepDefinitions
         private readonly PracticeFormPage _practiceFormPage;
         private Faker _faker;
         private PopUpHandler popUpHandler;
+        private string firstName;
+        private string lastName;
+        private string userEmail;
+        private string userAddress;
+        private string userPhone;
 
         public PracticeFormSteps(WebDriverManager driverManager)
         {
@@ -29,16 +34,18 @@ namespace SpecFlowProjectPractice.StepDefinitions
 
             var faker = new Bogus.Faker();
 
-            var firstName = _faker.Name.FirstName();
-            var lastName = _faker.Name.LastName();
-            var userEmail = $"{firstName}.{lastName}@example.com";
-            var userAddress = _faker.Address.StreetAddress();
-            var userPhone = _faker.Phone.PhoneNumber()
-                .Replace("-", "")
-                .Replace(".", "")
-                .Replace("(", "")
-                .Replace(")", "");
-            userPhone = userPhone.Replace(" ", "");
+            firstName = _faker.Name.FirstName();
+            lastName = _faker.Name.LastName();
+            userEmail = $"{firstName}.{lastName}@example.com";
+            userAddress = _faker.Address.StreetAddress();
+
+            userPhone = _faker.Phone.PhoneNumber()
+              .Replace("-", "")
+              .Replace(".", "")
+              .Replace("(", "")
+              .Replace(")", "")
+              .Replace("x", "")
+              .Replace(" ", "");
 
             _practiceFormPage.FillForm(firstName, lastName, userEmail, userAddress, userPhone);
 
@@ -46,8 +53,7 @@ namespace SpecFlowProjectPractice.StepDefinitions
             _practiceFormPage.SetDateOfBirth("2000-01-10");
             _practiceFormPage.SelectState("Uttar Pradesh");
             _practiceFormPage.SelectCity("Merrut");
-            
-            _practiceFormPage.SelectSubjects("Maths");  
+            _practiceFormPage.SelectSubjects("Maths");
             _practiceFormPage.SelectSubjects("Physics");
             _practiceFormPage.SelectHobbies(new[] { "Reading", "Music" });
 
@@ -63,40 +69,30 @@ namespace SpecFlowProjectPractice.StepDefinitions
         public void VerifySubmittedData()
         {
             var submittedData = _practiceFormPage.GetSubmittedData();
-            var expectedData = new Dictionary<string, string>()
-            {
-                ["Student Name"] = _faker.Name.FirstName() + " " + _faker.Name.LastName(),
-                ["Student Email"] = $"{_faker.Name.FirstName()}.{_faker.Name.LastName()}@example.com",
-                ["Gender"] = "Female",
-                ["Subjects"] = "Maths, Physics", 
-                ["Hobbies"] = "Reading, Music", 
-                ["Address"] = _faker.Address.StreetAddress(),
-                ["Mobile"] = _faker.Phone.PhoneNumber().Replace("-", "").Replace(".", "").Replace("(", "").Replace(")", ""),
-                ["State and City"] = "Uttar Pradesh, Merrut"
-            };
 
-            bool allDataMatches = true;
-            StringBuilder comparisonLog = new StringBuilder();
+            var expectedFirstName = firstName;
+            var expectedLastName = lastName;
+            var expectedEmail = userEmail;
+            var expectedMobile = userPhone;
+            var expectedAddress = userAddress;
+            var expectedGender = "Female";
+            var expectedDoB = "10 March,2000";
+            var expectedState = "Uttar Pradesh";
+            var expectedCity = "Merrut";
+            var expectedSubjects = new List<string> { "Maths", "Physics" };
+            var expectedHobbies = new List<string> { "Reading", "Music" };
 
-            foreach (var key in submittedData.Keys)
-            {
-                if (submittedData[key] != expectedData[key])
-                {
-                    allDataMatches = false;
-                    comparisonLog.AppendLine($"  - {key}: Expected '{expectedData[key]}', Actual '{submittedData[key]}'");
-                }
-            }
+            Assert.AreEqual(expectedFirstName, submittedData["Student Name"].Split(' ').First());
+            Assert.AreEqual(expectedLastName, submittedData["Student Name"].Split(' ').Last());
+            Assert.AreEqual(expectedEmail, submittedData["Student Email"]);
+            Assert.AreEqual(expectedMobile, submittedData["Mobile"]);
+            Assert.AreEqual(expectedAddress, submittedData["Address"]);
 
-            if (allDataMatches)
-            {
-                Console.WriteLine("Submitted data matches expected data!");
-            }
-            else
-            {
-                Console.WriteLine("Submitted data does not match expected data!");
-                Console.WriteLine(comparisonLog.ToString());
-            }
+            Assert.AreEqual(expectedGender, submittedData["Gender"] ?? "Female");
+            Assert.AreEqual(expectedDoB, submittedData["Date of Birth"]);
+            CollectionAssert.AreEquivalent(expectedSubjects, submittedData["Subjects"].Split(',').Select(x => x.Trim()).ToList());
+            CollectionAssert.AreEquivalent(expectedHobbies, submittedData["Hobbies"].Split(',').Select(x => x.Trim()).ToList());
+            Assert.AreEqual($"{expectedState} {expectedCity}", submittedData["State and City"]!);
         }
-
     }
 }

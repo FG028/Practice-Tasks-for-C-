@@ -1,12 +1,7 @@
 ﻿using Bogus;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Support.UI;
-using SeleniumExtras.WaitHelpers;
 using SpecFlowProjectPractice.Drivers;
-using System;
-
-
 
 namespace SpecFlowProjectPractice.PageObjects
 {
@@ -20,16 +15,21 @@ namespace SpecFlowProjectPractice.PageObjects
             _driverManager = driverManager;
             _faker = new Faker();
         }
+        public string FormatAndValidatePhoneNumber(string phoneNumber)
+        { 
+            phoneNumber = phoneNumber.Replace("-", "")
+              .Replace(".", "")
+              .Replace("(", "")
+              .Replace(")", "")
+              .Replace("x", "")
+              .Replace(" ", "");
 
-        public void PopUpButtonConfirmation()
-        {
-            /*var popup = _driverManager.Driver().FindElement(By.CssSelector("body > div.fc-consent-root > div.fc-dialog-container > div.fc-dialog.fc-choice-dialog > div.fc-dialog-content"));
-            popup.FindElement(By.XPath("/html/body/div[3]/div[2]/div[1]/div[2]/div[2]/button[1]/p")).Click();q*/
-        }
+            if (phoneNumber.Length != 10 || phoneNumber.StartsWith("0"))
+            {
+                throw new ArgumentException("Invalid phone number format");
+            }
 
-        public bool IsValidMobileNumber(string phoneNumber)
-        {
-            return phoneNumber.Length == 10 && !phoneNumber.StartsWith("0");
+            return phoneNumber;
         }
 
 
@@ -44,6 +44,7 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public void SetDateOfBirth(string date)
         {
+
             _driverManager.Driver().FindElement(By.Id("dateOfBirthInput")).Click();
             _driverManager.Driver().FindElement(By.CssSelector(".react-datepicker__month-select")).SendKeys(date.Split('-')[1]); // Select Month
             _driverManager.Driver().FindElement(By.CssSelector(".react-datepicker__year-select")).SendKeys(date.Split('-')[0]); // Select Year
@@ -66,9 +67,17 @@ namespace SpecFlowProjectPractice.PageObjects
             {
                 _driverManager.Driver().FindElement(By.XPath("//*[@id='subjectsContainer']/div/div[1]")).Click();
 
-                var subjectsInput = _driverManager.Driver().FindElement(By.Id("subjectsInput"));
                 Actions actions = new Actions(_driverManager.Driver());
                 actions.SendKeys(subject).Perform();
+                
+                var element = _driverManager.Driver().FindElement(By.XPath("//*[@id='react-select-2-option-0']"));
+                var subjectText = element.Text;
+
+                if (subjectText.Equals(subject))
+                {
+                    element.Click();
+                }
+
             }
             catch (WebDriverException ex)
             {
@@ -101,7 +110,10 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public void SelectState(string stateName)
         {
+            
             IWebElement stateDropdown = _driverManager.Driver().FindElement(By.Id("state"));
+            ((IJavaScriptExecutor)_driverManager.Driver()).ExecuteScript(
+            "arguments[0].scrollIntoView(true);", stateDropdown);
             stateDropdown.Click();
 
             Actions actions = new Actions(_driverManager.Driver());
@@ -123,22 +135,21 @@ namespace SpecFlowProjectPractice.PageObjects
             var SubmitButton = _driverManager.Driver().FindElement(By.Id("submit"));
             var jsExecutor = (IJavaScriptExecutor)_driverManager.Driver();
             jsExecutor.ExecuteScript("arguments[0].click();", SubmitButton);
-            
         }
 
         public Dictionary<string, string> GetSubmittedData()
         {
             var data = new Dictionary<string, string>();
-            data["Student Name"] = _driverManager.Driver().FindElement(By.XPath("/html/body/div[4]/div/div/div[2]/div/table/tbody/tr[1]/td[2]]")).Text;
-            data["Student Email"] = _driverManager.Driver().FindElement(By.XPath("/html/body/div[4]/div/div/div[2]/div/table/tbody/tr[2]/td[2]")).Text;
-            data["Gender"] = _driverManager.Driver().FindElement(By.XPath("/html/body/div[4]/div/div/div[2]/div/table/tbody/tr[3]/td[2]")).Text;
-            data["Date of Birth"] = _driverManager.Driver().FindElement(By.XPath("/html/body/div[4]/div/div/div[2]/div/table/tbody/tr[5]/td[2]")).GetAttribute("value");
-            data["Subjects"] = _driverManager.Driver().FindElements(By.XPath("/html/body/div[4]/div/div/div[2]/div/table/tbody/tr[6]/td[2]")).Select(x => x.Text).Aggregate((a, b) => $"{a}, {b}"); // Get and combine subject texts
-            data["Hobbies"] = _driverManager.Driver().FindElements((By.XPath("/html/body/div[4]/div/div/div[2]/div/table/tbody/tr[7]/td[2]"))).Select(x => x.Text).Aggregate((a, b) => $"{a}, {b}"); // Get and combine hobby texts
-            data["Address"] = _driverManager.Driver().FindElement(By.XPath("/html/body/div[4]/div/div/div[2]/div/table/tbody/tr[9]/td[2]")).Text;
-            data["Mobile"] = _driverManager.Driver().FindElement(By.XPath("/html/body/div[4]/div/div/div[2]/div/table/tbody/tr[4]/td[2]")).Text;
+            data["Student Name"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(1) > td:nth-child(2)")).Text;
+            data["Student Email"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(2) > td:nth-child(2)")).Text;
+            data["Gender"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(3) > td:nth-child(2)")).Text;
+            data["Date of Birth"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(5) > td:nth-child(2)")).Text;
+            data["Subjects"] = _driverManager.Driver().FindElements(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(6) > td:nth-child(2)")).Select(x => x.Text).Aggregate((a, b) => $"{a}, {b}"); // Get and combine subject texts
+            data["Hobbies"] = _driverManager.Driver().FindElements((By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(7) > td:nth-child(2)"))).Select(x => x.Text).Aggregate((a, b) => $"{a}, {b}"); // Get and combine hobby texts
+            data["Address"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(9) > td:nth-child(2)")).Text;
+            data["Mobile"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(4) > td:nth-child(2)")).Text;
 
-            data["State and City"] = _driverManager.Driver().FindElement(By.XPath("/html/body/div[4]/div/div/div[2]/div/table/tbody/tr[10]/td[2]")).Text;
+            data["State and City"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(10) > td:nth-child(2)")).Text;
 
             return data;
         }
