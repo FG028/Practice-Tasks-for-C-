@@ -32,45 +32,24 @@ namespace SpecFlowProjectPractice.PageObjects
 
          public void SelectOptions()
         {
-            List<string> optionSelectors = new List<string>
+            string combinedSelector = "#row1 > li:nth-child(1), #row1 > li:nth-child(3), #row2 > li:nth-child(2), #row3 > li:nth-child(1), #row3 > li:nth-child(3)";
+
+            IList<IWebElement> squares = _driverManager.Driver().FindElements(By.CssSelector(combinedSelector));
+
+            foreach (IWebElement square in squares)
             {
-                "#row1 > li:nth-child(1)",
-                "#row1 > li:nth-child(3)",
-                "#row2 > li:nth-child(2)",
-                "#row3 > li:nth-child(1)",
-                "#row3 > li:nth-child(3)"
-            };
-            foreach (string selector in optionSelectors)
-            {
-                
-                IWebElement option = _driverManager.Driver().FindElement(By.CssSelector(selector));
                 ((IJavaScriptExecutor)_driverManager.Driver()).ExecuteScript(
-                "arguments[0].scrollIntoView(true);", option);
-                option.Click();
+                        "arguments[0].scrollIntoView(true);", square);
+                square.Click();
             }
         }
 
         public List<string> GetSelectedSquareValues()
         {
-            var selectedSelectors = new List<string>()
-            {
-                "#row1 > li:nth-child(1)",
-                "#row1 > li:nth-child(3)",
-                "#row2 > li:nth-child(2)",
-                "#row3 > li:nth-child(1)",
-                "#row3 > li:nth-child(3)"
-            };
+            string combinedSelector = ".list-group-item.active";
+            IList<IWebElement> selectedSquares = _driverManager.Driver().FindElements(By.CssSelector(combinedSelector));
 
-            List<string> selectedValues = new List<string>();
-
-            foreach (var selector in selectedSelectors)
-            {
-                var square = _driverManager.Driver().FindElement(By.CssSelector(selector));
-                string value = square.Text.Trim();
-                selectedValues.Add(value);
-            }
-
-            return selectedValues;
+            return selectedSquares.Select(square => square.Text.Trim()).ToList();
         }
 
         public void VerifySelectedValues(List<string> expectedValues)

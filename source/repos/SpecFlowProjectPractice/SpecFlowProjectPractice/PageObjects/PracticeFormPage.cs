@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using SpecFlowProjectPractice.Drivers;
+using SpecFlowProjectPractice.Models;
 
 namespace SpecFlowProjectPractice.PageObjects
 {
@@ -15,30 +16,14 @@ namespace SpecFlowProjectPractice.PageObjects
             _driverManager = driverManager;
             _faker = new Faker();
         }
-        public string FormatAndValidatePhoneNumber(string phoneNumber)
-        { 
-            phoneNumber = phoneNumber.Replace("-", "")
-              .Replace(".", "")
-              .Replace("(", "")
-              .Replace(")", "")
-              .Replace("x", "")
-              .Replace(" ", "");
-
-            if (phoneNumber.Length != 10 || phoneNumber.StartsWith("0"))
-            {
-                throw new ArgumentException("Invalid phone number format");
-            }
-
-            return phoneNumber;
-        }
-
-        public void FillForm(string firstName, string lastName, string email, string address, string phone)
+        
+        public void FillForm(PracticeFormData formData)
         {
-            _driverManager.Driver().FindElement(By.Id("firstName")).SendKeys(firstName);
-            _driverManager.Driver().FindElement(By.Id("lastName")).SendKeys(lastName);
-            _driverManager.Driver().FindElement(By.Id("userEmail")).SendKeys(email);
-            _driverManager.Driver().FindElement(By.Id("userNumber")).SendKeys(phone);
-            _driverManager.Driver().FindElement(By.Id("currentAddress")).SendKeys(address);
+            _driverManager.Driver().FindElement(By.Id("firstName")).SendKeys(formData.FirstName);
+            _driverManager.Driver().FindElement(By.Id("lastName")).SendKeys(formData.LastName);
+            _driverManager.Driver().FindElement(By.Id("userEmail")).SendKeys(formData.Email);
+            _driverManager.Driver().FindElement(By.Id("userNumber")).SendKeys((formData.PhoneNumber));
+            _driverManager.Driver().FindElement(By.Id("currentAddress")).SendKeys(formData.Address);
         }
 
         public void SetDateOfBirth(string date)
@@ -49,7 +34,7 @@ namespace SpecFlowProjectPractice.PageObjects
             _driverManager.Driver().FindElement(By.XPath("//div[contains(@class, 'react-datepicker__day') and text()='" + date.Split('-')[2] + "']")).Click();
         }
 
-        public void SelectGender()
+        public void SelectGender(string Gender)
         {
             var maleRadioButton = _driverManager.Driver().FindElement(By.Id("gender-radio-1"));
             var femaleRadioButton = _driverManager.Driver().FindElement(By.Id("gender-radio-2"));

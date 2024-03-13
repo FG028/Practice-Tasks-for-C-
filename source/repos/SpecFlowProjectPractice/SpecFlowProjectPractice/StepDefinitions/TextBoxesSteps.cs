@@ -22,7 +22,7 @@ namespace SpecFlowProjectPractice.StepDefinitions
             _textBoxPage = new TextBoxPage(driverManager);
         }
 
-        [When(@"I enter the following data:")]
+        [Given(@"I enter the following data")]
         public void GivenIEnterInTheField(Table table)
         {
             if (_textBoxPage.FullNameField == null || _textBoxPage.EmailField == null || _textBoxPage.CurrentAddressField == null || _textBoxPage.PermanentAddressField == null)
@@ -41,7 +41,7 @@ namespace SpecFlowProjectPractice.StepDefinitions
             }
         }
 
-        [Then(@"I click on the Submit button")]
+        [When(@"I click on the Submit button")]
         public void WhenIClickTheSubmitButton()
         {
             _textBoxPage.ClickSubmitButton();

@@ -20,19 +20,19 @@ namespace SpecFlowProjectPractice.StepDefinitions
             _webTablesPage = new WebTablesPage(_driverManager);
         }
 
-        [When(@"I click on the Salary column")]
+        [Given(@"I click on the Salary column")]
         public void WhenIClickOnTheSalaryColumn()
         {
             _webTablesPage.ClickSalaryColumn();
         }
 
-        [Then(@"the values in the Salary column should be in ascending order")]
+        [Given(@"the values in the Salary column should be in ascending order")]
         public void ThenTheValuesInTheSalaryColumnShouldBeInAscendingOrder()
         {
             Assert.IsTrue(_webTablesPage.AreSalaryValuesAscending());
         }
 
-        [Then(@"I delete the second row")]
+        [When(@"I delete the second row")]
         public void WhenIDeleteTheSecondRow()
         {
             _webTablesPage.DeleteSecondRow();

@@ -4,6 +4,7 @@ using SpecFlowProjectPractice.PageObjects;
 using SpecFlowProjectPractice.Helper;
 using Bogus;
 using NUnit.Framework;
+using SpecFlowProjectPractice.Models;
 
 namespace SpecFlowProjectPractice.StepDefinitions
 {
@@ -11,14 +12,11 @@ namespace SpecFlowProjectPractice.StepDefinitions
     public class PracticeFormSteps
     {
         private WebDriverManager _driverManager;
-        private readonly PracticeFormPage _practiceFormPage;
+        private PracticeFormPage _practiceFormPage;
         private Faker _faker;
         private PopUpHandler popUpHandler;
-        private string firstName;
-        private string lastName;
-        private string userEmail;
-        private string userAddress;
-        private string userPhone;
+        private PracticeFormData _formData = new PracticeFormData();
+        private StudentInfoModel userData;
 
         public PracticeFormSteps(WebDriverManager driverManager)
         {
@@ -28,69 +26,59 @@ namespace SpecFlowProjectPractice.StepDefinitions
             _practiceFormPage = new PracticeFormPage(_driverManager);
         }
 
-        [When(@"I fill the form with random data")]
+        [Given(@"I fill the form with random data")]
         public void FillFormWithRandomData()
         {
-            var faker = new Bogus.Faker();
-
-            firstName = _faker.Name.FirstName();
-            lastName = _faker.Name.LastName();
-            userEmail = $"{firstName}.{lastName}@example.com";
-            userAddress = _faker.Address.StreetAddress();
-
-            userPhone = _faker.Phone.PhoneNumber()
-              .Replace("-", "")
-              .Replace(".", "")
-              .Replace("(", "")
-              .Replace(")", "")
-              .Replace("x", "")
-              .Replace(" ", "")
-              .Substring(0, 10);
-
-            _practiceFormPage.FillForm(firstName, lastName, userEmail, userAddress, userPhone);
-            _practiceFormPage.SelectGender();
+            _formData.FirstName = _faker.Name.FirstName();
+            _formData.LastName = _faker.Name.LastName();
+            _formData.Email = $"{_formData.FirstName}.{_formData.LastName}@example.com";
+            _formData.Address = _faker.Address.StreetAddress();
+            _formData.PhoneNumber = _faker.Phone.PhoneNumber()
+                .Replace("-", "")
+                .Replace(".", "")
+                .Replace("(", "")
+                .Replace(")", "")
+                .Replace("x", "")
+                .Replace(" ", "")
+                .Substring(0, 10);
+            _practiceFormPage.FillForm(_formData);
+            _practiceFormPage.SelectGender(_formData.Gender);
             _practiceFormPage.SetDateOfBirth("2000-01-10");
-            _practiceFormPage.SelectState("Uttar Pradesh");
-            _practiceFormPage.SelectCity("Merrut");
+            _practiceFormPage.SelectState(_formData.State);
+            _practiceFormPage.SelectCity(_formData.City);
             _practiceFormPage.SelectSubjects("Maths");
             _practiceFormPage.SelectSubjects("Physics");
             _practiceFormPage.SelectHobbies(new[] { "Reading", "Music" });
+            
         }
 
-        [Then(@"I click the Submit button")]
+        [When(@"I click the Submit button")]
         public void WhenISubmitTheForm()
         {
             _practiceFormPage.ClickSubmit();
         }
 
         [Then(@"I should see the model with submitted data matching my input")]
-        public void VerifySubmittedData()
+        public void ThenIShouldSeeTheSubmittedDataMatchingMyInput()
         {
             var submittedData = _practiceFormPage.GetSubmittedData();
+            userData = new StudentInfoModel(submittedData);
 
-            var expectedFirstName = firstName;
-            var expectedLastName = lastName;
-            var expectedEmail = userEmail;
-            var expectedMobile = userPhone;
-            var expectedAddress = userAddress;
-            var expectedGender = "Female";
             var expectedDoB = "10 March,2000";
-            var expectedState = "Uttar Pradesh";
-            var expectedCity = "Merrut";
             var expectedSubjects = new List<string> { "Maths", "Physics" };
             var expectedHobbies = new List<string> { "Reading", "Music" };
 
-            Assert.AreEqual(expectedFirstName, submittedData["Student Name"].Split(' ').First());
-            Assert.AreEqual(expectedLastName, submittedData["Student Name"].Split(' ').Last());
-            Assert.AreEqual(expectedEmail, submittedData["Student Email"]);
-            Assert.AreEqual(expectedMobile, submittedData["Mobile"]);
-            Assert.AreEqual(expectedAddress, submittedData["Address"]);
-
-            Assert.AreEqual(expectedGender, submittedData["Gender"] ?? "Female");
-            Assert.AreEqual(expectedDoB, submittedData["Date of Birth"]);
-            CollectionAssert.AreEquivalent(expectedSubjects, submittedData["Subjects"].Split(',').Select(x => x.Trim()).ToList());
-            CollectionAssert.AreEquivalent(expectedHobbies, submittedData["Hobbies"].Split(',').Select(x => x.Trim()).ToList());
-            Assert.AreEqual($"{expectedState} {expectedCity}", submittedData["State and City"]!);
+            Assert.AreEqual(_formData.FirstName, userData.StudentName.Split(' ').First());
+            Assert.AreEqual(_formData.LastName, userData.StudentName.Split(' ').Last());
+            Assert.AreEqual(_formData.Email, userData.StudentEmail);
+            Assert.AreEqual(_formData.PhoneNumber, userData.Mobile);
+            Assert.AreEqual(_formData.Address, userData.Address);
+            Assert.AreEqual(_formData.Gender, userData.Gender);
+            Assert.AreEqual(expectedDoB, userData.DateOfBirth);
+            Assert.AreEqual(_formData.Address, userData.Address);
+            CollectionAssert.AreEquivalent(expectedSubjects, userData.Subjects);
+            CollectionAssert.AreEquivalent(expectedHobbies, userData.Hobbies);
+            Assert.AreEqual($"{_formData.State} {_formData.City}", userData.StateAndCity);
         }
     }
 }

@@ -18,25 +18,25 @@ public class ProgressBarSteps : Steps
         _progressBarPage = new ProgressBarPage(_driverManager);
     }
 
-    [When(@"I click on Start")]
+    [Given(@"I click on Start")]
     public void WhenIClickOnStart()
     {
         _progressBarPage.ClickStartButton();
     }
 
-    [Then(@"the progress bar should be complete")]
+    [Given(@"the progress bar should be complete")]
     public void ThenTheProgressBarShouldBeComplete()
     {
         Assert.IsTrue(_progressBarPage.IsProgressBarComplete());
     }
 
-    [Then(@"the button should have changed its name to Reset")]
+    [Given(@"the button should have changed its name to Reset")]
     public void ThenTheButtonShouldHaveChangedItsNameToReset()
     {
         Assert.AreEqual("Reset", _progressBarPage.GetStartButtonName());
     }
 
-    [Then(@"I click on Reset")]
+    [When(@"I click on Reset")]
     public void WhenIClickOnReset()
     {
         _progressBarPage.ClickResetButton();

@@ -20,13 +20,13 @@ namespace SpecFlowProjectPractice.StepDefinitions
             checkBoxPage = new CheckBoxPage(_driverManager);
         }
 
-        [When(@"I expand the ""(.*)"" folder")]
+        [Given(@"I expand the ""(.*)"" folder")]
         public void WhenIExtendTheHomeFolder(string folderName)
         {
             checkBoxPage.ExpandHomeFolder();
         }
 
-        [Then(@"I select the Desktop folder without expanding")]
+        [When(@"I select the Desktop folder without expanding")]
         public void WhenISelectTheDesktopFolderWithoutExpanding()
         {
             checkBoxPage.DesktopSelector();
