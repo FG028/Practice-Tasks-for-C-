@@ -18,12 +18,12 @@ namespace SpecFlowProjectPractice.PageObjects
         {
             switch (buttonName)
             {
+                case "Right Click Me":
+                    return driverManager.Driver().FindElement(By.Id("rightClickBtn"));
                 case "Click Me":
                     return driverManager.Driver().FindElement(By.XPath("/html/body/div[2]/div/div/div/div[2]/div[2]/div[3]/button"));
                 case "Double Click Me":
                     return driverManager.Driver().FindElement(By.Id("doubleClickBtn"));
-                case "Right Click Me":
-                    return driverManager.Driver().FindElement(By.Id("rightClickBtn"));
                 default:
                     throw new ArgumentException($"Unsupported button name: {buttonName}");
             }
@@ -37,14 +37,14 @@ namespace SpecFlowProjectPractice.PageObjects
 
             switch (buttonName)
             {
+                case "Double Click Me":
+                    new Actions(driverManager.Driver()).DoubleClick(button).Perform();
+                    break;
                 case "Click Me":
                     button.Click();
                     break;
                 case "Right Click Me":
                     new Actions(driverManager.Driver()).ContextClick(button).Perform();
-                    break;
-                case "Double Click Me":
-                    new Actions(driverManager.Driver()).DoubleClick(button).Perform();
                     break;
                 default:
                     throw new ArgumentException($"Unsupported button name: {buttonName}");
@@ -55,12 +55,12 @@ namespace SpecFlowProjectPractice.PageObjects
         {
             switch (_clickedButtonName)
             {
+                case "Right Click Me":
+                    return driverManager.Driver().FindElement(By.CssSelector("#rightClickMessage")).Text;
                 case "Click Me":
                     return driverManager.Driver().FindElement(By.CssSelector("#dynamicClickMessage")).Text;
                 case "Double Click Me":
                     return driverManager.Driver().FindElement(By.CssSelector("#doubleClickMessage")).Text;
-                case "Right Click Me":
-                    return driverManager.Driver().FindElement(By.CssSelector("#rightClickMessage")).Text;
                 default:
                     throw new ArgumentException($"Unsupported button name: {_clickedButtonName}");
             }

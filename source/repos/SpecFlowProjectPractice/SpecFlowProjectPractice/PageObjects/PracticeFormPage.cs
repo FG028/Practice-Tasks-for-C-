@@ -1,6 +1,8 @@
 ﻿using Bogus;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using SpecFlowProjectPractice.Drivers;
 using SpecFlowProjectPractice.Models;
 
@@ -9,6 +11,7 @@ namespace SpecFlowProjectPractice.PageObjects
     public class PracticeFormPage
     {
         private readonly WebDriverManager _driverManager;
+        public StudentInfoModel _formData;
         private Faker _faker;
 
         public PracticeFormPage(WebDriverManager driverManager)
@@ -17,21 +20,32 @@ namespace SpecFlowProjectPractice.PageObjects
             _faker = new Faker();
         }
         
-        public void FillForm(PracticeFormData formData)
+        public void FillForm(StudentInfoModel formData)
         {
-            _driverManager.Driver().FindElement(By.Id("firstName")).SendKeys(formData.FirstName);
-            _driverManager.Driver().FindElement(By.Id("lastName")).SendKeys(formData.LastName);
-            _driverManager.Driver().FindElement(By.Id("userEmail")).SendKeys(formData.Email);
-            _driverManager.Driver().FindElement(By.Id("userNumber")).SendKeys((formData.PhoneNumber));
+            _driverManager.Driver().FindElement(By.Id("firstName")).SendKeys(formData.StudentName.Split(' ').First());
+            _driverManager.Driver().FindElement(By.Id("lastName")).SendKeys(formData.StudentName.Split(' ').Last());
+            _driverManager.Driver().FindElement(By.Id("userEmail")).SendKeys(formData.StudentEmail);
+            _driverManager.Driver().FindElement(By.Id("userNumber")).SendKeys((formData.Mobile));
             _driverManager.Driver().FindElement(By.Id("currentAddress")).SendKeys(formData.Address);
         }
 
-        public void SetDateOfBirth(string date)
+        public string GetRandomDateOfBirth(string dateOfBirth)
         {
-            _driverManager.Driver().FindElement(By.Id("dateOfBirthInput")).Click();
-            _driverManager.Driver().FindElement(By.CssSelector(".react-datepicker__month-select")).SendKeys(date.Split('-')[1]);
-            _driverManager.Driver().FindElement(By.CssSelector(".react-datepicker__year-select")).SendKeys(date.Split('-')[0]);
-            _driverManager.Driver().FindElement(By.XPath("//div[contains(@class, 'react-datepicker__day') and text()='" + date.Split('-')[2] + "']")).Click();
+            var random = new Random();
+            int year = random.Next(1901, 2099);
+            int month = random.Next(1, 13);
+            int day = random.Next(1, DateTime.DaysInMonth(year, month));
+            var dob = new DateTime(year, month, day);
+            return dob.ToString("yyyy-MM-dd");
+        }
+
+        public void SetDateOfBirth(string dateOfBirth)
+        {
+            ;
+            var dateOfBirthInput = _driverManager.Driver().FindElement(By.Id("dateOfBirthInput"));
+            dateOfBirthInput.Click();
+            dateOfBirthInput.Clear();
+            dateOfBirthInput.SendKeys(GetRandomDateOfBirth(dateOfBirth) + Keys.Enter);
         }
 
         public void SelectGender(string Gender)
@@ -42,23 +56,43 @@ namespace SpecFlowProjectPractice.PageObjects
 
             var jsExecutor = (IJavaScriptExecutor)_driverManager.Driver();
             jsExecutor.ExecuteScript("arguments[0].click();", femaleRadioButton);
+            /*
+            if (Gender.Equals("Male") && !maleRadioButton.Selected)
+            {
+                maleRadioButton.Click();
+            }
+            else if (Gender.Equals("Female") && !femaleRadioButton.Selected)
+            {
+                femaleRadioButton.Click();
+            }
+            else if (Gender.Equals("Other") && !otherRadioButton.Selected)
+            {
+                otherRadioButton.Click();
+            }*/
         }
 
-        public void SelectSubjects(string subject)
+        public void SelectSubjects(List<string> subjects)
         {
             try
             {
                 _driverManager.Driver().FindElement(By.XPath("//*[@id='subjectsContainer']/div/div[1]")).Click();
 
-                Actions actions = new Actions(_driverManager.Driver());
-                actions.SendKeys(subject).Perform();
-                
-                var element = _driverManager.Driver().FindElement(By.XPath("//*[@id='react-select-2-option-0']"));
-                var subjectText = element.Text;
-
-                if (subjectText.Equals(subject))
+                foreach (var subject in subjects)
                 {
-                    element.Click();
+                    Actions actions = new Actions(_driverManager.Driver());
+                    actions.SendKeys(subject);
+                    actions.Build().Perform();
+
+                    WebDriverWait wait = new WebDriverWait(_driverManager.Driver(), TimeSpan.FromSeconds(2));
+                    wait.Until(ExpectedConditions.ElementIsVisible(By.XPath($"//*[@id='react-select-2-option-0']")));
+
+                    var element = _driverManager.Driver().FindElement(By.XPath($"//*[@id='react-select-2-option-0']"));
+                    var subjectText = element.Text;
+
+                    if (subjectText.Equals(subject))
+                    {
+                        element.Click();
+                    }
                 }
             }
             catch (WebDriverException ex)
@@ -67,7 +101,7 @@ namespace SpecFlowProjectPractice.PageObjects
             }
         }
 
-        public void SelectHobbies(string[] hobbiesToSelect)
+        public void SelectHobbies(List<string> hobbiesToSelect)
         {
             IWebElement sportCheckbox = _driverManager.Driver().FindElement(By.Id("hobbies-checkbox-1"));
             IWebElement readingCheckbox = _driverManager.Driver().FindElement(By.Id("hobbies-checkbox-2"));
@@ -96,18 +130,16 @@ namespace SpecFlowProjectPractice.PageObjects
             ((IJavaScriptExecutor)_driverManager.Driver()).ExecuteScript(
             "arguments[0].scrollIntoView(true);", stateDropdown);
             stateDropdown.Click();
-
-            Actions actions = new Actions(_driverManager.Driver());
-            actions.SendKeys(stateName + Keys.Enter).Perform();
+            IWebElement upOption = _driverManager.Driver().FindElement(By.CssSelector("#react-select-3-option-1"));
+            upOption.Click();
         }
-
         public void SelectCity(string cityName)
         {
             IWebElement cityDropdown = _driverManager.Driver().FindElement(By.Id("city"));
             cityDropdown.Click();
 
-            Actions actions = new Actions(_driverManager.Driver());
-            actions.SendKeys(cityName + Keys.Enter).Perform();
+            IWebElement upOption = _driverManager.Driver().FindElement(By.CssSelector("#react-select-4-option-2"));
+            upOption.Click();
         }
 
         public void ClickSubmit()
@@ -117,21 +149,20 @@ namespace SpecFlowProjectPractice.PageObjects
             jsExecutor.ExecuteScript("arguments[0].click();", SubmitButton);
         }
 
-        public Dictionary<string, string> GetSubmittedData()
+        public StudentInfoModel GetSubmittedData()
         {
-            var data = new Dictionary<string, string>();
-
-            data["Student Name"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(1) > td:nth-child(2)")).Text;
-            data["Student Email"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(2) > td:nth-child(2)")).Text;
-            data["Gender"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(3) > td:nth-child(2)")).Text;
-            data["Date of Birth"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(5) > td:nth-child(2)")).Text;
-            data["Subjects"] = _driverManager.Driver().FindElements(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(6) > td:nth-child(2)")).Select(x => x.Text).Aggregate((a, b) => $"{a}, {b}"); // Get and combine subject texts
-            data["Hobbies"] = _driverManager.Driver().FindElements((By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(7) > td:nth-child(2)"))).Select(x => x.Text).Aggregate((a, b) => $"{a}, {b}"); // Get and combine hobby texts
-            data["Address"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(9) > td:nth-child(2)")).Text;
-            data["Mobile"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(4) > td:nth-child(2)")).Text;
-            data["State and City"] = _driverManager.Driver().FindElement(By.CssSelector("body > div.fade.modal.show > div > div > div.modal-body > div > table > tbody > tr:nth-child(10) > td:nth-child(2)")).Text;
-
-            return data;
+            return new StudentInfoModel
+            {
+            StudentName = _driverManager.Driver().FindElement(By.XPath(".//tr[1]/td[2]")).Text,
+            StudentEmail = _driverManager.Driver().FindElement(By.XPath(".//tr[2]/td[2]")).Text,
+            Gender = _driverManager.Driver().FindElement(By.XPath(".//tr[3]/td[2]")).Text,
+            Mobile = _driverManager.Driver().FindElement(By.XPath(".//tr[4]/td[2]")).Text,
+            DateOfBirth = _driverManager.Driver().FindElement(By.XPath(".//tr[5]/td[2]")).Text,
+            Subjects = _driverManager.Driver().FindElements(By.XPath(".//tr[6]/td[2]")).Select(x => x.Text).ToList(),
+            Hobbies = _driverManager.Driver().FindElements(By.XPath(".//tr[7]/td[2]")).Select(x => x.Text).ToList(),
+            Address = _driverManager.Driver().FindElement(By.XPath(".//tr[9]/td[2]")).Text,
+            StateAndCity = _driverManager.Driver().FindElement(By.XPath(".//tr[10]/td[2]")).Text,
+            };
         }
     }
 }

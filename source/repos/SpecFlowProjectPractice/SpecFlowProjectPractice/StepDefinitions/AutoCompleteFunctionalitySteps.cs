@@ -20,37 +20,33 @@ namespace SpecFlowProjectPractice.StepDefinitions
             _autoCompletePage = new AutoCompletePage(_driverManager);
         }
 
-        [Given("I enter the letter 'g' in the Type multiple color names field")]
+        [Given("The user enters the letter 'g' in the Type multiple color names field")]
         public void WhenIEnterTheLetterGInTheTypeMultipleColorNamesField()
         {
             _autoCompletePage.EnterText("g");
         }
 
-        [Given("I should see three AutoComplete suggestions containing 'g'")]
+        [Given("Three suggestions containing 'g' should be displayed.")]
         public void ThenIShouldSeeThreeAutoCompleteSuggestionsContainingG()
         {
             Assert.That(_autoCompletePage.GetAutoCompleteSuggestions().Count, Is.EqualTo(2));
         }
 
-        [Given("I add the colors Red, Yellow, Green, Blue, and Purple")]
+        [Given("The System should display the following colors in the field: Red, Yellow, Green, Blue, and Purple")]
         public void WhenIAddTheColorsRedYellowGreenBlueAndPurple()
         {
+
             _autoCompletePage.ClearInputField();
             _autoCompletePage.AddMultipleColors("Red", "Yellow", "Green", "Blue", "Purple");
-        }
 
-        [Given("I should see the following colors in the field: Red, Yellow, Green, Blue, Purple")]
-        public void ThenIShouldSeeTheFollowingColorsInTheFieldRedYellowGreenBlueAndPurple()
-        {
             var expectedColors = new string[] { "Red", "Yellow", "Green", "Blue", "Purple" };
-
             foreach (var color in expectedColors)
             {
                 Assert.That(_autoCompletePage.GetSelectedColors().Contains(color), $"Color '{color}' not found in selected options");
             }
         }
 
-        [When("I delete the colors Yellow and Purple")]
+        [When("I am removing the colors Yellow and Purple")]
         public void WhenIDeleteTheColorsYellowAndPurple()
         {
             _autoCompletePage.DeleteColors("Yellow", "Purple");

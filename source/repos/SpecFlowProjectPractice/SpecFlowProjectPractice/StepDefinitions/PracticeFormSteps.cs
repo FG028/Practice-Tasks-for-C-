@@ -15,8 +15,7 @@ namespace SpecFlowProjectPractice.StepDefinitions
         private PracticeFormPage _practiceFormPage;
         private Faker _faker;
         private PopUpHandler popUpHandler;
-        private PracticeFormData _formData = new PracticeFormData();
-        private StudentInfoModel userData;
+        private StudentInfoModel _formData = new StudentInfoModel();
 
         public PracticeFormSteps(WebDriverManager driverManager)
         {
@@ -29,11 +28,11 @@ namespace SpecFlowProjectPractice.StepDefinitions
         [Given(@"I fill the form with random data")]
         public void FillFormWithRandomData()
         {
-            _formData.FirstName = _faker.Name.FirstName();
-            _formData.LastName = _faker.Name.LastName();
-            _formData.Email = $"{_formData.FirstName}.{_formData.LastName}@example.com";
+            
+            _formData.StudentName = $"{_faker.Name.FirstName()} {_faker.Name.LastName()}";
+            _formData.StudentEmail = $"{_formData.StudentName.Split(' ').First()}.{_formData.StudentName.Split(' ').Last()}@example.com";
             _formData.Address = _faker.Address.StreetAddress();
-            _formData.PhoneNumber = _faker.Phone.PhoneNumber()
+            _formData.Mobile = _faker.Phone.PhoneNumber()
                 .Replace("-", "")
                 .Replace(".", "")
                 .Replace("(", "")
@@ -41,15 +40,18 @@ namespace SpecFlowProjectPractice.StepDefinitions
                 .Replace("x", "")
                 .Replace(" ", "")
                 .Substring(0, 10);
+
             _practiceFormPage.FillForm(_formData);
-            _practiceFormPage.SelectGender(_formData.Gender);
-            _practiceFormPage.SetDateOfBirth("2000-01-10");
+            _practiceFormPage.SelectGender("Female");
+            _practiceFormPage.SetDateOfBirth((_formData.DateOfBirth));
             _practiceFormPage.SelectState(_formData.State);
             _practiceFormPage.SelectCity(_formData.City);
-            _practiceFormPage.SelectSubjects("Maths");
-            _practiceFormPage.SelectSubjects("Physics");
-            _practiceFormPage.SelectHobbies(new[] { "Reading", "Music" });
-            
+
+            _formData.Subjects = new List<string> { "Maths", "Physics" };
+            _practiceFormPage.SelectSubjects(_formData.Subjects);
+
+            _formData.Hobbies = new List<string> { "Reading", "Music" };
+            _practiceFormPage.SelectHobbies(_formData.Hobbies);
         }
 
         [When(@"I click the Submit button")]
@@ -61,23 +63,18 @@ namespace SpecFlowProjectPractice.StepDefinitions
         [Then(@"I should see the model with submitted data matching my input")]
         public void ThenIShouldSeeTheSubmittedDataMatchingMyInput()
         {
-            var submittedData = _practiceFormPage.GetSubmittedData();
-            userData = new StudentInfoModel(submittedData);
+               
+            var userData = _practiceFormPage.GetSubmittedData();
 
-            var expectedDoB = "10 March,2000";
-            var expectedSubjects = new List<string> { "Maths", "Physics" };
-            var expectedHobbies = new List<string> { "Reading", "Music" };
-
-            Assert.AreEqual(_formData.FirstName, userData.StudentName.Split(' ').First());
-            Assert.AreEqual(_formData.LastName, userData.StudentName.Split(' ').Last());
-            Assert.AreEqual(_formData.Email, userData.StudentEmail);
-            Assert.AreEqual(_formData.PhoneNumber, userData.Mobile);
+            Assert.AreEqual(_formData.StudentName.Split(' ').First(), userData.StudentName.Split(' ').First());
+            Assert.AreEqual(_formData.StudentName.Split(' ').Last(), userData.StudentName.Split(' ').Last());
+            Assert.AreEqual(_formData.StudentEmail, userData.StudentEmail);
+            Assert.AreEqual(_formData.Mobile, userData.Mobile);
             Assert.AreEqual(_formData.Address, userData.Address);
             Assert.AreEqual(_formData.Gender, userData.Gender);
-            Assert.AreEqual(expectedDoB, userData.DateOfBirth);
-            Assert.AreEqual(_formData.Address, userData.Address);
-            CollectionAssert.AreEquivalent(expectedSubjects, userData.Subjects);
-            CollectionAssert.AreEquivalent(expectedHobbies, userData.Hobbies);
+            Assert.AreEqual(_formData.DateOfBirth, userData.DateOfBirth);
+            CollectionAssert.AreEquivalent(_formData.Subjects, userData.Subjects);
+            CollectionAssert.AreEquivalent(_formData.Hobbies, userData.Hobbies);
             Assert.AreEqual($"{_formData.State} {_formData.City}", userData.StateAndCity);
         }
     }
