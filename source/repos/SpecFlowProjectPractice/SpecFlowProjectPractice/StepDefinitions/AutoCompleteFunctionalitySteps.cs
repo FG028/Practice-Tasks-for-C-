@@ -20,19 +20,19 @@ namespace SpecFlowProjectPractice.StepDefinitions
             _autoCompletePage = new AutoCompletePage(_driverManager);
         }
 
-        [Given("The user enters the letter 'g' in the Type multiple color names field")]
+        [When("The user enters the letter 'g' in the Type multiple color names field")]
         public void WhenIEnterTheLetterGInTheTypeMultipleColorNamesField()
         {
             _autoCompletePage.EnterText("g");
         }
 
-        [Given("Three suggestions containing 'g' should be displayed.")]
+        [Then("Three suggestions containing 'g' should be displayed.")]
         public void ThenIShouldSeeThreeAutoCompleteSuggestionsContainingG()
         {
             Assert.That(_autoCompletePage.GetAutoCompleteSuggestions().Count, Is.EqualTo(2));
         }
 
-        [Given("The System should display the following colors in the field: Red, Yellow, Green, Blue, and Purple")]
+        [Given("The following colors displayed in the field: Red, Yellow, Green, Blue, and Purple")]
         public void WhenIAddTheColorsRedYellowGreenBlueAndPurple()
         {
 

@@ -5,6 +5,7 @@ using SpecFlowProjectPractice.Helper;
 using Bogus;
 using NUnit.Framework;
 using SpecFlowProjectPractice.Models;
+using System.Linq;
 
 namespace SpecFlowProjectPractice.StepDefinitions
 {
@@ -28,7 +29,6 @@ namespace SpecFlowProjectPractice.StepDefinitions
         [Given(@"I fill the form with random data")]
         public void FillFormWithRandomData()
         {
-            
             _formData.StudentName = $"{_faker.Name.FirstName()} {_faker.Name.LastName()}";
             _formData.StudentEmail = $"{_formData.StudentName.Split(' ').First()}.{_formData.StudentName.Split(' ').Last()}@example.com";
             _formData.Address = _faker.Address.StreetAddress();
@@ -42,9 +42,13 @@ namespace SpecFlowProjectPractice.StepDefinitions
                 .Substring(0, 10);
 
             _practiceFormPage.FillForm(_formData);
-            _practiceFormPage.SelectGender("Female");
+            _formData.Gender = "Female";
+            _practiceFormPage.SelectGender(_formData.Gender);
+            _formData.DateOfBirth = "14 March,202420";
             _practiceFormPage.SetDateOfBirth((_formData.DateOfBirth));
+            _formData.State = "Uttar Pradesh";
             _practiceFormPage.SelectState(_formData.State);
+            _formData.City = "Merrut";
             _practiceFormPage.SelectCity(_formData.City);
 
             _formData.Subjects = new List<string> { "Maths", "Physics" };
@@ -63,8 +67,10 @@ namespace SpecFlowProjectPractice.StepDefinitions
         [Then(@"I should see the model with submitted data matching my input")]
         public void ThenIShouldSeeTheSubmittedDataMatchingMyInput()
         {
-               
-            var userData = _practiceFormPage.GetSubmittedData();
+            StudentInfoModel userData = _practiceFormPage.GetSubmittedData();
+            var expectedSubjects = string.Join(", ", _formData.Subjects);
+            var expectedHobbies = string.Join(", ", _formData.Hobbies);
+
 
             Assert.AreEqual(_formData.StudentName.Split(' ').First(), userData.StudentName.Split(' ').First());
             Assert.AreEqual(_formData.StudentName.Split(' ').Last(), userData.StudentName.Split(' ').Last());
@@ -73,8 +79,8 @@ namespace SpecFlowProjectPractice.StepDefinitions
             Assert.AreEqual(_formData.Address, userData.Address);
             Assert.AreEqual(_formData.Gender, userData.Gender);
             Assert.AreEqual(_formData.DateOfBirth, userData.DateOfBirth);
-            CollectionAssert.AreEquivalent(_formData.Subjects, userData.Subjects);
-            CollectionAssert.AreEquivalent(_formData.Hobbies, userData.Hobbies);
+            Assert.AreEqual(expectedSubjects, string.Join(", ", userData.Subjects));
+            Assert.AreEqual(expectedHobbies, string.Join(", ", userData.Hobbies));
             Assert.AreEqual($"{_formData.State} {_formData.City}", userData.StateAndCity);
         }
     }

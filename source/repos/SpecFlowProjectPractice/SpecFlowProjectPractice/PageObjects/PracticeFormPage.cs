@@ -32,7 +32,7 @@ namespace SpecFlowProjectPractice.PageObjects
         public string GetRandomDateOfBirth(string dateOfBirth)
         {
             var random = new Random();
-            int year = random.Next(1901, 2099);
+            int year = random.Next(2000, 2099);
             int month = random.Next(1, 13);
             int day = random.Next(1, DateTime.DaysInMonth(year, month));
             var dob = new DateTime(year, month, day);
@@ -41,7 +41,6 @@ namespace SpecFlowProjectPractice.PageObjects
 
         public void SetDateOfBirth(string dateOfBirth)
         {
-            ;
             var dateOfBirthInput = _driverManager.Driver().FindElement(By.Id("dateOfBirthInput"));
             dateOfBirthInput.Click();
             dateOfBirthInput.Clear();
@@ -57,17 +56,18 @@ namespace SpecFlowProjectPractice.PageObjects
             var jsExecutor = (IJavaScriptExecutor)_driverManager.Driver();
             jsExecutor.ExecuteScript("arguments[0].click();", femaleRadioButton);
             /*
-            if (Gender.Equals("Male") && !maleRadioButton.Selected)
+            var jsExecutor = (IJavaScriptExecutor)_driverManager.Driver();
+            switch (gender.ToLower())
             {
-                maleRadioButton.Click();
-            }
-            else if (Gender.Equals("Female") && !femaleRadioButton.Selected)
-            {
-                femaleRadioButton.Click();
-            }
-            else if (Gender.Equals("Other") && !otherRadioButton.Selected)
-            {
-                otherRadioButton.Click();
+              case "male":
+                jsExecutor.ExecuteScript("arguments[0].click();", _driverManager.Driver().FindElement(By.Id("gender-radio-1")));
+                break;
+              case "female":
+                jsExecutor.ExecuteScript("arguments[0].click();", _driverManager.Driver().FindElement(By.Id("gender-radio-2")));
+                break;
+              case "other":
+                jsExecutor.ExecuteScript("arguments[0].click();", _driverManager.Driver().FindElement(By.Id("gender-radio-3")));
+                break;
             }*/
         }
 
