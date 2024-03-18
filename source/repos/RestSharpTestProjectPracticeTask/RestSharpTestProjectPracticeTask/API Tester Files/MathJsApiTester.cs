@@ -1,4 +1,5 @@
 ﻿using RestSharp;
+using RestSharpTestProjectPracticeTask.Configuration_Files;
 using RestSharpTestProjectPracticeTask.Helpers;
 
 namespace RestSharpTestProjectPracticeTask.StepDefinitions

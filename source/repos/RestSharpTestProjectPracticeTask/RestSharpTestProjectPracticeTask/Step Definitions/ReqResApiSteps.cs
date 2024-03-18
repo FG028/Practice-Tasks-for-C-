@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using NUnit.Framework;
 using RestSharp;
+using RestSharpTestProjectPracticeTask.Configuration_Files;
 using RestSharpTestProjectPracticeTask.Helpers;
+using System.Net;
 using TechTalk.SpecFlow;
 
 namespace RestSharpTestProjectPracticeTask.Step_Definitions
@@ -10,32 +12,32 @@ namespace RestSharpTestProjectPracticeTask.Step_Definitions
     public class ReqResApiSteps
     {
         private readonly string _baseUrl = "https://reqres.in/api/";
+        private readonly IRestSharpClient _restSharpClient;
         private IRestResponse _response;
-        private readonly CommonApiSteps _commonApiSteps;
         private readonly CustomTimer _timer;
 
-        public ReqResApiSteps(CommonApiSteps commonApiSteps, CustomTimer timer)
+        public ReqResApiSteps(CustomTimer timer, IRestSharpClient restSharpClient)
         {
-            _commonApiSteps = commonApiSteps;
+            _restSharpClient = restSharpClient;
             _timer = timer;
         }
 
         [Given(@"I send a (.*) request to ""(.*)"" with the following user data:")]
         public async Task GivenISendARequestToWithTheFollowingUserData(string method, string endpoint, object userData)
         {
-            _response = await _commonApiSteps.SendRequest(method, endpoint, userData);
+            _response = await _restSharpClient.ExecuteAsync(method, endpoint, userData);
         }
 
         [Given(@"I send a (.*) request to ""(.*)""")]
         public async Task GivenISendARequestTo(string method, string endpoint)
         {
-            _response = await _commonApiSteps.SendRequest(method, endpoint);
+            _response = await _restSharpClient.GetAsync(method, endpoint);
         }
 
         [Then(@"the status code should be (.*)")]
         public void ThenTheStatusCodeShouldBe(int expectedStatusCode)
         {
-            // Assert.AreEqual(expectedStatusCode, _response.StatusCode);
+            Assert.AreEqual((HttpStatusCode)expectedStatusCode, _response.StatusCode);
         }
 
         [Then(@"the response body should contain a list of users")]
@@ -79,7 +81,7 @@ namespace RestSharpTestProjectPracticeTask.Step_Definitions
         public async Task ThenTheResponseTimeShouldBeGreaterThan2Seconds()
         {
             _timer.Start();
-            await _commonApiSteps.SendRequest("GET", "users/delayed");
+            await _restSharpClient.GetAsync("GET", "users/delayed");
             _timer.Stop();
 
             var elapsedTime = _timer.GetElapsedSeconds();

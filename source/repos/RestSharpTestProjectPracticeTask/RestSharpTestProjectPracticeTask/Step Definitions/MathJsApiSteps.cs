@@ -2,6 +2,9 @@
 using RestSharp;
 using TechTalk.SpecFlow;
 using Newtonsoft.Json.Linq;
+using RestSharpTestProjectPracticeTask.Configuration_Files;
+using RestSharpTestProjectPracticeTask.Helpers;
+using System.Net;
 
 namespace YourProjectName.MathJsApiSteps
 {
@@ -9,26 +12,25 @@ namespace YourProjectName.MathJsApiSteps
     public class MathJsApiSteps
     {
         private readonly string _baseUrl = "http://api.mathjs.org/v4/";
-        private readonly CommonApiSteps _commonApiSteps;
+        private readonly IRestSharpClient _restSharpClient;
         private IRestResponse _response;
 
-        public MathJsApiSteps(CommonApiSteps commonApiSteps)
+        public MathJsApiSteps(IRestSharpClient restSharpClient)
         {
-            
-            _commonApiSteps = commonApiSteps;
+            _restSharpClient = restSharpClient;
         }
 
         [Given(@"I send a POST request to ""(.*)"" with the following expression")]
         public async Task GivenISendAPostRequestToWithTheFollowingExpression(string endpoint, string expression)
         {
             var body = new { args = new[] { expression } };
-            _response = await _commonApiSteps.SendRequest("POST", $"{_baseUrl}{endpoint}", body);
+            _response = await _restSharpClient.PostAsync("POST", $"{_baseUrl}{endpoint}", body);
         }
 
         [Then(@"The status code should be the next (.*)")]
-        public void ThenTheStatusCodeShouldBe(int expectedStatusCode)
+        public void ThenTheStatusCodeShouldBe(HttpStatusCode expectedStatusCode)
         {
-           // Assert.AreEqual(expectedStatusCode, _response.StatusCode);
+            Assert.AreEqual(expectedStatusCode, _response.StatusCode);
         }
 
         [Then(@"the response body should contain the following result:")]
