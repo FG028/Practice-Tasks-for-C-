@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestSharpTestProjectPracticeTask", "RestSharpTestProjectPracticeTask\RestSharpTestProjectPracticeTask.csproj", "{7D6AB23C-C81B-4E0D-8253-8D9E88B3440D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7D6AB23C-C81B-4E0D-8253-8D9E88B3440D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D6AB23C-C81B-4E0D-8253-8D9E88B3440D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D6AB23C-C81B-4E0D-8253-8D9E88B3440D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D6AB23C-C81B-4E0D-8253-8D9E88B3440D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0D8D6428-5ACC-440C-B093-9D1FE6393CA7}
+	EndGlobalSection
+EndGlobal
