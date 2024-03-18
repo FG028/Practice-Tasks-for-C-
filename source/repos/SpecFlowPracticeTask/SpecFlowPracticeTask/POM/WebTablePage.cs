@@ -1,23 +1,11 @@
 ﻿using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
+using SpecFlowPracticeTask.Hooks;
 
 namespace SpecFlowPracticeTask.POM
 {
     public class WebTablePage
     {
-        private readonly IWebDriver driver;
-
-        public WebTablePage(IWebDriver driver)
-        {
-            this.driver = driver;
-            PageFactory.InitElements(driver, this);
-        }
-
-        public void NavigateToPage()
-        {
-            driver.Navigate().GoToUrl("https://demoqa.com/webtables");
-        }
-
         [FindsBy(How = How.CssSelector, Using = "#webtables")]
         public IWebElement Table { get; set; }
 

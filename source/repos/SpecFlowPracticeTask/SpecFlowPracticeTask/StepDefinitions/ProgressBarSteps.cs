@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
+using SpecFlowPracticeTask.Hooks;
 using SpecFlowPracticeTask.POM;
 using TechTalk.SpecFlow;
 
@@ -8,12 +9,12 @@ namespace SpecFlowPracticeTask.StepDefinitions
     [Binding]
     public class ProgressBarSteps
     {
-        private readonly WebDriver driver;
         private readonly ProgressBarPage progressBarPage;
+        WebDriver driver = WebDriverManager.GetDriver();
 
-        public ProgressBarSteps(WebDriver driver)
+        public ProgressBarSteps(WebDriver _driver)
         {
-            this.driver = driver;
+            driver = _driver;
             progressBarPage = new ProgressBarPage(driver);
         }
 
@@ -21,12 +22,6 @@ namespace SpecFlowPracticeTask.StepDefinitions
         public void NavigateToDemoQA()
         {
             progressBarPage.NavigateToDemoQA();
-        }
-
-        [Given(@"I navigate to the ""Widgets"" category and ""Progress Bar"" section")]
-        public void NavigateToAutoCompleteSection()
-        {
-            progressBarPage.NavigateToAutoCompleteSection();
         }
 
         [Then(@"I click the ""(.*)"" button")]

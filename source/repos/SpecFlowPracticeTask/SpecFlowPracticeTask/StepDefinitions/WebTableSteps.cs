@@ -1,27 +1,25 @@
 ﻿using NUnit.Framework;
-using OpenQA.Selenium;
 using System.Data;
 using TechTalk.SpecFlow;
 using SpecFlowPracticeTask.POM;
+using SpecFlowPracticeTask.Hooks;
 
 namespace SpecFlowPracticeTask.StepDefinitions
 {
     [Binding]
     public class WebTableSteps
     {
-        private readonly WebDriver driver;
         private readonly WebTablePage webTablePage;
 
-        public WebTableSteps(WebDriver driver)
+        public WebTableSteps()
         {
-            this.driver = driver;
-            webTablePage = new WebTablePage(driver);
+            this.webTablePage = webTablePage;
         }
 
         [Given(@"I am on the DemoQA page ""https://demoqa.com/webtables""")]
         public void NavigateToDemoQA()
         {
-            webTablePage.NavigateToPage();
+            BrowserManager.GetDriver().Navigate().GoToUrl("https://demoqa.com/webtables");
         }
 
         [When(@"I click on the ""(.*)"" column header")]

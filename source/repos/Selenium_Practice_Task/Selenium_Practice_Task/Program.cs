@@ -2,7 +2,6 @@
 {
     using System;
     using System.Linq;
-    using System.Xml.Linq;
     using NUnit.Framework;
     using OpenQA.Selenium;
     using OpenQA.Selenium.Chrome;

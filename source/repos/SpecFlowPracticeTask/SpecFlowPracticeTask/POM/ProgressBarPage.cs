@@ -1,27 +1,23 @@
-﻿using OpenQA.Selenium;
+﻿using NUnit.Framework;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.PageObjects;
+using SpecFlowPracticeTask.Hooks;
 
 namespace SpecFlowPracticeTask.POM
 {
     public class ProgressBarPage
     {
-        private readonly WebDriver driver;
-
-        public ProgressBarPage(WebDriver driver)
+        WebDriver driver = WebDriverManager.GetDriver();
+        public ProgressBarPage(WebDriver _driver)
         {
-            this.driver = driver;
+            this.driver = _driver;
             PageFactory.InitElements(driver, this);
         }
 
         public void NavigateToDemoQA()
         {
             driver.Navigate().GoToUrl("https://demoqa.com/progress-bar");
-        }
-
-        public void NavigateToAutoCompleteSection()
-        {
-            driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[4]/div/ul/li[5]")).Click();
         }
 
         [FindsBy(How = How.Id, Using = "startStopButton")]
@@ -37,8 +33,7 @@ namespace SpecFlowPracticeTask.POM
 
         public void WaitForProgressBar(int expectedValue)
         {
-            new WebDriverWait(driver, TimeSpan.FromSeconds(10))
-                .Until(d => int.Parse(ProgressBarText.Text.Split('%')[0]) >= expectedValue);
+            new WebDriverWait(driver, TimeSpan.FromSeconds(10)).Until(d => int.Parse(ProgressBarText.Text.Split('%')[0]) >= expectedValue);
         }
 
         public string GetButtonText()

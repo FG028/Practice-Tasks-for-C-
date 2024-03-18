@@ -2,27 +2,22 @@
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.PageObjects;
 using SeleniumExtras.WaitHelpers;
+using SpecFlowPracticeTask.Hooks;
 
 namespace SpecFlowPracticeTask.POM
 {
     public class AutoCompletePage
     {
-        private readonly WebDriver driver;
-
-        public AutoCompletePage(WebDriver driver)
+        
+        public AutoCompletePage(WebDriver _driver)
         {
-            this.driver = driver;
+            this.driver = _driver;
             PageFactory.InitElements(driver, this);
         }
 
         public void NavigateToDemoQA()
         {
             driver.Navigate().GoToUrl("https://demoqa.com/auto-complete");
-        }
-
-        public void NavigateToAutoCompleteSection()
-        {
-            driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[4]/div/ul/li[2]")).Click();
         }
 
         [FindsBy(How = How.Id, Using = "autoCompleteMultipleInput")]

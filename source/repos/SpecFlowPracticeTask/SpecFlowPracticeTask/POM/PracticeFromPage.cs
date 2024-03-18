@@ -1,18 +1,15 @@
-﻿using NUnit.Framework;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
+﻿using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
-using SeleniumExtras.WaitHelpers;
+using SpecFlowPracticeTask.Hooks;
 
 namespace SpecFlowPracticeTask.POM
 {
     public class PracticeFormPage
     {
-        private readonly IWebDriver driver;
-
-        public PracticeFormPage(IWebDriver driver)
+        WebDriver driver = WebDriverManager.GetDriver();
+        public PracticeFormPage(WebDriver _driver)
         {
-            this.driver = driver;
+            this.driver = _driver;
             PageFactory.InitElements(driver, this);
         }
 
@@ -63,11 +60,6 @@ namespace SpecFlowPracticeTask.POM
             driver.Navigate().GoToUrl("https://demoqa.com/text-box");
         }
 
-        public void NavigateToAutoCompleteSection()
-        {
-            driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[2]/div/ul/li")).Click();
-        }
-
         public void FillForm(string firstName, string lastName, string email, string address, string phone)
         {
             FirstNameInput.SendKeys(firstName);
@@ -99,10 +91,7 @@ namespace SpecFlowPracticeTask.POM
             foreach (var subject in subjects)
             {
                 var checkbox = SubjectCheckBoxes.FirstOrDefault(x => x.GetAttribute("value").Contains(subject));
-                if (checkbox != null)
-                {
-                    checkbox.Click();
-                }
+                checkbox?.Click();
             }
         }
 
@@ -111,10 +100,7 @@ namespace SpecFlowPracticeTask.POM
             foreach (var hobby in hobbies)
             {
                 var checkbox = HobbyCheckBoxes.FirstOrDefault(x => x.GetAttribute("values").Contains(hobby));
-                if (checkbox != null)
-                {
-                    checkbox.Click();
-                }
+                checkbox?.Click();
             }
         }
 

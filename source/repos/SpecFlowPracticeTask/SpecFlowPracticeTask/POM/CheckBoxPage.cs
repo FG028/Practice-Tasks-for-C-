@@ -1,28 +1,22 @@
 ﻿using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
+using SpecFlowPracticeTask.Hooks;
 
 namespace SpecFlowPracticeTask.POM
 {
     public class CheckBoxPage
     {
-        private readonly IWebDriver driver;
-
-        public CheckBoxPage(IWebDriver driver)
+        WebDriver driver = WebDriverManager.GetDriver();
+        public CheckBoxPage(WebDriver _driver)
         {
-            this.driver = driver;
+            this.driver = _driver;
             PageFactory.InitElements(driver, this);
         }
 
-        public void NavigateToPage() 
+        public void NavigateToPage()
         {
             driver.Navigate().GoToUrl("https://demoqa.com/checkbox");
         }
-
-        public void NavigateToAutoCompleteSection() 
-        {
-            driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[1]/div/ul/li[2]")).Click();
-        }
-
 
         [FindsBy(How = How.Name, Using = "Home")]
         public IWebElement HomeFolder { get; set; }
@@ -44,7 +38,7 @@ namespace SpecFlowPracticeTask.POM
             folderElement.Click();
         }
 
-        public IList<IWebElement> GetItemsInFolder(IWebElement folderElement) 
+        public  IList<IWebElement> GetItemsInFolder(IWebElement folderElement) 
         {
             return folderElement.FindElements(By.TagName("label"));
         }

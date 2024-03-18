@@ -1,14 +1,16 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using SeleniumExtras.PageObjects;
+using SpecFlowPracticeTask.Hooks;
+
 namespace SpecFlowPracticeTask.POM
 {
     public class ButtonPage
     {
-        private readonly IWebDriver driver;
-        public ButtonPage(IWebDriver driver) 
+        WebDriver driver = WebDriverManager.GetDriver();
+        public ButtonPage(WebDriver _driver)
         {
-            this.driver = driver;
+            this.driver = _driver;
             PageFactory.InitElements(driver, this);
         }
 
@@ -17,13 +19,8 @@ namespace SpecFlowPracticeTask.POM
             driver.Navigate().GoToUrl("https://demoqa.com/buttons");
         }
 
-        public void NavigateToAutoCompleteSection()
-        {
-            driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[1]/div/ul/li[5]")).Click();
-        }
-
         [FindsBy(How = How.XPath, Using = "//button[text()='Click Me']")]
-        public IWebElement ClickMEButton { get; set; }
+        public IWebElement ClickMeButton { get; set; }
 
         [FindsBy(How = How.XPath, Using = "//button[text()='Double Click']")]
         public IWebElement DoubleClickButton { get; set; }

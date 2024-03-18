@@ -2,18 +2,19 @@
 using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using SpecFlowPracticeTask.POM;
+using SpecFlowPracticeTask.Hooks;
 
 namespace SpecFlowPracticeTask.StepDefinitions
 {
     [Binding]
     public class ButtonSteps
     {
-        private readonly WebDriver driver;
         private readonly ButtonPage buttonPage;
+        WebDriver driver = WebDriverManager.GetDriver();
 
-        public ButtonSteps(WebDriver driver)
+        public ButtonSteps(WebDriver _driver)
         {
-            this.driver = driver;
+            driver = _driver;
             buttonPage = new ButtonPage(driver);
         }
 
@@ -21,12 +22,6 @@ namespace SpecFlowPracticeTask.StepDefinitions
         public void NavigateToDemoQA()
         {
             buttonPage.NavigateToPage();
-        }
-
-        [Given(@"I navigate to the ""Elements"" category and ""Buttons"" section")]
-        public void NavigateToAutoCompleteSection()
-        {
-            buttonPage.NavigateToAutoCompleteSection();
         }
 
         [When(@"I interact with the ""(.*)"" button")]

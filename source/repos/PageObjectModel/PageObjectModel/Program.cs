@@ -11,7 +11,8 @@ public class Program
 
         driver.Navigate().GoToUrl("https://practice.automationtesting.in/my-account/.");
 
-        LoginPage loginPage = new LoginPage(driver);
+        LoginPage loginPage = new LoginPage(driver)
+
 
         string lostPasswordText = loginPage.GetLostPasswordText();
         Console.WriteLine(lostPasswordText);

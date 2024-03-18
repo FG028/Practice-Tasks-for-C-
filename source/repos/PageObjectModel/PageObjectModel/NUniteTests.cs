@@ -13,7 +13,8 @@ namespace PageObjectModel
             public void Setup()
             {
                 driver = new ChromeDriver();
-            }
+                locators = new LocatorClass();
+        }
             [Test]
             public void TestGetLostPassword()
             {

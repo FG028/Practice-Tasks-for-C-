@@ -2,16 +2,17 @@
 using NUnit.Framework;
 using OpenQA.Selenium;
 using SpecFlowPracticeTask.POM;
+using SpecFlowPracticeTask.Hooks;
 
 [Binding]
 public class SelectableSteps
 {
     private readonly SelectablePage selectablePage;
-    private readonly IWebDriver driver;
+    WebDriver driver = WebDriverManager.GetDriver();
 
-    public SelectableSteps(IWebDriver driver)
+    public SelectableSteps(WebDriver _driver)
     {
-        this.driver = driver;
+        driver = _driver;
         selectablePage = new SelectablePage(driver);
     }
 
@@ -19,12 +20,6 @@ public class SelectableSteps
     public void NavigateToDemoQA()
     {
         selectablePage.NavigateToPage();
-    }
-
-    [Given(@"I navigate to the ""Interactions"" category and ""Selectable"" section")]
-    public void NavigateToAutoCompleteSection()
-    {
-        selectablePage.NavigateToAutoCompleteSection();
     }
 
     [Given(@"I switch to the ""Grid"" tab")]

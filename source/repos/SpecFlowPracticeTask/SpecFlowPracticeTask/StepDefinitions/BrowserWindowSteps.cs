@@ -1,31 +1,27 @@
 ﻿using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using SpecFlowPracticeTask.POM;
+using SpecFlowPracticeTask.Hooks;
+
 
 namespace SpecFlowPracticeTask.StepDefinitions
 {
     [Binding]
     public class BrowserWindowSteps
     {
-        private readonly WebDriver driver;
         private readonly BrowserWindowPage browserWindowPage;
+        WebDriver driver = WebDriverManager.GetDriver();
 
-        public BrowserWindowSteps(WebDriver driver)
+        public BrowserWindowSteps(WebDriver _driver)
         {
-            this.driver = driver;
+            driver = _driver;
             browserWindowPage = new BrowserWindowPage(driver);
         }
 
         [Given(@"I am on the DemoQA page ""https://demoqa.com/browser-windows""")]
-        public void NavigateToSpecificPage()
+        public void NavigateToDemoQA()
         {
             browserWindowPage.NavigateToPage();
-        }
-
-        [Given(@"I navigate to the ""Alerts, Frame & Windows"" category and ""Browser Windows"" section")]
-        public void NavigateToBrowserWindowsSection()
-        {
-            browserWindowPage.NavigateToAutoCompleteSection();
         }
 
         [When(@"I click on the ""(.*)"" button")]

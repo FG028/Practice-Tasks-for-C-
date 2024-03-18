@@ -1,26 +1,22 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using SeleniumExtras.PageObjects;
+using SpecFlowPracticeTask.Hooks;
 
 namespace SpecFlowPracticeTask.POM
 {
     public class SelectablePage
     {
-        private readonly IWebDriver driver;
-        
-        public SelectablePage(IWebDriver driver) 
+        WebDriver driver = WebDriverManager.GetDriver();
+        public SelectablePage(WebDriver _driver)
         {
-            this.driver = driver;
+            this.driver = _driver;
             PageFactory.InitElements(driver, this);
         }
+
         public void NavigateToPage()
         {
             driver.Navigate().GoToUrl("https://demoqa.com/selectable");
-        }
-
-        public void NavigateToAutoCompleteSection()
-        {
-            driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[5]/div/ul/li[2]")).Click();
         }
 
         [FindsBy(How = How.Id, Using = "gridTab")]

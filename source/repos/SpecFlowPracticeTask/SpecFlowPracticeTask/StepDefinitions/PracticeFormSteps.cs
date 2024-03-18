@@ -4,34 +4,30 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using SpecFlowPracticeTask.POM;
+using SpecFlowPracticeTask.Hooks;
 
 [Binding]
 public class PracticeFormSteps
 {
     private readonly PracticeFormPage practiceFormPage;
-    private readonly IWebDriver driver;
+    WebDriver driver = WebDriverManager.GetDriver();
+
     private string firstName;
     private string lastName;
     private string userEmail;
     private string userAddress;
     private string userPhone;
 
-    public PracticeFormSteps(IWebDriver driver)
+    public PracticeFormSteps(WebDriver _driver)
     {
-        this.driver = driver;
+        driver = _driver;
         practiceFormPage = new PracticeFormPage(driver);
     }
 
     [Given(@"I am on the DemoQA page ""https://demoqa.com/automation-practice-form""")]
     public void NavigateToDemoQA()
     {
-        driver.Navigate();
-    }
-
-    [Given(@"I navigate to the ""Forms"" category and ""Practice Form"" section")]
-    public void NavigateToAutoCompleteSection()
-    {
-        practiceFormPage.NavigateToAutoCompleteSection();
+        practiceFormPage.NavigateToPage();
     }
 
     [When(@"I fill the form with random data")]
@@ -99,7 +95,6 @@ public class PracticeFormSteps
             Assert.That(stateSelectElement.SelectedOption.Text, Is.EqualTo("Uttar Pradesh"));
             Assert.That(citySelectElement.SelectedOption.Text, Is.EqualTo("Merrut"));
         });
-
         practiceFormPage.CloseModalButton.Click();
     }
 }

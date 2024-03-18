@@ -24,11 +24,13 @@ namespace PageObjectModelTest
             var rememberMeCheckBox = driver.FindElement(locators.RememberMeCheckBox);
             return rememberMeCheckBox.Text;
         }
+
         public string GetRegisterButtonText()
         {
             var registerButton = driver.FindElement(locators.RegisterButton);
             return registerButton.Text;
         }
+
         public void Login(string username, string password)
         {
             var usernameField = driver.FindElement(locators.UsernameField);

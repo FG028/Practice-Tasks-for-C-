@@ -2,18 +2,19 @@
 using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using SpecFlowPracticeTask.POM;
+using SpecFlowPracticeTask.Hooks;
 
 namespace SpecFlowPracticeTask.StepDefinitions;
 
 [Binding]
 public class CheckBoxSteps
 {
-    private readonly WebDriver driver;
     private readonly CheckBoxPage checkBoxPage;
+    WebDriver driver = WebDriverManager.GetDriver();
 
-    public CheckBoxSteps(WebDriver driver)
+    public CheckBoxSteps(WebDriver _driver)
     {
-        this.driver = driver;
+        driver = _driver;
         checkBoxPage = new CheckBoxPage(driver);
     }
 
@@ -21,12 +22,6 @@ public class CheckBoxSteps
     public void NavigateToDemoQA()
     {
         checkBoxPage.NavigateToPage();
-    }
-
-    [Given(@"I navigate to the ""Elements"" category and ""Check Box"" section")]
-    public void NavigateToAutoCompleteSection()
-    {
-        checkBoxPage.NavigateToAutoCompleteSection();
     }
 
     [When(@"I expand the Home folder")]

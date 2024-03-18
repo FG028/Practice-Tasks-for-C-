@@ -1,26 +1,21 @@
 ﻿using OpenQA.Selenium;
 using SeleniumExtras.PageObjects;
+using SpecFlowPracticeTask.Hooks;
 
 namespace SpecFlowPracticeTask.POM
 {
     public class BrowserWindowPage
     {
-        private readonly WebDriver driver;
-
-        public BrowserWindowPage(WebDriver driver)
+        WebDriver driver = WebDriverManager.GetDriver();
+        public BrowserWindowPage(WebDriver _driver)
         {
-            this.driver = driver;
+            this.driver = _driver;
             PageFactory.InitElements(driver, this);
         }
 
         public void NavigateToPage()
         {
             driver.Navigate().GoToUrl("https://demoqa.com/browser-windows");
-        }
-
-        public void NavigateToAutoCompleteSection()
-        {
-            driver.FindElement(By.XPath("/html/body/div[2]/div/div/div/div[1]/div/div/div[3]/div/ul/li[1]")).Click();
         }
 
         [FindsBy(How = How.XPath, Using = "//button[@id='button1']")]

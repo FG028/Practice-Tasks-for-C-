@@ -2,17 +2,15 @@
 
 Scenario: 1.1. Fill TextBox form, submit, and verify displayed data
     Given I am on the DemoQA page "https://demoqa.com/text-box"
-
     When I enter the following data:
       | Field             | Value                                  |
       |-------------------|----------------------------------------|
       | Full Name         | John Doe                               |
       | Email             | john.doe@example.com                   |
       | Current Address   | 123 Main Street, Anytown, USA 12345    |
-      | Permanent Address | Same as Current Address                |
-        
-        And I click on the "Submit" button
-    Then I should see the submitted data displayed in the table
+      | Permanent Address | Same as Current Address                |    
+    Then I select on the "Submit" button
+        And I should see the submitted data displayed in the table
       
       | Field             | Value                                  |
       |-------------------|----------------------------------------|
@@ -23,7 +21,6 @@ Scenario: 1.1. Fill TextBox form, submit, and verify displayed data
 
 Scenario: 1.2. Expand and Select Folders
     Given I am on the DemoQA page "https://demoqa.com/checkbox"
-        And  I navigate to the "Elements" category and "Check Box" section
     When I expand the Home folder 
     Then I select the Desktop folder
     Given I select "Angular" and "Veu" from the "WorkSpace" folder
@@ -43,7 +40,6 @@ Scenario: 1.3. Sort and delete row in Web Tables
 
 Scenario: 1.4. Perform various clicks on buttons
     Given I am on the DemoQA page "https://demoqa.com/buttons"
-        And I navigate to the "Elements" category and "Buttons" section
     When I interact with the "<button_name>" button
     Then I should see the text "<expected_message>"
 

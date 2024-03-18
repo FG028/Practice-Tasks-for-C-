@@ -9,12 +9,12 @@ namespace SpecFlowPracticeTask.StepDefinitions
     [Binding]
     public class AutoCompleteSteps
     {
-        private readonly WebDriver driver;
         private readonly AutoCompletePage autoCompletePage;
+        WebDriver driver = WebDriverManager.GetDriver();
 
-        public AutoCompleteSteps(WebDriver driver)
+        public AutoCompleteSteps(WebDriver _driver)
         {
-            this.driver = driver;
+            driver = _driver;
             autoCompletePage = new AutoCompletePage(driver);
         }
 
@@ -22,12 +22,6 @@ namespace SpecFlowPracticeTask.StepDefinitions
         public void NavigateToDemoQA()
         {
             autoCompletePage.NavigateToDemoQA();
-        }
-
-        [Given(@"I navigate to the ""Widgets"" category and ""Auto Complete"" section")]
-        public void NavigateToAutoCompleteSection()
-        {
-            autoCompletePage.NavigateToAutoCompleteSection();
         }
 
         [When(@"I enter the letter ""(.*)"" in the ""Type multiple color names"" field")]
