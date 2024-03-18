@@ -1,14 +1,14 @@
 ﻿Feature: MathJS API Testing
+Background:
+    Given The application is put together
 
 Scenario Outline: Perform MathJS operation
-    Given I send a POST request to "eval" with the following expression
-          | Expression |
-          |-------------|
+    When I send a POST request to "eval" with the following expression
+          | Expression   |
           | <expression> |
     Then The status code should be the next 200
       And the response body should contain the following result:
           | Field        | Expected Value   |
-          |--------------|------------------|
           | result       | <expectedResult> |
 
     Examples:
@@ -20,5 +20,7 @@ Scenario Outline: Perform MathJS operation
           | sqrt(16)          | 4               |
 
 Scenario: Invalid expression
-    Given I send a POST request to "eval" with an invalid expression: "abc"
-      Then The status code should be the next 400 (Bad Request)
+    When I send a POST request to "eval" with the following invalid expression
+        | Expression   |
+        | <expression> |
+      Then The status code should be the next 400

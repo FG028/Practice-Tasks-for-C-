@@ -3,7 +3,6 @@ using RestSharp;
 using TechTalk.SpecFlow;
 using Newtonsoft.Json.Linq;
 using RestSharpTestProjectPracticeTask.Configuration_Files;
-using RestSharpTestProjectPracticeTask.Helpers;
 using System.Net;
 
 namespace YourProjectName.MathJsApiSteps
@@ -20,11 +19,25 @@ namespace YourProjectName.MathJsApiSteps
             _restSharpClient = restSharpClient;
         }
 
-        [Given(@"I send a POST request to ""(.*)"" with the following expression")]
-        public async Task GivenISendAPostRequestToWithTheFollowingExpression(string endpoint, string expression)
+        [Given(@"The application is put together")]
+        public async void GivenTheApplicationIsPrepared()
+        {
+            await _restSharpClient.GetAsync("GET", "");
+            Assert.AreEqual(HttpStatusCode.OK, _response.StatusCode);
+        }
+
+        [When(@"I send a POST request to ""(.*)"" with the following expression")]
+        public async Task WhenISendAPostRequestToWithTheFollowingExpression(string endpoint, string expression)
         {
             var body = new { args = new[] { expression } };
             _response = await _restSharpClient.PostAsync("POST", $"{_baseUrl}{endpoint}", body);
+        }
+
+        [When(@"I send a POST request to ""(.*)"" with the following invalid expression")]
+        public async Task WhenISendAPostRequestWithAnInvalidExpression(string endpoint, string expression)
+        {
+            _response = null;
+            await _restSharpClient.PostAsync("POST", $"{_baseUrl}{endpoint}", new { args = new[] { expression } });
         }
 
         [Then(@"The status code should be the next (.*)")]
@@ -58,9 +71,9 @@ namespace YourProjectName.MathJsApiSteps
         // [ScenarioOutline]
         public async Task PerformMathJsOperation(string expression, string expectedResult)
         {
-            await GivenISendAPostRequestToWithTheFollowingExpression("eval", expression);
+            await WhenISendAPostRequestToWithTheFollowingExpression("eval", expression);
             
-            ThenTheStatusCodeShouldBe(200);
+            ThenTheStatusCodeShouldBe((HttpStatusCode) 200);
             ThenTheResponseBodyShouldContainTheFollowingResult(CreateResultTable(expectedResult));
         }
 
@@ -74,8 +87,8 @@ namespace YourProjectName.MathJsApiSteps
         // [Scenario]
         public async Task InvalidExpression()
         {
-            await GivenISendAPostRequestToWithTheFollowingExpression("eval", "abc");
-            ThenTheStatusCodeShouldBe(400);
+            await WhenISendAPostRequestWithAnInvalidExpression("eval", "abc");
+            ThenTheStatusCodeShouldBe((HttpStatusCode) 400);
         }
     }
 }

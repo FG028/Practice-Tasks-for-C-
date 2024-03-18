@@ -22,13 +22,20 @@ namespace RestSharpTestProjectPracticeTask.Step_Definitions
             _timer = timer;
         }
 
-        [Given(@"I send a (.*) request to ""(.*)"" with the following user data:")]
+        [Given(@"The application is prepared")]
+        public async void GivenTheApplicationIsPrepared()
+        {
+            await _restSharpClient.GetAsync("GET", "");
+            Assert.AreEqual(HttpStatusCode.OK, _response.StatusCode);
+        }
+
+        [When(@"I send a (.*) request to ""(.*)"" with the following user data:")]
         public async Task GivenISendARequestToWithTheFollowingUserData(string method, string endpoint, object userData)
         {
             _response = await _restSharpClient.ExecuteAsync(method, endpoint, userData);
         }
 
-        [Given(@"I send a (.*) request to ""(.*)""")]
+        [When(@"I send a (.*) request to ""(.*)""")]
         public async Task GivenISendARequestTo(string method, string endpoint)
         {
             _response = await _restSharpClient.GetAsync(method, endpoint);
